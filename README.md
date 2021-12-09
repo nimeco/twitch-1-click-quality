@@ -13,3 +13,5 @@ Adiciona botões abaixo do stream que permitem trocar de qualidade com um clique
 O botão de liga e desliga salva a última qualidade e quando um novo stream é aberto, ele inicia com a qualidade salva. Se está desligado, a última qualidade salva ou a qualidade selecionada com os botões padrões do player será usada.
 
 Caso queira ficar trocando de streams mas precisa que eles rodem em uma qualidade baixa quando não estiver assistindo (160p), é mais fácil trocar dessa forma. Foi algo que fiz exatamente com esse propósito e achei que mais alguém poderia achar útil.
+
+Caso seja necessário falar comigo: https://linktr.ee/xuxameneghel
