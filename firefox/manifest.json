@@ -1,0 +1,29 @@
+{
+    "description": "Adds buttons to change qualities with one click.",
+    "manifest_version": 2,
+    "name": "1-click quality for Twitch",
+    "version": "1.0",
+    "icons": {
+        "48": "icons/quality-48.png",
+        "96": "icons/quality-96.png"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [{
+        "js": ["content.js"],
+        "matches": ["https://*.twitch.tv/*"],
+        "run_at": "document_idle"
+    }],
+    "web_accessible_resources": [
+        "resource.js"
+    ],
+    "browser_action": { 
+        "default_title": "1-click quality",
+        "default_icon": "icons/quality-32.png",
+        "default_popup": "popup/config.html"
+    },
+    "permissions": [
+        "storage"
+    ]
+}

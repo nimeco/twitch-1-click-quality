@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="config.css" />
+    </head>
+
+    <body>
+        <div id="title">
+            1-click quality for <span class="purple">Twitch</span>
+        </div>
+        <div class='wrapper'>
+
+            <ul id="option-quality-save">
+                <li>Keep quality <span class='tooltip' data-description="Saves the last quality selected so when streams are opened or refreshed, it will default to that quality if available.">⯈</span></li>
+                <li>
+                    <div class="toggle-container">
+                        <label class="small-switch">
+                            <input class="switch-input" type="checkbox">
+                            <span class="switch-label" data-on="On" data-off="Off"></span>
+                            <span class="switch-handle"></span>
+                        </label>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+        <div id='footer'>
+            <button id='twitter' class='quality-button'>Twitter</button>
+            <button id='github' class='quality-button'>GitHub</button>
+            <button id='donate' class='quality-button'>Donate</button>
+        </div>
+        <script src="config.js"></script>
+    </body>
+
+</html>
