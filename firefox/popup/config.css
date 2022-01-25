@@ -189,7 +189,7 @@ button {
     width: 54px;
     height: 30px;
 }
-.toggle-container * {
+.switch-container * {
     transition: 0.08s ease-out;
 }
 .switch-input {

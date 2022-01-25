@@ -193,6 +193,7 @@
                 display: flex;
                 position: relative;
                 margin-left: 3rem;
+                height: 3rem;
             }
             `;
             cssNode = createCssRules(buttonCss);

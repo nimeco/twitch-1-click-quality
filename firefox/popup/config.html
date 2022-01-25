@@ -16,12 +16,21 @@
             <ul id="option-quality-save">
                 <li>Keep quality <span class='tooltip' data-description="Saves the last quality selected so when streams are opened or refreshed, it will default to that quality if available.">⯈</span></li>
                 <li>
-                    <div class="toggle-container">
+                    <div class="switch-container">
                         <label class="small-switch">
                             <input class="switch-input" type="checkbox">
                             <span class="switch-label" data-on="On" data-off="Off"></span>
                             <span class="switch-handle"></span>
                         </label>
+                    </div>
+                </li>
+            </ul>
+
+            <ul id="option-button-width">
+                <li>Button width <span class='tooltip' data-description="Butao width">⯈</span></li>
+                <li>
+                    <div class="range-container">
+                        <input class="range-input" type="range" id="range-width" />
                     </div>
                 </li>
             </ul>
@@ -32,6 +41,7 @@
             <button id='github' class='quality-button'>GitHub</button>
             <button id='donate' class='quality-button'>Donate</button>
         </div>
+        <a target="_blank" href="config.html">Popup</a>
         <script src="config.js"></script>
     </body>
 
