@@ -25,14 +25,6 @@ if (thisBrowser) {
         }
     });
 
-    thisBrowser.storage.onChanged.addListener((changes, namespace) => {
-        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-            console.log(
-                `Storage key "${key}" in namespace "${namespace}" changed.`,
-                `Old value was "${oldValue}", new value is "${newValue}".`
-            );
-        }
-    });
 
     thisBrowser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.type === "style") {
@@ -50,5 +42,14 @@ if (thisBrowser) {
 
     s.addEventListener('load', () => {
         s.parentNode.removeChild(s);
+    });
+
+    thisBrowser.storage.onChanged.addListener((changes, namespace) => {
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+            console.log(
+                `Storage key "${key}" in namespace "${namespace}" changed.`,
+                `Old value was "${oldValue}", new value is "${newValue}".`
+            );
+        }
     });
 }
