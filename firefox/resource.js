@@ -194,6 +194,8 @@
                 position: relative;
                 margin-left: 3rem;
                 height: 3rem;
+                transform-origin: top right 0px;
+                transition: all 700ms;
             }
             `;
             cssNode = createCssRules(buttonCss);

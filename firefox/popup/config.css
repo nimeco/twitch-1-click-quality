@@ -119,6 +119,8 @@ li {
 
 .tooltip {
     font-size: var(--button-text-x-small);
+    margin-right: 5px;
+    vertical-align: middle;
 }
 .tooltip:hover {
     cursor: pointer;
@@ -136,6 +138,16 @@ li {
     font-weight: var(--font-weight-normal);
     font-family: Helvetica;
     transition: all .2s ease;
+    position: absolute;
+    width: 224px;
+    background: var(--color-background-button-primary-hover);
+    z-index: 666;
+    padding: 10px;
+    border-radius: 5px;
+    font: inherit;
+    line-height: 1.1;
+    font-size: 17px;
+    margin-left: 8px;
 }
 
 #footer {
@@ -256,3 +268,7 @@ button {
 .switch-label:active ~.switch-handle {
     width: 40px;
 }
+
+.label { display: none; }
+.lang-en .label .en { display: inline; }
+.lang-br .label .br { display: inline; }

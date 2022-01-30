@@ -9,7 +9,8 @@ else {
 thisBrowser.runtime.onInstalled.addListener(() => {
     let defaultOptions = [
         {'option-quality-save': true},
-        {'option-button-width': 69},
+        {'option-button-width': "100"},
+        {'option-button-scale': "1"},
     ];
 
     for (let option of defaultOptions) {

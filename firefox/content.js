@@ -31,8 +31,7 @@ if (thisBrowser) {
             let detail = request.detail;
 
             let node = document.querySelector(detail.selector);
-            node.style[detail.style] = `${(11*detail.value - 350)/100}rem`;
-
+            node.style[detail.style] = `${detail.value}${detail.unit}`;
         }
         setTimeout(() => {
             sendResponse({response: "Response from content script"});

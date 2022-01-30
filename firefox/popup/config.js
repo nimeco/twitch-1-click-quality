@@ -21,9 +21,20 @@ const options = {
         property: "checked",
     },
     "option-button-width": {
+        style: "marginRight",
         event: "input",
         property: "value",
-        style: "marginRight",
+        selector: ".quality-button-header",
+        calc: x => (11*x - 350)/100,
+        unit: 'rem',
+    },
+    "option-button-scale": {
+        style: "scale",
+        event: "input",
+        property: "value",
+        selector: ".quality-button-header",
+        calc: x => x/100,
+        unit: '',
     },
 };
 
@@ -38,34 +49,55 @@ function handleError(error) {
 if (thisBrowser) {
     for (let [optionId, option] of Object.entries(options)) {
         let node = document.querySelector(`#${optionId} input`);
+        let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
+        let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
         node.addEventListener(option.event, (event) => {
-            thisBrowser.storage.local.set({[optionId]: node[option.property]});
+            debounceSet({[optionId]: node[option.property]});
 
             if (option.style != undefined) {
+                let value = option.calc(node[option.property]);
+
                 let message = {
                     type: "style",
                     detail: {
-                        'selector': '.quality-button-header',
-                        'value': node[option.property],
-                        'property': option.property,
-                        'style': option.style,
-                    }
-                }
+                        style: option.style,
+                        event: option.event,
+                        property: option.property,
+                        selector: option.selector,
+                        unit: option.unit,
+                        value: value,
+                    },
+                };
 
-                // active: true, currentWindow: true
-                thisBrowser.tabs.query({}, (tabs) => {
-                    tabs.forEach((tab) => {
-                        console.log("title", tab.title);
-                        thisBrowser.tabs.sendMessage(tab.id, message, (response) => {
-                            console.log("response", response);
-                        });
-                    });
-                });
+                debounceMsg(thisBrowser, message);
             }
         });
     }
 }
 
+function messageTwitchTabs(browser, message) {
+    console.log("cabum");
+    browser.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+            if (tab.url.match(/https:\/\/[^.]+\.twitch\.tv\/.*/)) {
+                console.log(tab.id, tab.title, tab.url);
+                browser.tabs.sendMessage(tab.id, message, (response) => {
+                    console.log("responsefunc", response);
+                });
+            }
+        });
+    });
+}
+
+function debounce(func, timeout = 100) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args);
+        }, timeout);
+    }
+}
 
 // make firefox fire resize popup by dom manipulation as hover doesn't trigger it
 document.querySelectorAll('.tooltip').forEach((elem) => {
