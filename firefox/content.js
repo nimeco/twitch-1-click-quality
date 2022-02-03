@@ -1,5 +1,5 @@
 let thisBrowser = null; 
-if (!chrome?.app) {
+if (chrome?.app) {
     thisBrowser = chrome;
 }
 else {
@@ -31,7 +31,7 @@ if (thisBrowser) {
             let detail = request.detail;
 
             let node = document.querySelector(detail.selector);
-            node.style[detail.style] = `${detail.value}${detail.unit}`;
+            node.style[detail.style] = `${detail.value}`;
         }
         setTimeout(() => {
             sendResponse({response: "Response from content script"});
@@ -39,9 +39,9 @@ if (thisBrowser) {
         return true;
     });
 
-    s.addEventListener('load', () => {
-        s.parentNode.removeChild(s);
-    });
+    // s.addEventListener('load', () => {
+    //     s.parentNode.removeChild(s);
+    // });
 
     thisBrowser.storage.onChanged.addListener((changes, namespace) => {
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {

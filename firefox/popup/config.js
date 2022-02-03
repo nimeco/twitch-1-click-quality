@@ -1,18 +1,9 @@
 let thisBrowser = null; 
-if (!chrome?.app) {
+if (chrome?.app) {
     thisBrowser = chrome;
 }
 else {
     thisBrowser = browser;
-}
-
-function getItem(key) {
-    thisBrowser.storage.local.get(key, (result) => {
-        if (result) {
-            return result
-        }
-    });
-    return null;
 }
 
 const options = {
@@ -20,21 +11,19 @@ const options = {
         event: "click",
         property: "checked",
     },
-    "option-button-width": {
+    "option-button-margin": {
         style: "marginRight",
         event: "input",
         property: "value",
         selector: ".quality-button-header",
-        calc: x => (11*x - 350)/100,
-        unit: 'rem',
+        calc: x => `${(11*(100-x) - 350)/100}rem`,
     },
     "option-button-scale": {
-        style: "scale",
+        style: "transform",
         event: "input",
         property: "value",
         selector: ".quality-button-header",
-        calc: x => x/100,
-        unit: '',
+        calc: x => `scale(${x/100})`,
     },
 };
 
@@ -56,17 +45,12 @@ if (thisBrowser) {
 
             if (option.style != undefined) {
                 let value = option.calc(node[option.property]);
+                let detail = Object.fromEntries(Object.entries(option).filter(([_,v]) => typeof(v) != "function"));
+                detail.value = value;
 
                 let message = {
                     type: "style",
-                    detail: {
-                        style: option.style,
-                        event: option.event,
-                        property: option.property,
-                        selector: option.selector,
-                        unit: option.unit,
-                        value: value,
-                    },
+                    detail: detail,
                 };
 
                 debounceMsg(thisBrowser, message);
@@ -108,15 +92,33 @@ document.querySelectorAll('.tooltip').forEach((elem) => {
     });
 });
 
+
+function setRangeBackground(node) {
+    let point = (node.value-node.min)/(node.max-node.min)*100;
+    node.style.background = 'linear-gradient(to right, #a970ff 0%, #a970ff ' + point + '%, hsla(0,0%,100%,0.2) ' + point + '%, hsla(0,0%,100%,0.2) 100%)';
+}
+let nodes = document.querySelectorAll("input[type='range']");
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, (result) => {
         for (let [optionId, option] of Object.entries(result)) {
             document.querySelector(`#${optionId} input`)[options[optionId].property] = result[optionId];
+            if (chrome?.app) {
+                nodes.forEach((node) => {
+                    setRangeBackground(node);
+                });
+            }
             console.log(optionId, option);
         }
         console.log(result);
     });
+
 });
+
+if (chrome?.app) {
+    nodes.forEach((node) => {
+        node.addEventListener('input', (evt) => { setRangeBackground(evt.target); });
+    });
+}
 
 document.getElementById('donate').addEventListener('click', () => {
     window.open('https://www.paypal.com/donate/?business=NJ6EEA8PWCZW2&no_recurring=0&currency_code=BRL');
@@ -129,7 +131,6 @@ document.getElementById('twitter').addEventListener('click', () => {
 document.getElementById('github').addEventListener('click', () => {
     window.open('https://github.com/nimeco/twitch-1-click-quality');
 });
-
 
 thisBrowser.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {

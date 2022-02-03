@@ -102,8 +102,23 @@
             if (detail['requested-key'] == 'option-quality-save' && detail['answer'] == true) {
                 setQualityStorage(detail);
             }
+            if (detail['requested-key'] == 'option-button-margin' && detail['answer']) {
+                document.querySelector('.quality-button-header').style.marginRight = `${(11*(100-detail['answer']) - 350)/100}rem`;
+            }
+            if (detail['requested-key'] == 'option-button-scale' && detail['answer']) {
+                document.querySelector('.quality-button-header').style.scale = `${detail['answer']/100}`;
+            }
         }
     });
+
+    function getStorageItem(key) {
+        let customEvent = new CustomEvent("option-request", {
+            detail: {
+                'requested-key': key,
+            }
+        });
+        document.dispatchEvent(customEvent);
+    }
 
     function createButtons(properties) {
         buttons = [];
@@ -119,6 +134,8 @@
         buttonsHeader = newNode('div', ['quality-button-header']);
 
         channelHeader?.prepend(buttonsHeader);
+        getStorageItem('option-button-margin');
+        getStorageItem('option-button-scale');
 
         return buttonsHeader;
     }

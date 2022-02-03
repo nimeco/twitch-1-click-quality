@@ -1,5 +1,5 @@
 let thisBrowser = null; 
-if (!chrome?.app) {
+if (chrome?.app) {
     thisBrowser = chrome;
 }
 else {
@@ -9,8 +9,8 @@ else {
 thisBrowser.runtime.onInstalled.addListener(() => {
     let defaultOptions = [
         {'option-quality-save': true},
-        {'option-button-width': "100"},
-        {'option-button-scale': "1"},
+        {'option-button-margin': "100"},
+        {'option-button-scale': "100"},
     ];
 
     for (let option of defaultOptions) {
