@@ -12,16 +12,16 @@ const options = {
         property: "checked",
     },
     "option-button-margin": {
-        style: "marginRight",
         event: "input",
         property: "value",
+        style: "marginRight",
         selector: ".quality-button-header",
         calc: x => `${(11*(100-x) - 350)/100}rem`,
     },
     "option-button-scale": {
-        style: "transform",
         event: "input",
         property: "value",
+        style: "transform",
         selector: ".quality-button-header",
         calc: x => `scale(${x/100})`,
     },

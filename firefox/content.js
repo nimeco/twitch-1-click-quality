@@ -7,10 +7,24 @@ else {
 }
 
 if (thisBrowser) {
-    let s = document.createElement('script');
-    s.src = thisBrowser.runtime.getURL('resource.js');
+    function injectScript(name) {
+        return new Promise((resolve, reject) => {
+            let s = document.createElement('script');
+            s.src = thisBrowser.runtime.getURL(name);
+            s.addEventListener('load', () => {
+                this.parentNode.removeChild(this);
+                resolve(true);
+            });
+            (document.head||document.documentElement).appendChild(s);
+        });
+    }
 
-    (document.head||document.documentElement).appendChild(s);
+    async function injectScripts() {
+        await injectScript('resource.js');
+    }
+
+    injectScripts();
+
 
     document.addEventListener('option-request', (event) => {
         if (event.type === 'option-request') {
@@ -39,10 +53,6 @@ if (thisBrowser) {
         return true;
     });
 
-    // s.addEventListener('load', () => {
-    //     s.parentNode.removeChild(s);
-    // });
-
     thisBrowser.storage.onChanged.addListener((changes, namespace) => {
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
             console.log(
@@ -52,3 +62,5 @@ if (thisBrowser) {
         }
     });
 }
+
+
