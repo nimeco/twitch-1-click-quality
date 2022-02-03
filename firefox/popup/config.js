@@ -16,7 +16,7 @@ const options = {
         property: "value",
         style: "marginRight",
         selector: ".quality-button-header",
-        calc: x => `${(11*(100-x) - 350)/100}rem`,
+        calc: x => `${11.5-0.15*x}rem`,
     },
     "option-button-scale": {
         event: "input",

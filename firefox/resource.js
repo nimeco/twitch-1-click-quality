@@ -103,10 +103,10 @@
                 setQualityStorage(detail);
             }
             if (detail['requested-key'] == 'option-button-margin' && detail['answer']) {
-                document.querySelector('.quality-button-header').style.marginRight = `${(11*(100-detail['answer']) - 350)/100}rem`;
+                document.querySelector('.quality-button-header').style.marginRight = `${11.5-0.15*detail['answer']}rem`;
             }
             if (detail['requested-key'] == 'option-button-scale' && detail['answer']) {
-                document.querySelector('.quality-button-header').style.scale = `${detail['answer']/100}`;
+                document.querySelector('.quality-button-header').style.transform = `scale(${detail['answer']/100})`;
             }
         }
     });

@@ -305,8 +305,10 @@ button {
 input[type=range] {
     appearance: none;
     background-color: transparent;
-    /* height: 35px; */
     padding: 0;
+}
+input[type=range] {
+    outline: none;
 }
 
 /* thumb */
