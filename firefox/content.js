@@ -1,4 +1,4 @@
-let thisBrowser = null; 
+let thisBrowser = null;
 if (chrome?.app) {
     thisBrowser = chrome;
 }
@@ -24,7 +24,6 @@ if (thisBrowser) {
     }
 
     injectScripts();
-
 
     document.addEventListener('option-request', (event) => {
         if (event.type === 'option-request') {
