@@ -1,5 +1,5 @@
 :root {
-    font-size: 67.5%;
+    font-size: 62.5%;
     --border-width-default: 1px;
     --border-width-input: 2px;
     --border-width-input-overlay-unfocused: 1px;
@@ -820,17 +820,16 @@ body {
     margin: 0;
     background-color: #18181b;
     padding: 5px;
-    color: var(--color-text-base); 
+    color: var(--color-text-base);
     border: 3px solid var(--color-twitch-purple-12);
     border-radius: 9px;
     width: 280px;
-    font: var(--font-size-base) "Inter", "Roobert", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: var(--font-size-base) "Inter", Arial, sans-serif;
     overflow: hidden;
 }
 
 .purple {
     color: var(--color-text-brand);
-    font-size: inherit;
 }
 .wrapper {
     display: grid;
@@ -840,10 +839,8 @@ body {
 #title {
     font-size: var(--button-text-large);
     text-align: center;
-    margin: 10px 0;
+    margin: 3px 0;
     white-space: nowrap;
-}
-#option-quality-save {
 }
 
 ul {
@@ -858,41 +855,60 @@ ul {
 ul > li:nth-child(2) {
     align-self: flex-start;
 }
+/* ul > li:nth-child(1) > div:nth-child(1) { */
+/*     margin-left: 20px; */
+/* } */
+
 li {
     line-height: 2rem;
 }
-
 .tooltip {
+    position: relative;
+    top: 2px;
+    left: -20px;
+}
+.tooltip > span {
     font-size: var(--button-text-x-small);
     margin-right: 5px;
     vertical-align: middle;
+    position: absolute;
 }
-.tooltip:hover {
+.tooltip > span:hover {
     cursor: pointer;
 }
-.tooltip:hover:after {
+.tooltip > span:hover:after {
     opacity: 1;
     display: inline;
 }
-.tooltip:after {
+.tooltip > span:after {
     content: attr(data-description);
     opacity: 0;
     display: none;
     color: var(--color-text-base);
     font-size: var(--button-text-xx-small);
     font-weight: var(--font-weight-normal);
-    font-family: Helvetica;
     transition: all .2s ease;
     position: absolute;
-    width: 224px;
+    width: 194px;
     background: var(--color-background-button-primary-hover);
-    z-index: 666;
+    z-index: var(--z-index-above);
     padding: 10px;
     border-radius: 5px;
-    font: inherit;
-    line-height: 1.1;
+    line-height: 1;
     font-size: 17px;
-    margin-left: 8px;
+}
+.figure-inline {
+    display: inline-block;
+}
+.svg-info {
+    fill: var(--color-fill-brand);
+    width: 14px;
+    height: 14px;
+}
+.svg-definition {
+    width: 0;
+    height: 0;
+    position: absolute;
 }
 
 #footer {
@@ -911,8 +927,8 @@ li {
     white-space: nowrap;
     font-weight: var(--font-weight-semibold);
     border-radius: var(--border-radius-medium);
-    font-size: var(--button-text-xx-small);
-    height: var(--button-size-x-small);
+    font-size: var(--button-text-default);
+    height: var(--button-size-default);
     background-color: var(--color-background-button-primary-default);
     color: var(--color-text-overlay);
     padding: 0px var(--button-padding-x);
@@ -950,7 +966,7 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked + .input-toggle-label {
     border-color: var(--color-border-toggle-checked);
     background-color: var(--color-background-toggle-checked);
-} 
+}
 .input-toggle-label {
     display: inline-block;
     position: relative;
@@ -1005,11 +1021,11 @@ input[type="checkbox"]:checked + .input-toggle-label::after {
     background-color: var(--color-background-toggle-handle-checked);
 }
 input[type="checkbox"]:checked + .input-toggle-label:active::after {
-    width: var(--button-size-active); 
+    width: var(--button-size-active);
     left: calc((100% - var(--button-size-active)) - 0.2rem);
 }
 input[type="checkbox"] + .input-toggle-label:active::after {
-    width: var(--button-size-active); 
+    width: var(--button-size-active);
     transition: width var(--timing-short) ease-out, left var(--timing-short) ease-out;
 }
 
@@ -1114,7 +1130,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 input[type="range"]::-moz-range-thumb {
     border-radius: 9000px;
-    /* box-shadow: */ 
     width: 1.6rem;
     height: 1.6rem;
     margin-top: -0.7rem;
@@ -1172,6 +1187,22 @@ background-color: var(--color-background-range-fill);
 height: 100%;
 }
 */
-.label { display: none; }
-.lang-en .label .en { display: inline; }
-.lang-br .label .br { display: inline; }
+/*
+.lang :lang(en), .lang :lang(pt) {
+display: none;
+}
+html[lang*="en"] .lang :lang(en) {
+display: block;
+}
+html[lang*="pt"] .lang :lang(pt) {
+display: block;
+}
+*/
+
+.wrapper li div {
+    display: block;
+    margin-left: 20px;
+}
+.lang { display: none; }
+.lang-en .lang.en { display: inline; }
+.lang-pt .lang.pt { display: inline; }
