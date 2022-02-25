@@ -1,4 +1,4 @@
-let thisBrowser = null; 
+let thisBrowser = null;
 if (chrome?.app) {
     thisBrowser = chrome;
 }
@@ -24,6 +24,14 @@ const options = {
         style: "transform",
         selector: ".quality-button-header",
         calc: x => `scale(${x/100})`,
+    },
+    "option-language-save": {
+        event: "click",
+        property: "checked",
+        callback: lang => {
+            document.body.removeAttribute('class');
+            document.body.classList.add(lang);
+        },
     },
 };
 
@@ -54,6 +62,10 @@ if (thisBrowser) {
                 };
 
                 debounceMsg(thisBrowser, message);
+            }
+
+            if (option.callback != undefined) {
+                option.callback(node.checked == false ? 'lang-en' : 'lang-pt');
             }
         });
     }
@@ -106,6 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 nodes.forEach((node) => {
                     setRangeBackground(node);
                 });
+            }
+
+            if (options[optionId].callback) {
+                options[optionId].callback(result[optionId] == false ? 'lang-en' : 'lang-pt');
             }
             console.log(optionId, option);
         }
