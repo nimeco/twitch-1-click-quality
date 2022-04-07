@@ -1,8 +1,7 @@
 let thisBrowser = null;
 if (chrome?.app) {
     thisBrowser = chrome;
-}
-else {
+} else {
     thisBrowser = browser;
 }
 
@@ -16,14 +15,14 @@ const options = {
         property: "value",
         style: "marginRight",
         selector: ".quality-button-header",
-        calc: x => `${11.5-0.15*x}rem`,
+        calc: x => `${11.5 - (0.15 * x)}rem`,
     },
     "option-button-scale": {
         event: "input",
         property: "value",
         style: "transform",
         selector: ".quality-button-header",
-        calc: x => `scale(${x/100})`,
+        calc: x => `scale(${x / 100})`,
     },
     "option-language-save": {
         event: "click",
@@ -48,12 +47,12 @@ if (thisBrowser) {
         let node = document.querySelector(`#${optionId} input`);
         let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
         let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
-        node.addEventListener(option.event, (event) => {
-            debounceSet({[optionId]: node[option.property]});
+        node.addEventListener(option.event, _event => {
+            debounceSet({ [optionId]: node[option.property] });
 
-            if (option.style != undefined) {
+            if (option.style !== undefined) {
                 let value = option.calc(node[option.property]);
-                let detail = Object.fromEntries(Object.entries(option).filter(([_,v]) => typeof(v) != "function"));
+                let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== "function"));
                 detail.value = value;
 
                 let message = {
@@ -64,27 +63,25 @@ if (thisBrowser) {
                 debounceMsg(thisBrowser, message);
             }
 
-            if (option.callback != undefined) {
-                option.callback(node.checked == false ? 'lang-en' : 'lang-pt');
+            if (option.callback !== undefined) {
+                option.callback(node.checked === false ? 'lang-en' : 'lang-pt');
             }
         });
     }
 }
 
 function messageTwitchTabs(browser, message) {
-    console.log("cabum");
-    browser.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => {
-            if (tab.url.match(/https:\/\/[^.]+\.twitch\.tv\/.*/)) {
-                console.log(tab.id, tab.title, tab.url);
-                browser.tabs.sendMessage(tab.id, message, (response) => {
-                    console.log("responsefunc", response);
+    console.log('just to have a string');
+    browser.tabs.query({}, tabs => {
+        tabs.forEach(tab => {
+            if (tab.url.match(/https:\/\/[^.]+\.(?!.*-.*).+\.com\//)) {
+                browser.tabs.sendMessage(tab.id, message, response => {
+                    store(response);
                 });
             }
         });
     });
 }
-
 function debounce(func, timeout = 100) {
     let timer;
     return (...args) => {
@@ -92,11 +89,11 @@ function debounce(func, timeout = 100) {
         timer = setTimeout(() => {
             func.apply(this, args);
         }, timeout);
-    }
+    };
 }
 
 // make firefox fire resize popup by dom manipulation as hover doesn't trigger it
-document.querySelectorAll('.tooltip').forEach((elem) => {
+document.querySelectorAll('.tooltip').forEach(elem => {
     elem.addEventListener('mouseleave', () => {
         let a = document.createElement('a');
         document.body.appendChild(a);
@@ -106,33 +103,32 @@ document.querySelectorAll('.tooltip').forEach((elem) => {
 
 
 function setRangeBackground(node) {
-    let point = (node.value-node.min)/(node.max-node.min)*100;
-    node.style.background = 'linear-gradient(to right, #a970ff 0%, #a970ff ' + point + '%, hsla(0,0%,100%,0.2) ' + point + '%, hsla(0,0%,100%,0.2) 100%)';
+    let point = (node.value - node.min) / (node.max - node.min) * 100;
+    node.style.background = `linear-gradient(to right, #a970ff 0%, #a970ff ${point}%, hsla(0,0%,100%,0.2) ${point}%, hsla(0,0%,100%,0.2) 100%)`;
 }
 let nodes = document.querySelectorAll("input[type='range']");
 document.addEventListener('DOMContentLoaded', () => {
-    thisBrowser.storage.local.get(null, (result) => {
+    thisBrowser.storage.local.get(null, result => {
         for (let [optionId, option] of Object.entries(result)) {
             document.querySelector(`#${optionId} input`)[options[optionId].property] = result[optionId];
             if (chrome?.app) {
-                nodes.forEach((node) => {
+                nodes.forEach(node => {
                     setRangeBackground(node);
                 });
             }
 
             if (options[optionId].callback) {
-                options[optionId].callback(result[optionId] == false ? 'lang-en' : 'lang-pt');
+                options[optionId].callback(result[optionId] === false ? 'lang-en' : 'lang-pt');
             }
             console.log(optionId, option);
         }
         console.log(result);
     });
-
 });
 
 if (chrome?.app) {
-    nodes.forEach((node) => {
-        node.addEventListener('input', (evt) => { setRangeBackground(evt.target); });
+    nodes.forEach(node => {
+        node.addEventListener('input', evt => { setRangeBackground(evt.target); });
     });
 }
 
@@ -152,7 +148,7 @@ thisBrowser.storage.onChanged.addListener((changes, namespace) => {
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
         console.log(
             `Storage key "${key}" in namespace "${namespace}" changed.`,
-            `Old value was "${oldValue}", new value is "${newValue}".`
+            `Old value was "${oldValue}", new value is "${newValue}".`,
         );
     }
 });

@@ -1,4 +1,4 @@
-(function() {
+(() => {
     let videoPlayer = null;
     let cssNode = null;
     let buttonsHeader = null;
@@ -6,40 +6,52 @@
     let lastButton = null;
 
     function findPlayer() {
-        try {
-            let videoPlayer = null;
-            function findReactNode(root, constraint) {
-                if (root.stateNode && constraint(root.stateNode)) {
-                    return root.stateNode;
-                }
-                let node = root.child;
-                while (node) {
-                    const result = findReactNode(node, constraint);
-                    if (result) {
-                        return result;
-                    }
-                    node = node.sibling;
-                }
-                return null;
+        function findReactNode(root, constraint) {
+            if (root.stateNode && constraint(root.stateNode)) {
+                return root.stateNode;
             }
+            let node = root.child;
+            while (node) {
+                const result = findReactNode(node, constraint);
+                if (result) {
+                    return result;
+                }
+                node = node.sibling;
+            }
+            return null;
+        }
+
+        try {
+            videoPlayer = null;
 
             let reactRootNode = null;
             let rootNode = document.querySelector('#root');
 
-            if (rootNode && rootNode._reactRootContainer && rootNode._reactRootContainer._internalRoot && rootNode._reactRootContainer._internalRoot.current) {
+            if (
+                rootNode &&
+                rootNode._reactRootContainer &&
+                rootNode._reactRootContainer._internalRoot &&
+                rootNode._reactRootContainer._internalRoot.current
+            ) {
                 reactRootNode = rootNode._reactRootContainer._internalRoot.current;
             }
 
-            videoPlayer = findReactNode(reactRootNode, node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance);
-            videoPlayer = videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ? videoPlayer.props.mediaPlayerInstance : null;
+            videoPlayer = findReactNode(
+                reactRootNode,
+                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance,
+            );
+            videoPlayer =
+                videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ?
+                    videoPlayer.props.mediaPlayerInstance :
+                    null;
 
             if (videoPlayer) {
                 return videoPlayer;
             }
-        }
-        catch(err) {
+        } catch (err) {
             console.log(err);
         }
+        return null;
     }
 
     function createCssRules(rules) {
@@ -58,16 +70,16 @@
     }
 
     function setItem(key, value, stringify = false) {
-        window.localStorage.setItem(key, (stringify ? JSON.stringify(value) : value));
+        window.localStorage.setItem(key, stringify ? JSON.stringify(value) : value);
     }
     function setQualityStorage(detail) {
-        setItem('video-quality', {default: detail['quality-group']}, true);
+        setItem('video-quality', { default: detail['quality-group'] }, true);
     }
 
     function newNode(nodeName, classes, options, dataset) {
         let node = document.createElement(nodeName);
         if (classes) {
-            Object.assign(node, {classList: classes.join(' ')});
+            Object.assign(node, { classList: classes.join(' ') });
         }
         if (options) {
             Object.assign(node, options);
@@ -79,43 +91,43 @@
     }
 
     function createButton(data) {
-        let button = newNode('button', ['quality-button'], {textContent: data.quality.name});
-        button.addEventListener('click', (event) => {
+        let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
+        button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
             highlightSelectedButton(event.target);
 
-            let customEvent = new CustomEvent("option-request", {
+            let customEvent = new CustomEvent('option-request', {
                 detail: {
                     'requested-key': 'option-quality-save',
                     'quality-group': data.quality.group,
-                }
+                },
             });
             document.dispatchEvent(customEvent);
         });
         return button;
     }
 
-    document.addEventListener("option-answer", (event) => {
+    document.addEventListener('option-answer', event => {
         if (event.detail) {
             let detail = event.detail;
 
-            if (detail['requested-key'] == 'option-quality-save' && detail['answer'] == true) {
+            if (detail['requested-key'] === 'option-quality-save' && detail.answer === true) {
                 setQualityStorage(detail);
             }
-            if (detail['requested-key'] == 'option-button-margin' && detail['answer']) {
-                document.querySelector('.quality-button-header').style.marginRight = `${11.5-0.15*detail['answer']}rem`;
+            if (detail['requested-key'] === 'option-button-margin' && detail.answer) {
+                document.querySelector('.quality-button-header').style.marginRight = `${11.5 - (0.15 * detail.answer)}rem`;
             }
-            if (detail['requested-key'] == 'option-button-scale' && detail['answer']) {
-                document.querySelector('.quality-button-header').style.transform = `scale(${detail['answer']/100})`;
+            if (detail['requested-key'] === 'option-button-scale' && detail.answer) {
+                document.querySelector('.quality-button-header').style.transform = `scale(${detail.answer / 100})`;
             }
         }
     });
 
     function getStorageItem(key) {
-        let customEvent = new CustomEvent("option-request", {
+        let customEvent = new CustomEvent('option-request', {
             detail: {
                 'requested-key': key,
-            }
+            },
         });
         document.dispatchEvent(customEvent);
     }
@@ -152,13 +164,13 @@
         if (videoPlayer && buttonsHeader) {
             let qualities = [...videoPlayer.getQualities()];
             qualities.unshift(Object.assign({}, qualities[0]));
-            qualities[0].name = "Auto";
+            qualities[0].name = 'Auto';
             qualities[0].group = 'auto';
 
             let functions = Array(qualities.length).fill('setQuality');
             functions.unshift('setAutoQualityMode');
 
-            data = [];
+            let data = [];
             for (let i = 0; i < qualities.length; ++i) {
                 data.push({
                     quality: qualities[i],
@@ -169,9 +181,9 @@
             buttons = createButtons(data);
             buttonsHeader.replaceChildren(...buttons.reverse());
 
-            let qualityName = videoPlayer.isAutoQualityMode() ? "Auto" : videoPlayer.getQuality().name;
+            let qualityName = videoPlayer.isAutoQualityMode() ? 'Auto' : videoPlayer.getQuality().name;
             for (let button of buttons) {
-                if (button.textContent == qualityName) {
+                if (button.textContent === qualityName) {
                     highlightSelectedButton(button);
                     break;
                 }
@@ -221,12 +233,11 @@
 
     const targetNode = document.getElementById('root');
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
-    const observer = new MutationObserver((list) => {
+    const observer = new MutationObserver(list => {
         for (let mutation of list) {
-            if (mutation.type == 'attributes' && mutation.target?.nodeName === 'VIDEO') {
+            if (mutation.type === 'attributes' && mutation.target?.nodeName === 'VIDEO') {
                 updateQualityButtons();
-            }
-            else if (mutation.addedNodes.length > 0) {
+            } else if (mutation.addedNodes.length > 0) {
                 if (mutation.addedNodes[0].innerHTML?.includes('follow-button"')) {
                     updateQualityButtons();
                 }

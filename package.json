@@ -1,0 +1,23 @@
+{
+  "name": "twitchqualities",
+  "version": "1.0.0",
+  "description": "npm package twitchqualities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nimeco/twitch-1-click-quality.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nimeco/twitch-1-click-quality/issues"
+  },
+  "homepage": "https://github.com/nimeco/twitch-1-click-quality#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.16.0"
+  }
+}

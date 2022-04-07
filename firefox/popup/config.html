@@ -21,73 +21,67 @@
         </div>
         <div class='wrapper'>
 
-            <ul id="option-quality-save">
-                <li>
-                    <div class="tooltip">
-                        <span class='lang en' data-description="Saves the last quality selected so when streams are opened or refreshed, it will default to that quality if available.">
-                            <svg class="svg-info" viewBox="0 0 20 20">
-                                <use xlink:href="#info_svg">
-                            </svg>
-                        </span>
-                        <span class='lang pt' data-description="Salva a ultima qualidade escolhida de forma que quando um stream é aberto, aquela qualidade é selecionada se disponível.">
-                            <svg class="svg-info" viewBox="0 0 20 20">
-                                <use xlink:href="#info_svg">
-                            </svg>
-                        </span>
-                    </div>
-                    <div>
-                        <span class="lang en">Keep quality</span>
-                        <span class="lang pt">Salvar qualidade</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="input-toggle">
-                        <input type="checkbox" id="checkbox-save">
-                        <label class="input-toggle-label" for="checkbox-save"></label>
-                    </div>
-                </li>
-            </ul>
+            <div id="option-quality-tooltip">
+                <span class='lang en' data-description="Saves the last quality selected so when streams are opened or refreshed, it will default to that quality if available.">
+                    <svg class="svg-info" viewBox="0 0 20 20">
+                        <use xlink:href="#info_svg">
+                    </svg>
+                </span>
+                <span class='lang pt' data-description="Salva a última qualidade escolhida de forma que quando um stream é aberto, aquela qualidade é selecionada se disponível.">
+                    <svg class="svg-info" viewBox="0 0 20 20">
+                        <use xlink:href="#info_svg">
+                    </svg>
+                </span>
+            </div>
+            <div id="option-quality-label">
+                <span class="lang en">Keep Quality</span>
+                <span class="lang pt">Salvar qualidade</span>
+            </div>
+            <div id="option-quality-save">
+                <div class="input-toggle">
+                    <input type="checkbox" id="checkbox-save">
+                    <label class="input-toggle-label" for="checkbox-save"></label>
+                </div>
+            </div>
 
-            <ul id="option-button-margin">
-                <li>
-                    <div>
-                        <span class="lang en">Position</span>
-                        <span class="lang pt">Posição</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="range-container">
-                        <input class="range-input" type="range" id="range-margin" min="0" max="100" step="1">
-                    </div>
-                </li>
-            </ul>
 
-            <ul id="option-button-scale">
-                <li>
-                    <div>
-                        <span class="lang en">Size</span>
-                        <span class="lang pt">Tamanho</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="range-container">
-                        <input class="range-input" type="range" id="range-scale" min="0" max="200" step="20">
-                    </div>
-                </li>
-            </ul>
+            <div id="option-margin-label">
+                <span class="lang en">Position</span>
+                <span class="lang pt">Posição</span>
+            </div>
+            <div id="option-button-margin">
+                <div class="range-container">
+                    <input class="range-input" type="range" id="range-margin" min="0" max="100" step="1">
+                </div>
+            </div>
 
-            <ul id="option-language-save">
-                <li>
-                    <div>
-                        <span class="lang en">Language</span>
-                        <span class="lang pt">Idioma</span>
-                    </div>
-                    <div class="input-toggle">
-                        <input type="checkbox" id="checkbox-language">
-                        <label class="input-toggle-label" for="checkbox-language"></label>
-                    </div>
-                </li>
-            </ul>
+
+            <div id="option-scale-label" aria-label="Scale" src="scale.js">
+                <span>Size</span>
+            </div>
+
+            <div id="option-scale-label">
+                <span class="lang en">Size</span>
+                <span class="lang pt">Tamanho</span>
+            </div>
+            <div id="option-button-scale">
+                <div class="range-container">
+                    <input class="range-input" type="range" id="range-scale" min="0" max="200" step="20">
+                </div>
+            </div>
+
+
+            <div id="option-language-label">
+                <span class="lang en">Language</span>
+                <span class="lang pt">Idioma</span>
+            </div>
+            <div id="option-language-save">
+                <div class="input-toggle">
+                    <input type="checkbox" id="checkbox-language">
+                    <label class="input-toggle-label" for="checkbox-language"></label>
+                </div>
+            </div>
+
         </div>
         <div id='footer'>
             <button id='twitter' class='quality-button'>Twitter</button>

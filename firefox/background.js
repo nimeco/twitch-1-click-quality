@@ -1,19 +1,22 @@
-let thisBrowser = null; 
+let thisBrowser = null;
 if (chrome?.app) {
     thisBrowser = chrome;
-}
-else {
+} else {
     thisBrowser = browser;
 }
 
 thisBrowser.runtime.onInstalled.addListener(() => {
     let defaultOptions = [
-        {'option-quality-save': true},
-        {'option-button-margin': "100"}, //max
-        {'option-button-scale': "100"}, //middle
+        { 'option-quality-save': true },
+
+        // max button margin == 100
+        { 'option-button-margin': "100" },
+
+        // middle button scale == 100
+        { 'option-button-scale': "100" },
     ];
 
     for (let option of defaultOptions) {
         thisBrowser.storage.local.set(option);
     }
-})
+});
