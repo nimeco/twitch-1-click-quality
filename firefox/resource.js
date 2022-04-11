@@ -115,7 +115,7 @@
                 setQualityStorage(detail);
             }
             if (detail['requested-key'] === 'option-button-margin' && detail.answer) {
-                document.querySelector('.quality-button-header').style.marginRight = `${11.5 - (0.15 * detail.answer)}rem`;
+                document.querySelector('.quality-button-header').style.marginRight = `${144.5 - (149 / 140 * detail.answer)}%`;
             }
             if (detail['requested-key'] === 'option-button-scale' && detail.answer) {
                 document.querySelector('.quality-button-header').style.transform = `scale(${detail.answer / 100})`;

@@ -15,7 +15,8 @@ const options = {
         property: "value",
         style: "marginRight",
         selector: ".quality-button-header",
-        calc: x => `${11.5 - (0.15 * x)}rem`,
+        calc: x => `${144.5 - (149 / 140 * x)}%`,
+        // calc: x => `${11.5 - (0.15 * x)}rem`,
     },
     "option-button-scale": {
         event: "input",
@@ -25,29 +26,21 @@ const options = {
         calc: x => `scale(${x / 100})`,
     },
     "option-language-save": {
-        event: "click",
-        property: "checked",
-        callback: lang => {
+        event: "change",
+        property: "value",
+        callback: node => {
             document.body.removeAttribute('class');
-            document.body.classList.add(lang);
+            document.body.classList.add(node);
         },
     },
 };
 
-function handleResponse(message) {
-    console.log(`Message from the background script: ${message.response}`);
-}
-
-function handleError(error) {
-    console.log(`Error: ${error}`);
-}
-
 if (thisBrowser) {
     for (let [optionId, option] of Object.entries(options)) {
-        let node = document.querySelector(`#${optionId} input`);
+        let node = document.querySelector(`#${optionId} .input`);
         let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
         let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
-        node.addEventListener(option.event, _event => {
+        node.addEventListener(option.event, () => {
             debounceSet({ [optionId]: node[option.property] });
 
             if (option.style !== undefined) {
@@ -64,17 +57,16 @@ if (thisBrowser) {
             }
 
             if (option.callback !== undefined) {
-                option.callback(node.checked === false ? 'lang-en' : 'lang-pt');
+                option.callback(node[option.property]);
             }
         });
     }
 }
 
 function messageTwitchTabs(browser, message) {
-    console.log('just to have a string');
     browser.tabs.query({}, tabs => {
         tabs.forEach(tab => {
-            if (tab.url.match(/https:\/\/[^.]+\.(?!.*-.*).+\.com\//)) {
+            if (tab.url.match(/^(?:https?:\/\/)?(?:[^.]+\.)?twitch\.(tv|com)\/[^/]+\/?$/)) {
                 browser.tabs.sendMessage(tab.id, message, response => {
                     store(response);
                 });
@@ -106,11 +98,11 @@ function setRangeBackground(node) {
     let point = (node.value - node.min) / (node.max - node.min) * 100;
     node.style.background = `linear-gradient(to right, #a970ff 0%, #a970ff ${point}%, hsla(0,0%,100%,0.2) ${point}%, hsla(0,0%,100%,0.2) 100%)`;
 }
-let nodes = document.querySelectorAll("input[type='range']");
+let nodes = document.querySelectorAll(".input");
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
         for (let [optionId, option] of Object.entries(result)) {
-            document.querySelector(`#${optionId} input`)[options[optionId].property] = result[optionId];
+            document.querySelector(`#${optionId} .input`)[options[optionId].property] = result[optionId];
             if (chrome?.app) {
                 nodes.forEach(node => {
                     setRangeBackground(node);
@@ -118,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (options[optionId].callback) {
-                options[optionId].callback(result[optionId] === false ? 'lang-en' : 'lang-pt');
+                options[optionId].callback(result[optionId]);
             }
             console.log(optionId, option);
         }
