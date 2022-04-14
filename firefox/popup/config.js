@@ -6,28 +6,28 @@ if (chrome?.app) {
 }
 
 const options = {
-    "option-quality-save": {
-        event: "click",
-        property: "checked",
+    'option-quality-save': {
+        event: 'click',
+        property: 'checked',
     },
-    "option-button-margin": {
-        event: "input",
-        property: "value",
-        style: "marginRight",
-        selector: ".quality-button-header",
+    'option-button-margin': {
+        event: 'input',
+        property: 'value',
+        style: 'marginRight',
+        selector: '.quality-button-header',
         calc: x => `${144.5 - (149 / 140 * x)}%`,
         // calc: x => `${11.5 - (0.15 * x)}rem`,
     },
-    "option-button-scale": {
-        event: "input",
-        property: "value",
-        style: "transform",
-        selector: ".quality-button-header",
+    'option-button-scale': {
+        event: 'input',
+        property: 'value',
+        style: 'transform',
+        selector: '.quality-button-header',
         calc: x => `scale(${x / 100})`,
     },
-    "option-language-save": {
-        event: "change",
-        property: "value",
+    'option-language-save': {
+        event: 'change',
+        property: 'value',
         callback: node => {
             document.body.removeAttribute('class');
             document.body.classList.add(node);
@@ -45,11 +45,11 @@ if (thisBrowser) {
 
             if (option.style !== undefined) {
                 let value = option.calc(node[option.property]);
-                let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== "function"));
+                let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
                 detail.value = value;
 
                 let message = {
-                    type: "style",
+                    type: 'style',
                     detail: detail,
                 };
 
@@ -67,9 +67,7 @@ function messageTwitchTabs(browser, message) {
     browser.tabs.query({}, tabs => {
         tabs.forEach(tab => {
             if (tab.url.match(/^(?:https?:\/\/)?(?:[^.]+\.)?twitch\.(tv|com)\/[^/]+\/?$/)) {
-                browser.tabs.sendMessage(tab.id, message, response => {
-                    store(response);
-                });
+                browser.tabs.sendMessage(tab.id, message);
             }
         });
     });
@@ -87,42 +85,31 @@ function debounce(func, timeout = 100) {
 // make firefox fire resize popup by dom manipulation as hover doesn't trigger it
 document.querySelectorAll('.tooltip').forEach(elem => {
     elem.addEventListener('mouseleave', () => {
-        let a = document.createElement('a');
-        document.body.appendChild(a);
-        document.body.removeChild(a);
+        let node = document.createElement('a');
+        document.body.appendChild(node);
+        document.body.removeChild(node);
     });
 });
 
-
-function setRangeBackground(node) {
-    let point = (node.value - node.min) / (node.max - node.min) * 100;
-    node.style.background = `linear-gradient(to right, #a970ff 0%, #a970ff ${point}%, hsla(0,0%,100%,0.2) ${point}%, hsla(0,0%,100%,0.2) 100%)`;
-}
-let nodes = document.querySelectorAll(".input");
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
         for (let [optionId, option] of Object.entries(result)) {
-            document.querySelector(`#${optionId} .input`)[options[optionId].property] = result[optionId];
-            if (chrome?.app) {
-                nodes.forEach(node => {
-                    setRangeBackground(node);
-                });
-            }
+            let node = document.querySelector(`#${optionId} .input`);
+            node[options[optionId].property] = result[optionId];
 
             if (options[optionId].callback) {
                 options[optionId].callback(result[optionId]);
             }
-            console.log(optionId, option);
         }
-        console.log(result);
+
+        for (let e of document.querySelectorAll('input[type="range"]')) {
+            e.style.setProperty('--value', e.value);
+            e.style.setProperty('--min', e.min === '' ? '0' : e.min);
+            e.style.setProperty('--max', e.max === '' ? '100' : e.max);
+            e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+        }
     });
 });
-
-if (chrome?.app) {
-    nodes.forEach(node => {
-        node.addEventListener('input', evt => { setRangeBackground(evt.target); });
-    });
-}
 
 document.getElementById('donate').addEventListener('click', () => {
     window.open('https://www.paypal.com/donate/?business=NJ6EEA8PWCZW2&no_recurring=0&currency_code=BRL');
@@ -134,13 +121,4 @@ document.getElementById('twitter').addEventListener('click', () => {
 
 document.getElementById('github').addEventListener('click', () => {
     window.open('https://github.com/nimeco/twitch-1-click-quality');
-});
-
-thisBrowser.storage.onChanged.addListener((changes, namespace) => {
-    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-        console.log(
-            `Storage key "${key}" in namespace "${namespace}" changed.`,
-            `Old value was "${oldValue}", new value is "${newValue}".`,
-        );
-    }
 });

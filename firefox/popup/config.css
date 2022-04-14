@@ -835,6 +835,7 @@ body {
     display: grid;
     margin: 10px 0;
     grid-template: repeat(4, 2.4rem) / 20px repeat(2, 9fr);
+    grid-gap: 5px 2px;
     align-items: center;
 }
 .wrapper [id$='-tooltip'] {
@@ -1042,6 +1043,8 @@ input[type='checkbox'] + .input-toggle-label:active::after {
     transition: width var(--timing-short) ease-out, left var(--timing-short) ease-out;
 }
 
+
+
 .small-switch {
     position: relative;
     display: inline-block;
@@ -1120,98 +1123,55 @@ input[type='checkbox'] + .input-toggle-label:active::after {
     width: 40px;
 }
 
+
+
 input[type='range'] {
     appearance: none;
+    height: 1.4em;
     background-color: transparent;
-    padding: 0;
+    cursor: pointer;
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--value) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
 }
-input[type='range'] {
+input[type='range']:focus {
     outline: none;
-    width: 100%;
 }
 
-/* thumb */
+/* webkit */
 input[type='range']::-webkit-slider-thumb {
     appearance: none;
-    box-sizing: content-box;
-    border-radius: 9000px;
-    /* box-shadow: -210px 0 0 200px #666; */
-    width: 1.6rem;
-    height: 1.6rem;
-    margin-top: -0.7rem;
-    border: 1px solid var(--color-twitch-purple-10);
-    background-color: var(--color-twitch-purple-10);
+    width: 1.35em;
+    height: 1.35em;
+    border-radius: 1em;
+    background: var(--color-twitch-purple-10);
+    border: none;
+    margin-top: calc(max((1em - 1px - 1px) * 0.5, 0px) - 2em * 0.5);
 }
-input[type='range']::-moz-range-thumb {
-    border-radius: 9000px;
-    width: 1.6rem;
-    height: 1.6rem;
-    margin-top: -0.7rem;
-    border: 1px solid var(--color-twitch-purple-10);
-    background-color: var(--color-twitch-purple-10);
-    appearance: none;
+input[type='range']::-webkit-slider-runnable-track {
+    height: 0.15em;
+    border: none;
+    border-radius: var(--border-radius-large);
+    box-shadow: none;
+    background: linear-gradient(var(--color-twitch-purple-10), var(--color-twitch-purple-10)) 0/var(--sx) 100% no-repeat, var(--color-background-range);
 }
 
-/* track */
-input[type='range']::-webkit-slider-runnable-track {
-    background-color: var(--color-background-range);
-    width: 100%;
-    height: 0.2rem;
-    cursor: pointer;
-    border-radius: var(--border-radius-large);
+/* mozilla */
+input[type='range']::-moz-range-thumb {
+    width: 1.35em;
+    height: 1.35em;
+    border-radius: 1em;
+    background: var(--color-twitch-purple-10);
+    border: none;
 }
 input[type='range']::-moz-range-track {
-    background-color: var(--color-background-range);
-    width: 100%;
-    height: 0.2rem;
-    cursor: pointer;
+    height: 0.15em;
     border-radius: var(--border-radius-large);
+    background: linear-gradient(var(--color-twitch-purple-10), var(--color-twitch-purple-10)) 0/var(--sx) 100% no-repeat, var(--color-background-range);
 }
 
-/* progress */
-input[type='range']::-moz-range-progress {
-    background-color: var(--color-background-range-fill);
-    border-radius: var(--border-radius-large);
-    height: 2px;
-}
-/*
-.range-fill {
-position: absolute;
-width: 100%;
-height: 100%;
-top: 0px;
-bottom: 0px;
-display: flex;
-flex-direction: column;
--moz-box-pack: center;
-justify-content: center;
-z-index: var(--z-index-below);
-border-radius: var(--border-radius-large);
-}
-.range-fill-container {
-border-radius: var(--border-radius-large);
-background-color: var(--color-background-range);
-width: 100%;
-height: 0.2rem;
-cursor: pointer;
-}
-.range-fill-value {
-border-radius: var(--border-radius-large);
-background-color: var(--color-background-range-fill);
-height: 100%;
-}
-*/
-/*
-.lang :lang(en), .lang :lang(pt) {
-display: none;
-}
-html[lang*="en"] .lang :lang(en) {
-display: block;
-}
-html[lang*="pt"] .lang :lang(pt) {
-display: block;
-}
-*/
+
+
 select {
     font-family: inherit;
     appearance: none;
@@ -1271,4 +1231,8 @@ select:focus option {
 }
 .lang-jp .lang.jp {
     display: inline;
+}
+
+.no-transition {
+    transition: none !important;
 }
