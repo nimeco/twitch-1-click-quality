@@ -9,8 +9,8 @@ thisBrowser.runtime.onInstalled.addListener(() => {
     let defaultOptions = [
         { 'option-quality-save': true },
 
-        // max button margin == 140
-        { 'option-button-margin': "140" },
+        // max button margin == 100
+        { 'option-button-margin': "100" },
 
         // middle button scale == 100
         { 'option-button-scale': "100" },

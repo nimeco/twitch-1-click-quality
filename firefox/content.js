@@ -42,8 +42,18 @@ if (thisBrowser) {
         if (request.type === 'style') {
             let detail = request.detail;
 
-            let node = document.querySelector(detail.selector);
-            node.style[detail.style] = `${detail.value}`;
+            if (detail.selector === '.quality-button-header') {
+                detail.answer = detail.value;
+                let clonedDetail = detail;
+                if (chrome?.app === undefined) {
+                    clonedDetail = cloneInto(detail, document.defaultView);
+                }
+                let customEvent = new CustomEvent('option-answer', { detail: clonedDetail });
+                document.dispatchEvent(customEvent);
+            // } else {
+            //     let node = document.querySelector(detail.selector);
+            //     node.style.setProperty(detail.style, `${detail.value}`);
+            }
         }
         setTimeout(() => {
             sendResponse({ response: 'Response from content script' });

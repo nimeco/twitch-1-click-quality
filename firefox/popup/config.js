@@ -13,17 +13,16 @@ const options = {
     'option-button-margin': {
         event: 'input',
         property: 'value',
-        style: 'marginRight',
+        style: 'margin-right',
         selector: '.quality-button-header',
-        calc: x => `${144.5 - (149 / 140 * x)}%`,
-        // calc: x => `${11.5 - (0.15 * x)}rem`,
+        calc: x => `${x}`,
     },
     'option-button-scale': {
         event: 'input',
         property: 'value',
         style: 'transform',
         selector: '.quality-button-header',
-        calc: x => `scale(${x / 100})`,
+        calc: x => `${x}`,
     },
     'option-language-save': {
         event: 'change',
@@ -47,6 +46,7 @@ if (thisBrowser) {
                 let value = option.calc(node[option.property]);
                 let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
                 detail.value = value;
+                detail['requested-key'] = optionId;
 
                 let message = {
                     type: 'style',
@@ -61,6 +61,16 @@ if (thisBrowser) {
             }
         });
     }
+
+    document.querySelector('#option-reset').addEventListener('click', () => {
+        let margin_node = document.querySelector('#range-margin');
+        margin_node.value = 0;
+        margin_node.dispatchEvent(new Event('input', { bubbles: true }));
+
+        let scale_node = document.querySelector('#range-scale');
+        scale_node.value = 100;
+        scale_node.dispatchEvent(new Event('input', { bubbles: true }));
+    });
 }
 
 function messageTwitchTabs(browser, message) {
@@ -107,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.style.setProperty('--min', e.min === '' ? '0' : e.min);
             e.style.setProperty('--max', e.max === '' ? '100' : e.max);
             e.addEventListener('input', () => e.style.setProperty('--value', e.value));
+            e.addEventListener('change', () => e.style.setProperty('--value', e.value));
         }
     });
 });

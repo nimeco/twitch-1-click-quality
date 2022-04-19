@@ -4,6 +4,7 @@
     let buttonsHeader = null;
     let buttons = [];
     let lastButton = null;
+    // let relative_width = 0;
 
     function findPlayer() {
         function findReactNode(root, constraint) {
@@ -92,6 +93,7 @@
 
     function createButton(data) {
         let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
+
         button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
             highlightSelectedButton(event.target);
@@ -104,7 +106,27 @@
             });
             document.dispatchEvent(customEvent);
         });
+
         return button;
+    }
+
+    const innerDimensions = node => {
+        var computedStyle = getComputedStyle(node);
+
+        let width = node.clientWidth;
+        let height = node.clientHeight;
+
+        height -= parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
+        width -= parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
+        return { height, width };
+    };
+
+    function calcChildrenWidthNoBorder(node) {
+        let sum = 0;
+        Object.values(node.children).forEach(child => {
+            sum += innerDimensions(child).width;
+        });
+        return sum;
     }
 
     document.addEventListener('option-answer', event => {
@@ -113,12 +135,21 @@
 
             if (detail['requested-key'] === 'option-quality-save' && detail.answer === true) {
                 setQualityStorage(detail);
-            }
-            if (detail['requested-key'] === 'option-button-margin' && detail.answer) {
-                document.querySelector('.quality-button-header').style.marginRight = `${144.5 - (149 / 140 * detail.answer)}%`;
-            }
-            if (detail['requested-key'] === 'option-button-scale' && detail.answer) {
-                document.querySelector('.quality-button-header').style.transform = `scale(${detail.answer / 100})`;
+            } else if (detail['requested-key'] === 'option-button-margin' && detail.answer) {
+                try {
+                    let selector = '[data-target="channel-header-right"]';
+                    let node = document.querySelector(selector);
+                    let total_width = node.parentNode.getBoundingClientRect().width;
+                    let buttons_width = calcChildrenWidthNoBorder(node);
+                    let transform_width = document.querySelector('.quality-button-header ~ div div[style*="translateX"]')?.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
+                    let final_width = `calc(1rem - ${transform_width[1]} + ${(total_width - buttons_width) * detail.answer / 100}px)`;
+
+                    buttonsHeader?.style.setProperty('margin-right', final_width);
+                } catch {
+                    console.log('caught');
+                }
+            } else if (detail['requested-key'] === 'option-button-scale' && detail.answer) {
+                buttonsHeader?.style.setProperty('transform', `scale(${detail.answer / 100})`);
             }
         }
     });
@@ -189,43 +220,50 @@
                 }
             }
         }
+
+        getStorageItem('option-button-margin');
+        getStorageItem('option-button-scale');
     }
 
     function initScript() {
         if (!cssNode) {
             let buttonCss = `
-            .quality-button {
-                display: inline-flex;
-                position: relative;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                text-decoration: none;
-                white-space: nowrap;
-                font-weight: var(--font-weight-semibold);
-                border-radius: var(--border-radius-medium);
-                font-size: var(--button-text-default);
-                height: var(--button-size-default);
-                background-color: var(--color-background-button-primary-default);
-                color: var(--color-text-overlay);
-                margin-left: 1rem;
-                padding: 0px var(--button-padding-x);
-            }
-            .quality-button:hover {
-                background-color: var(--color-background-button-primary-hover);
-                color: var(--color-text-button-primary);
-            }
-            .quality-button[data-selected='1'] {
-                background-color: var(--color-twitch-purple-7);
-            }
-            .quality-button-header {
-                display: flex;
-                position: relative;
-                margin-left: 3rem;
-                height: 3rem;
-                transform-origin: top right 0px;
-                transition: all 700ms;
-            }
+                .quality-button {
+                    display: inline-flex;
+                    position: relative;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    font-weight: var(--font-weight-semibold);
+                    border-radius: var(--border-radius-medium);
+                    font-size: var(--button-text-default);
+                    height: var(--button-size-default);
+                    background-color: var(--color-background-button-primary-default);
+                    color: var(--color-text-overlay);
+                    margin-left: 1rem;
+                    padding: 0px var(--button-padding-x);
+                }
+                .quality-button:hover {
+                    background-color: var(--color-background-button-primary-hover);
+                    color: var(--color-text-button-primary);
+                }
+                .quality-button[data-selected='1'] {
+                    background-color: var(--color-twitch-purple-7);
+                }
+                .quality-button-header {
+                    display: flex;
+                    position: relative;
+                    height: 3rem;
+                    transform-origin: top right 0px;
+                    transition: all 700ms;
+                    padding-left: 1rem;
+                    z-index: 1;
+                }
+                .quality-button-header:not(:first-child) {
+                    margin-left: 1rem;
+                }
             `;
             cssNode = createCssRules(buttonCss);
         }

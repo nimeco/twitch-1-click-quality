@@ -834,7 +834,7 @@ body {
 .wrapper {
     display: grid;
     margin: 10px 0;
-    grid-template: repeat(4, 2.4rem) / 20px repeat(2, 9fr);
+    grid-template: repeat(5, 2.4rem) / 20px 5fr 4fr;
     grid-gap: 5px 2px;
     align-items: center;
 }
@@ -870,6 +870,11 @@ body {
 }
 #option-language-save {
     grid-area: 4 / 3 / 4 / 3;
+}
+
+#option-reset {
+    grid-area: 5 / 1 / 5 / 4;
+    text-align: right;
 }
 
 #title {
@@ -931,7 +936,7 @@ div[id$='-tooltip'] > span:after {
     margin: 14px;
 }
 
-.quality-button {
+.button {
     display: inline-flex;
     position: relative;
     align-items: center;
@@ -947,20 +952,19 @@ div[id$='-tooltip'] > span:after {
     color: var(--color-text-overlay);
     padding: 0px var(--button-padding-x);
 }
-.quality-button:not(:first-child) {
+#footer .button:not(:first-child) {
     margin-left: 1rem;
 }
-.quality-button:hover {
+.button:hover {
     background-color: var(--color-background-button-primary-hover);
     color: var(--color-text-button-primary);
 }
-.quality-button[data-selected='1'] {
+.button[data-selected='1'] {
     background-color: var(--color-twitch-purple-7);
 }
-.quality-button-header {
-    display: flex;
-    position: relative;
-    margin-left: 3rem;
+.reset-button {
+    font-weight: var(--font-weight-normal);
+    height: var(--button-size-small);
 }
 button {
     background: none;
@@ -1130,6 +1134,7 @@ input[type='range'] {
     height: 1.4em;
     background-color: transparent;
     cursor: pointer;
+    width: 100%;
     --range: calc(var(--max) - var(--min));
     --ratio: calc((var(--value) - var(--min)) / var(--range));
     --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
@@ -1192,7 +1197,7 @@ select {
     display: block !important;
     border-radius: 0.4rem !important;
     font-size: var(--font-size-6) !important;
-    width: 100% !important;
+    width: 100%;
 }
 select:hover {
     outline: currentcolor none medium;
