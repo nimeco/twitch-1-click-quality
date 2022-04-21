@@ -873,8 +873,8 @@ body {
 }
 
 #option-reset {
-    grid-area: 5 / 1 / 5 / 4;
-    text-align: right;
+    grid-area: 5 / 2 / 5 / 4;
+    text-align: left;
 }
 
 #title {
@@ -934,6 +934,22 @@ div[id$='-tooltip'] > span:after {
     display: flex;
     justify-content: center;
     margin: 14px;
+}
+a {
+    color: var(--color-text-brand);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--color-text-link-hover);
+}
+a:focus {
+    color: var(--color-text-link-focus);
+}
+a:active {
+    color: var(--color-text-link-active);
+}
+a:not(:first-child) {
+    margin-left: 1rem;
 }
 
 .button {

@@ -121,15 +121,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-document.getElementById('donate').addEventListener('click', () => {
-    window.open('https://www.paypal.com/donate/?business=NJ6EEA8PWCZW2&no_recurring=0&currency_code=BRL');
-});
-
-document.getElementById('twitter').addEventListener('click', () => {
-    window.open('https://twitter.com/ttvxuxameneghel');
-});
-
-document.getElementById('github').addEventListener('click', () => {
-    window.open('https://github.com/nimeco/twitch-1-click-quality');
-});
