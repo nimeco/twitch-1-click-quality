@@ -50,9 +50,6 @@ if (thisBrowser) {
                 }
                 let customEvent = new CustomEvent('option-answer', { detail: clonedDetail });
                 document.dispatchEvent(customEvent);
-            // } else {
-            //     let node = document.querySelector(detail.selector);
-            //     node.style.setProperty(detail.style, `${detail.value}`);
             }
         }
         setTimeout(() => {

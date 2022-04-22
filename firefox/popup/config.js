@@ -120,4 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
             e.addEventListener('change', () => e.style.setProperty('--value', e.value));
         }
     });
+
+    document.querySelector('.svg-close').addEventListener('click', () => {
+        window.close();
+    });
 });
