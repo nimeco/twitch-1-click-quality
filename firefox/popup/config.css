@@ -929,23 +929,6 @@ div[id$='-tooltip'] > span:after {
     position: absolute;
 }
 
-.svg-close {
-    position: absolute;
-    top: 0.5em;
-    left: 18.8em;
-    fill: var(--color-fill-brand);
-    height: 30px;
-}
-.svg-close path {
-    cursor: pointer;
-}
-.svg-close-x {
-    fill: var(--color-hinted-grey-2);
-}
-.svg-close g:hover path:nth-child(2) {
-    fill: var(--color-background-button-primary-hover);
-}
-
 .footer {
     display: flex;
     justify-content: center;

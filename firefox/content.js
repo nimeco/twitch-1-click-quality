@@ -45,6 +45,7 @@ if (thisBrowser) {
             if (detail.selector === '.quality-button-header') {
                 detail.answer = detail.value;
                 let clonedDetail = detail;
+                // firefox hack so data isn't private after the message is sent
                 if (chrome?.app === undefined) {
                     clonedDetail = cloneInto(detail, document.defaultView);
                 }
