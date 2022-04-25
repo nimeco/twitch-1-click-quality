@@ -1,3 +1,4 @@
+/* global cloneInto */
 let thisBrowser;
 
 if (chrome?.app) {

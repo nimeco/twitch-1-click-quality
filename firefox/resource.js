@@ -4,7 +4,6 @@
     let buttonsHeader = null;
     let buttons = [];
     let lastButton = null;
-    // let relative_width = 0;
 
     function findPlayer() {
         function findReactNode(root, constraint) {
@@ -130,6 +129,8 @@
     }
 
     document.addEventListener('option-answer', event => {
+        // let transformValue = `translateX(calc(45px - 1rem - (${t} / 100) * (${total_width - s*innerDimensions(node.children[0]).width - innerDimensions(node.children[1]).width - innerDimensions(node.children[2]).width}px))) scale(${s})`;
+
         if (event.detail) {
             let detail = event.detail;
 
