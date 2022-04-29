@@ -1,4 +1,5 @@
 (() => {
+    let cachedStorage = {};
     let videoPlayer = null;
     let cssNode = null;
     let buttonsHeader = null;
@@ -120,40 +121,70 @@
         return { height, width };
     };
 
-    function calcChildrenWidthNoBorder(node) {
-        let sum = 0;
-        Object.values(node.children).forEach(child => {
-            sum += innerDimensions(child).width;
-        });
-        return sum;
-    }
-
     document.addEventListener('option-answer', event => {
-        // let transformValue = `translateX(calc(45px - 1rem - (${t} / 100) * (${total_width - s*innerDimensions(node.children[0]).width - innerDimensions(node.children[1]).width - innerDimensions(node.children[2]).width}px))) scale(${s})`;
-
         if (event.detail) {
             let detail = event.detail;
 
-            if (detail['requested-key'] === 'option-quality-save' && detail.answer === true) {
+            cachedStorage = { ...cachedStorage, ...detail };
+            if (detail['requested-key'] === 'option-quality-save') {
                 setQualityStorage(detail);
-            } else if (detail['requested-key'] === 'option-button-margin' && detail.answer) {
-                try {
-                    let selector = '[data-target="channel-header-right"]';
-                    let node = document.querySelector(selector);
-                    let total_width = node.parentNode.getBoundingClientRect().width;
-                    let buttons_width = calcChildrenWidthNoBorder(node);
-                    let transform_width = document.querySelector('.quality-button-header ~ div div[style*="translateX"]')?.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
-                    let final_width = `calc(1rem - ${transform_width[1]} + ${(total_width - buttons_width) * detail.answer / 100}px)`;
-
-                    buttonsHeader?.style.setProperty('margin-right', final_width);
-                } catch {
-                    console.log('caught');
-                }
-            } else if (detail['requested-key'] === 'option-button-scale' && detail.answer) {
-                buttonsHeader?.style.setProperty('transform', `scale(${detail.answer / 100})`);
             }
         }
+        setButtonsStyles();
     });
+
+    function setButtonsStyles() {
+        if (!Object.keys(cachedStorage).length) {
+            getStorageItem('all');
+        } else {
+            try {
+                let t = cachedStorage['option-button-margin'] / 100;
+                let s = cachedStorage['option-button-scale'] / 100;
+                let node = document.querySelector('[data-target="channel-header-right"]');
+                let totalWidth = node.parentNode.getBoundingClientRect().width;
+                let childrenNodes = [];
+                [...node.children].forEach(n => {
+                    childrenNodes.push(innerDimensions(n).width);
+                });
+                childrenNodes[0] *= s;
+                let childrenWidth = childrenNodes.reduce((a, b) => a + b, 0);
+                let buttonWithTransform = document.querySelector('.quality-button-header ~ div div[style*="translateX"]');
+                let transformWidth = ['', '0px'];
+                if (buttonWithTransform) {
+                    transformWidth = buttonWithTransform.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
+                }
+
+                let transformValue = `translateX(calc(${transformWidth[1]} - 1rem - ${t} * (${totalWidth - childrenWidth}px + 1rem))) scale(${s})`;
+                buttonsHeader?.style.setProperty('transform', transformValue);
+            } catch (e) {
+            }
+        }
+    }
+
+
+    //     if (event.detail) {
+    //         let detail = event.detail;
+    //
+    //         if (detail['requested-key'] === 'option-quality-save') {
+    //             setQualityStorage(detail);
+    //         } else if (detail['requested-key'] === 'option-button-margin') {
+    //             try {
+    //                 let selector = '[data-target="channel-header-right"]';
+    //                 let node = document.querySelector(selector);
+    //                 let total_width = node.parentNode.getBoundingClientRect().width;
+    //                 let buttons_width = calcChildrenWidthNoBorder(node);
+    //                 let transform_width = document.querySelector('.quality-button-header ~ div div[style*="translateX"]')?.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
+    //                 let final_width = `calc(1rem - ${transform_width[1]} + ${(total_width - buttons_width) * detail.answer / 100}px)`;
+    //
+    //                 buttonsHeader?.style.setProperty('margin-right', final_width);
+    //             } catch {
+    //                 console.log('caught');
+    //             }
+    //         } else if (detail['requested-key'] === 'option-button-scale') {
+    //             buttonsHeader?.style.setProperty('transform', `scale(${detail.answer / 100})`);
+    //         }
+    //     }
+    // });
 
     function getStorageItem(key) {
         let customEvent = new CustomEvent('option-request', {
@@ -178,8 +209,9 @@
         buttonsHeader = newNode('div', ['quality-button-header']);
 
         channelHeader?.prepend(buttonsHeader);
-        getStorageItem('option-button-margin');
-        getStorageItem('option-button-scale');
+        getStorageItem('all');
+        // getStorageItem('option-button-margin');
+        // getStorageItem('option-button-scale');
 
         return buttonsHeader;
     }
@@ -222,8 +254,8 @@
             }
         }
 
-        getStorageItem('option-button-margin');
-        getStorageItem('option-button-scale');
+        // getStorageItem('option-button-margin');
+        // getStorageItem('option-button-scale');
     }
 
     function initScript() {
@@ -243,8 +275,10 @@
                     height: var(--button-size-default);
                     background-color: var(--color-background-button-primary-default);
                     color: var(--color-text-overlay);
-                    margin-left: 1rem;
                     padding: 0px var(--button-padding-x);
+                }
+                .quality-button:not(:first-child) {
+                    margin-left: 1rem;
                 }
                 .quality-button:hover {
                     background-color: var(--color-background-button-primary-hover);
