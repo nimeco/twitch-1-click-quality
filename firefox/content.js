@@ -1,4 +1,3 @@
-/* global cloneInto */
 let thisBrowser;
 let cachedStorage = {};
 
@@ -24,24 +23,28 @@ async function injectScripts() {
     await injectScript('resource.js');
 }
 
-function difference(keys, cache) {
-    return [...new Set(keys)].filter(x => !new Set(Object.keys(cache)).has(x));
-}
-
-function getLocalStorage(keys) {
+function getStorage(_keys) {
     return new Promise(resolve => {
-        if (typeof keys === 'string') {
-            if (keys in cachedStorage) {
-                resolve({ [keys]: cachedStorage[keys] });
-            } else {
-                thisBrowser.storage.local.get(keys, result => {
-                    cachedStorage = { ...cachedStorage, ...result };
-                    resolve(result);
-                });
+        let keys = _keys;
+        if (typeof _keys === "string") {
+            keys = [keys];
+        }
+        let allKeysExist = true;
+        for (let i = 0; i < keys.length; i++) {
+            if (!(keys[i] in cachedStorage)) {
+                allKeysExist = false;
+                break;
             }
+        }
+
+        if (allKeysExist) {
+            let result = {};
+            keys.forEach(key => {
+                result[key] = cachedStorage[key];
+            });
+            resolve(result);
         } else {
-            let diff = difference(keys, cachedStorage);
-            thisBrowser.storage.local.get(diff, result => {
+            thisBrowser.storage.local.get(keys, result => {
                 cachedStorage = { ...cachedStorage, ...result };
                 resolve(result);
             });
@@ -62,9 +65,9 @@ const innerDimensions = node => {
 
 async function setHeaderStyle() {
     try {
-        let res = await getLocalStorage(['option-button-margin', 'option-button-scale']);
-        let t = cachedStorage['option-button-margin'] / 100;
-        let s = cachedStorage['option-button-scale'] / 100;
+        let res = await getStorage(['option-button-margin', 'option-button-scale']);
+        let t = res['option-button-margin'] / 100;
+        let s = res['option-button-scale'] / 100;
 
         let node = document.querySelector('[data-target="channel-header-right"]');
 
@@ -98,7 +101,7 @@ document.addEventListener('set-style', _event => {
 
 document.addEventListener('save-quality?', async event => {
     let detail = event.detail;
-    let isSaveEnabled = await getLocalStorage('option-quality-save');
+    let isSaveEnabled = await getStorage('option-quality-save');
     if (isSaveEnabled['option-quality-save']) {
         window.localStorage.setItem('video-quality', JSON.stringify({ default: detail.group }));
     }
@@ -108,14 +111,5 @@ thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
     if (request.type === 'style') {
         cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setHeaderStyle();
-    }
-});
-
-thisBrowser.storage.onChanged.addListener((changes, namespace) => {
-    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-        console.log(
-            `Storage key "${key}" in namespace "${namespace}" changed.`,
-            `Old value was "${oldValue}", new value is "${newValue}".`,
-        );
     }
 });
