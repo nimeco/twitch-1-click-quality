@@ -1,4 +1,4 @@
-(function() {
+(() => {
     let videoPlayer = null;
     let cssNode = null;
     let buttonsHeader = null;
@@ -6,40 +6,52 @@
     let lastButton = null;
 
     function findPlayer() {
-        try {
-            let videoPlayer = null;
-            function findReactNode(root, constraint) {
-                if (root.stateNode && constraint(root.stateNode)) {
-                    return root.stateNode;
-                }
-                let node = root.child;
-                while (node) {
-                    const result = findReactNode(node, constraint);
-                    if (result) {
-                        return result;
-                    }
-                    node = node.sibling;
-                }
-                return null;
+        function findReactNode(root, constraint) {
+            if (root.stateNode && constraint(root.stateNode)) {
+                return root.stateNode;
             }
+            let node = root.child;
+            while (node) {
+                const result = findReactNode(node, constraint);
+                if (result) {
+                    return result;
+                }
+                node = node.sibling;
+            }
+            return null;
+        }
+
+        try {
+            videoPlayer = null;
 
             let reactRootNode = null;
             let rootNode = document.querySelector('#root');
 
-            if (rootNode && rootNode._reactRootContainer && rootNode._reactRootContainer._internalRoot && rootNode._reactRootContainer._internalRoot.current) {
+            if (
+                rootNode &&
+                rootNode._reactRootContainer &&
+                rootNode._reactRootContainer._internalRoot &&
+                rootNode._reactRootContainer._internalRoot.current
+            ) {
                 reactRootNode = rootNode._reactRootContainer._internalRoot.current;
             }
 
-            videoPlayer = findReactNode(reactRootNode, node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance);
-            videoPlayer = videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ? videoPlayer.props.mediaPlayerInstance : null;
+            videoPlayer = findReactNode(
+                reactRootNode,
+                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance,
+            );
+            videoPlayer =
+                videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ?
+                    videoPlayer.props.mediaPlayerInstance :
+                    null;
 
             if (videoPlayer) {
                 return videoPlayer;
             }
-        }
-        catch(err) {
+        } catch (err) {
             console.log(err);
         }
+        return null;
     }
 
     function createCssRules(rules) {
@@ -57,17 +69,10 @@
         lastButton = button;
     }
 
-    function setItem(key, value, stringify = false) {
-        window.localStorage.setItem(key, (stringify ? JSON.stringify(value) : value));
-    }
-    function setQualityStorage(detail) {
-        setItem('video-quality', {default: detail['quality-group']}, true);
-    }
-
     function newNode(nodeName, classes, options, dataset) {
         let node = document.createElement(nodeName);
         if (classes) {
-            Object.assign(node, {classList: classes.join(' ')});
+            Object.assign(node, { classList: classes.join(' ') });
         }
         if (options) {
             Object.assign(node, options);
@@ -79,31 +84,21 @@
     }
 
     function createButton(data) {
-        let button = newNode('button', ['quality-button'], {textContent: data.quality.name});
-        button.addEventListener('click', (event) => {
+        let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
+
+        button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
             highlightSelectedButton(event.target);
-
-            let customEvent = new CustomEvent("option-request", {
-                detail: {
-                    'requested-key': 'option-quality-save',
-                    'quality-group': data.quality.group,
-                }
-            });
-            document.dispatchEvent(customEvent);
+            sendEvent('save-quality?', { group: data.quality.group });
         });
+
         return button;
     }
 
-    document.addEventListener("option-answer", (event) => {
-        if (event.detail) {
-            let detail = event.detail;
-
-            if (detail['requested-key'] == 'option-quality-save' && detail['answer'] == true) {
-                setQualityStorage(detail);
-            }
-        }
-    });
+    function sendEvent(name, detail) {
+        let customEvent = new CustomEvent(name, { detail: detail });
+        document.dispatchEvent(customEvent);
+    }
 
     function createButtons(properties) {
         buttons = [];
@@ -115,10 +110,10 @@
 
     function createButtonsHeader() {
         let channelHeader = document.querySelector('div[data-target="channel-header-right"]');
-
         buttonsHeader = newNode('div', ['quality-button-header']);
-
         channelHeader?.prepend(buttonsHeader);
+
+        sendEvent('set-style', {});
 
         return buttonsHeader;
     }
@@ -135,13 +130,13 @@
         if (videoPlayer && buttonsHeader) {
             let qualities = [...videoPlayer.getQualities()];
             qualities.unshift(Object.assign({}, qualities[0]));
-            qualities[0].name = "Auto";
+            qualities[0].name = 'Auto';
             qualities[0].group = 'auto';
 
             let functions = Array(qualities.length).fill('setQuality');
             functions.unshift('setAutoQualityMode');
 
-            data = [];
+            let data = [];
             for (let i = 0; i < qualities.length; ++i) {
                 data.push({
                     quality: qualities[i],
@@ -152,9 +147,9 @@
             buttons = createButtons(data);
             buttonsHeader.replaceChildren(...buttons.reverse());
 
-            let qualityName = videoPlayer.isAutoQualityMode() ? "Auto" : videoPlayer.getQuality().name;
+            let qualityName = videoPlayer.isAutoQualityMode() ? 'Auto' : videoPlayer.getQuality().name;
             for (let button of buttons) {
-                if (button.textContent == qualityName) {
+                if (button.textContent === qualityName) {
                     highlightSelectedButton(button);
                     break;
                 }
@@ -165,35 +160,44 @@
     function initScript() {
         if (!cssNode) {
             let buttonCss = `
-            .quality-button {
-                display: inline-flex;
-                position: relative;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                text-decoration: none;
-                white-space: nowrap;
-                font-weight: var(--font-weight-semibold);
-                border-radius: var(--border-radius-medium);
-                font-size: var(--button-text-default);
-                height: var(--button-size-default);
-                background-color: var(--color-background-button-primary-default);
-                color: var(--color-text-overlay);
-                margin-left: 1rem;
-                padding: 0px var(--button-padding-x);
-            }
-            .quality-button:hover {
-                background-color: var(--color-background-button-primary-hover);
-                color: var(--color-text-button-primary);
-            }
-            .quality-button[data-selected='1'] {
-                background-color: var(--color-twitch-purple-7);
-            }
-            .quality-button-header {
-                display: flex;
-                position: relative;
-                margin-left: 3rem;
-            }
+                .quality-button {
+                    display: inline-flex;
+                    position: relative;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    font-weight: var(--font-weight-semibold);
+                    border-radius: var(--border-radius-medium);
+                    font-size: var(--button-text-default);
+                    height: var(--button-size-default);
+                    background-color: var(--color-background-button-primary-default);
+                    color: var(--color-text-overlay);
+                    padding: 0px var(--button-padding-x);
+                }
+                .quality-button:not(:first-child) {
+                    margin-left: 1rem;
+                }
+                .quality-button:hover {
+                    background-color: var(--color-background-button-primary-hover);
+                    color: var(--color-text-button-primary);
+                }
+                .quality-button[data-selected='1'] {
+                    background-color: var(--color-twitch-purple-7);
+                }
+                .quality-button-header {
+                    display: flex;
+                    position: relative;
+                    height: 3rem;
+                    transform-origin: top right 0px;
+                    transition: all 700ms;
+                    padding-left: 1rem;
+                    z-index: 1;
+                }
+                .quality-button-header:not(:first-child) {
+                    margin-left: 1rem;
+                }
             `;
             cssNode = createCssRules(buttonCss);
         }
@@ -201,12 +205,11 @@
 
     const targetNode = document.getElementById('root');
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
-    const observer = new MutationObserver((list) => {
+    const observer = new MutationObserver(list => {
         for (let mutation of list) {
-            if (mutation.type == 'attributes' && mutation.target?.nodeName === 'VIDEO') {
+            if (mutation.type === 'attributes' && mutation.target?.nodeName === 'VIDEO') {
                 updateQualityButtons();
-            }
-            else if (mutation.addedNodes.length > 0) {
+            } else if (mutation.addedNodes.length > 0) {
                 if (mutation.addedNodes[0].innerHTML?.includes('follow-button"')) {
                     updateQualityButtons();
                 }
