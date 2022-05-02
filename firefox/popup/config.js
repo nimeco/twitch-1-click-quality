@@ -5,44 +5,67 @@ if (chrome?.app) {
     thisBrowser = browser;
 }
 
+function setControlValue(selector, property, value, event) {
+    let node = document.querySelectorAll(selector);
+    node.forEach(n => {
+        n[property] = value;
+        n.dispatchEvent(new Event(event, { bubbles: true }));
+    });
+}
+
 const options = {
     'option-quality-save': {
+        type: 'input',
         event: 'click',
         property: 'checked',
     },
     'option-button-margin': {
+        type: 'input',
         event: 'input',
         property: 'value',
-        style: 'margin-right',
         selector: '.quality-button-header',
+        restyle: true,
         calc: x => `${x}`,
     },
     'option-button-scale': {
+        type: 'input',
         event: 'input',
         property: 'value',
-        style: 'transform',
         selector: '.quality-button-header',
+        restyle: true,
         calc: x => `${x}`,
     },
     'option-language-save': {
+        type: 'select',
         event: 'change',
         property: 'value',
-        callback: node => {
+        callback: value => {
             document.body.removeAttribute('class');
-            document.body.classList.add(node);
+            document.body.classList.add(value);
+        },
+    },
+    'option-reset': {
+        type: '',
+        event: 'click',
+        callback: () => {
+            setControlValue('#checkbox-save', 'checked', true, 'click');
+            setControlValue('#range-margin', 'value', 0, 'input');
+            setControlValue('#range-scale', 'value', 100, 'input');
         },
     },
 };
 
 if (thisBrowser) {
     for (let [optionId, option] of Object.entries(options)) {
-        let node = document.querySelector(`#${optionId} .input`);
+        let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
         let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
         let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
         node.addEventListener(option.event, () => {
-            debounceSet({ [optionId]: node[option.property] });
+            if (option.property) {
+                debounceSet({ [optionId]: node[option.property] });
+            }
 
-            if (option.style !== undefined) {
+            if (option.restyle) {
                 let value = option.calc(node[option.property]);
                 let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
                 detail.value = value;
@@ -56,21 +79,11 @@ if (thisBrowser) {
                 debounceMsg(thisBrowser, message);
             }
 
-            if (option.callback !== undefined) {
+            if (option.callback) {
                 option.callback(node[option.property]);
             }
         });
     }
-
-    document.querySelector('#option-reset').addEventListener('click', () => {
-        let margin_node = document.querySelector('#range-margin');
-        margin_node.value = 0;
-        margin_node.dispatchEvent(new Event('input', { bubbles: true }));
-
-        let scale_node = document.querySelector('#range-scale');
-        scale_node.value = 100;
-        scale_node.dispatchEvent(new Event('input', { bubbles: true }));
-    });
 }
 
 function messageTwitchTabs(browser, message) {
@@ -104,11 +117,11 @@ document.querySelectorAll('.tooltip').forEach(elem => {
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
         for (let [optionId, option] of Object.entries(result)) {
-            let node = document.querySelector(`#${optionId} .input`);
-            node[options[optionId].property] = result[optionId];
+            let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
+            node[options[optionId].property] = option;
 
             if (options[optionId].callback) {
-                options[optionId].callback(result[optionId]);
+                options[optionId].callback(option);
             }
         }
 
