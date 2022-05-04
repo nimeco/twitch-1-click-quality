@@ -1,4 +1,9 @@
 # twitch-1-click-quality
+1.1.1:
+
+EN: Fixed spacing bug from v1.1, added animation toggle option.
+
+PT: Corrigido um bug de espaçamento da v1.1, adicionado um botão para ativar e desativar a animação.
 
 1.1:
 
