@@ -1,6 +1,5 @@
 (() => {
     let videoPlayer = null;
-    let cssNode = null;
     let buttonsHeader = null;
     let buttons = [];
     let lastButton = null;
@@ -52,13 +51,6 @@
             console.log(err);
         }
         return null;
-    }
-
-    function createCssRules(rules) {
-        let styleNode = newNode('style');
-        styleNode.appendChild(document.createTextNode(rules));
-        document.head.appendChild(styleNode);
-        return cssNode;
     }
 
     function highlightSelectedButton(button) {
@@ -157,59 +149,11 @@
         }
     }
 
-    function initScript() {
-        if (!cssNode) {
-            let buttonCss = `
-                .quality-button {
-                    display: inline-flex;
-                    position: relative;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    text-decoration: none;
-                    white-space: nowrap;
-                    font-weight: var(--font-weight-semibold);
-                    border-radius: var(--border-radius-medium);
-                    font-size: var(--button-text-default);
-                    height: var(--button-size-default);
-                    background-color: var(--color-background-button-primary-default);
-                    color: var(--color-text-overlay);
-                    padding: 0px var(--button-padding-x);
-                }
-                .quality-button:not(:first-child) {
-                    margin-left: 1rem;
-                }
-                .quality-button:hover {
-                    background-color: var(--color-background-button-primary-hover);
-                    color: var(--color-text-button-primary);
-                }
-                .quality-button[data-selected='1'] {
-                    background-color: var(--color-twitch-purple-7);
-                }
-                .quality-button-header {
-                    display: flex;
-                    position: relative;
-                    height: 3rem;
-                    transform-origin: top right 0px;
-                    transition: all 700ms;
-                    padding-left: 1rem;
-                    z-index: 1;
-                }
-                .quality-button-header:not(:first-child) {
-                    margin-left: 1rem;
-                }
-            `;
-            cssNode = createCssRules(buttonCss);
-        }
-    }
-
     const targetNode = document.getElementById('root');
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
     const observer = new MutationObserver(list => {
         for (let mutation of list) {
-            if (mutation.type === 'attributes' && mutation.target?.nodeName === 'VIDEO') {
-                updateQualityButtons();
-            } else if (mutation.addedNodes.length > 0) {
+            if (mutation.addedNodes.length > 0) {
                 if (mutation.addedNodes[0].innerHTML?.includes('follow-button"')) {
                     updateQualityButtons();
                 }
@@ -217,6 +161,4 @@
         }
     });
     observer.observe(targetNode, config);
-
-    initScript();
 })();

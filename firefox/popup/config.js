@@ -24,7 +24,7 @@ const options = {
         event: 'input',
         property: 'value',
         selector: '.quality-button-header',
-        restyle: true,
+        message: 'calculate-style',
         calc: x => `${x}`,
     },
     'option-button-scale': {
@@ -32,7 +32,7 @@ const options = {
         event: 'input',
         property: 'value',
         selector: '.quality-button-header',
-        restyle: true,
+        message: 'calculate-style',
         calc: x => `${x}`,
     },
     'option-language-save': {
@@ -44,6 +44,12 @@ const options = {
             document.body.classList.add(value);
         },
     },
+    'option-toggle-transition': {
+        type: 'input',
+        event: 'click',
+        property: 'checked',
+        message: 'toggle-transition',
+    },
     'option-reset': {
         type: '',
         event: 'click',
@@ -51,6 +57,7 @@ const options = {
             setControlValue('#checkbox-save', 'checked', true, 'click');
             setControlValue('#range-margin', 'value', 0, 'input');
             setControlValue('#range-scale', 'value', 100, 'input');
+            setControlValue('#checkbox-transition', 'checked', true, 'click');
         },
     },
 };
@@ -65,14 +72,17 @@ if (thisBrowser) {
                 debounceSet({ [optionId]: node[option.property] });
             }
 
-            if (option.restyle) {
-                let value = option.calc(node[option.property]);
+            if (option.message) {
+                let value = node[option.property];
+                if (option.calc) {
+                    value = option.calc(value);
+                }
                 let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
                 detail.value = value;
                 detail['requested-key'] = optionId;
 
                 let message = {
-                    type: 'style',
+                    type: option.message,
                     detail: detail,
                 };
 

@@ -865,15 +865,22 @@ body {
     grid-area: 3 / 3 / 3 / 3;
 }
 
-#option-language-label {
+#option-toggle-transition-label {
     grid-area: 4 / 2 / 4 / 2;
 }
-#option-language-save {
+#option-toggle-transition {
     grid-area: 4 / 3 / 4 / 3;
 }
 
+#option-language-label {
+    grid-area: 5 / 2 / 5 / 2;
+}
+#option-language-save {
+    grid-area: 5 / 3 / 5 / 3;
+}
+
 #option-reset {
-    grid-area: 5 / 2 / 5 / 4;
+    grid-area: 6 / 2 / 6 / 4;
     text-align: left;
 }
 
