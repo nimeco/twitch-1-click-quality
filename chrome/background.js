@@ -8,13 +8,11 @@ if (chrome?.app) {
 thisBrowser.runtime.onInstalled.addListener(() => {
     let defaultOptions = [
         { 'option-quality-save': true },
-
-        // margin from 0-100
+        // margin from 0-100%
         { 'option-button-margin': "0" },
-
-        // scale from 50 to 200 (%)
+        // scale from 50-200%
         { 'option-button-scale': "100" },
-
+        { 'option-toggle-transition': true },
         { 'option-language-save': 'lang-en' },
     ];
 

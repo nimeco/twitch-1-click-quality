@@ -1,4 +1,3 @@
-/* global cloneInto */
 let thisBrowser;
 let cachedStorage = {};
 
@@ -24,26 +23,97 @@ async function injectScripts() {
     await injectScript('resource.js');
 }
 
-function difference(keys, cache) {
-    return [...new Set(keys)].filter(x => !new Set(Object.keys(cache)).has(x));
+let cssNode = null;
+function newNode(nodeName, classes, options, dataset) {
+    let node = document.createElement(nodeName);
+    if (classes) {
+        Object.assign(node, { classList: classes.join(' ') });
+    }
+    if (options) {
+        Object.assign(node, options);
+    }
+    if (dataset) {
+        Object.assign(node.dataset, dataset);
+    }
+    return node;
 }
+function createCssRules(rules) {
+    let styleNode = newNode('style', null, { title: "1-click-quality" });
+    styleNode.appendChild(document.createTextNode(rules));
+    document.head.appendChild(styleNode);
+    return cssNode;
+}
+async function initCSS() {
+    let transition = true;
+    transition = await getStorage('option-toggle-transition');
+    let buttonCss = `
+        .quality-button {
+        display: inline-flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-decoration: none;
+        white-space: nowrap;
+        font-weight: var(--font-weight-semibold);
+        border-radius: var(--border-radius-medium);
+        font-size: var(--button-text-default);
+        height: var(--button-size-default);
+        background-color: var(--color-background-button-primary-default);
+        color: var(--color-text-overlay);
+        padding: 0px var(--button-padding-x);
+        }
+        .quality-button:not(:first-child) {
+        margin-left: 1rem;
+        }
+        .quality-button:hover {
+        background-color: var(--color-background-button-primary-hover);
+        color: var(--color-text-button-primary);
+        }
+        .quality-button[data-selected='1'] {
+        background-color: var(--color-twitch-purple-7);
+        }
+        .quality-button-header {
+        display: flex;
+        position: relative;
+        height: 3rem;
+        transform-origin: top right 0px;
+        transition: all ${transition ? '700' : '0'}ms ease 0s;
+        padding-left: 1rem;
+        z-index: 1;
+        }
+        .quality-button-header:not(:first-child) {
+        margin-left: 1rem;
+        }
+        `;
+    cssNode = createCssRules(buttonCss);
+}
+initCSS();
 
-function getLocalStorage(keys) {
+function getStorage(_keys) {
     return new Promise(resolve => {
-        if (typeof keys === 'string') {
-            if (keys in cachedStorage) {
-                resolve({ [keys]: cachedStorage[keys] });
-            } else {
-                thisBrowser.storage.local.get(keys, result => {
-                    cachedStorage = { ...cachedStorage, ...result };
-                    resolve(result);
-                });
+        let keys = _keys;
+        if (typeof _keys === "string") {
+            keys = [keys];
+        }
+        let allKeysExist = true;
+        for (let i = 0; i < keys.length; i++) {
+            if (!(keys[i] in cachedStorage)) {
+                allKeysExist = false;
+                break;
             }
+        }
+
+        if (allKeysExist) {
+            let result = {};
+            keys.forEach(key => {
+                result[key] = cachedStorage[key];
+            });
+            resolve(Object.values(result));
         } else {
-            let diff = difference(keys, cachedStorage);
-            thisBrowser.storage.local.get(diff, result => {
+            thisBrowser.storage.local.get(keys, result => {
                 cachedStorage = { ...cachedStorage, ...result };
-                resolve(result);
+                resolve(Object.values(result));
             });
         }
     });
@@ -62,9 +132,9 @@ const innerDimensions = node => {
 
 async function setHeaderStyle() {
     try {
-        let res = await getLocalStorage(['option-button-margin', 'option-button-scale']);
-        let t = cachedStorage['option-button-margin'] / 100;
-        let s = cachedStorage['option-button-scale'] / 100;
+        let [t, s] = await getStorage(['option-button-margin', 'option-button-scale']);
+        t /= 100;
+        s /= 100;
 
         let node = document.querySelector('[data-target="channel-header-right"]');
 
@@ -90,6 +160,10 @@ async function setHeaderStyle() {
     }
 }
 
+function setTransitionRule(enabled) {
+    document.querySelector('.quality-button-header')?.style.setProperty('transition', `all ${enabled ? '700' : '0'}ms ease 0s`);
+}
+
 injectScripts();
 
 document.addEventListener('set-style', _event => {
@@ -98,24 +172,18 @@ document.addEventListener('set-style', _event => {
 
 document.addEventListener('save-quality?', async event => {
     let detail = event.detail;
-    let isSaveEnabled = await getLocalStorage('option-quality-save');
-    if (isSaveEnabled['option-quality-save']) {
+    let isSaveEnabled = await getStorage('option-quality-save');
+    if (isSaveEnabled) {
         window.localStorage.setItem('video-quality', JSON.stringify({ default: detail.group }));
     }
 });
 
 thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
-    if (request.type === 'style') {
+    if (request.type === 'calculate-style') {
         cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setHeaderStyle();
-    }
-});
-
-thisBrowser.storage.onChanged.addListener((changes, namespace) => {
-    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-        console.log(
-            `Storage key "${key}" in namespace "${namespace}" changed.`,
-            `Old value was "${oldValue}", new value is "${newValue}".`,
-        );
+    } else if (request.type === 'toggle-transition') {
+        cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
+        setTransitionRule(request.detail.value);
     }
 });
