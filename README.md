@@ -1,4 +1,10 @@
 # twitch-1-click-quality
+1.1.4:
+
+EN: Fix: granted "tabs" permission to chrome, messageTwitchTabs function had a minor issue.
+
+PT: Fix: adicionado a permissão "tabs" pro chrome, messageTwitchTabs tinha um errinho.
+
 1.1.3:
 
 EN: Fix: chrome.app got removed and broke the extension.
