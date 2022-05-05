@@ -97,10 +97,10 @@ if (thisBrowser) {
 }
 
 function messageTwitchTabs(browser, message) {
-    browser.tabs.query({}, tabs => {
+    thisBrowser.tabs.query({}, tabs => {
         tabs.forEach(tab => {
             if (tab.url.match(/^(?:https?:\/\/)?(?:[^.]+\.)?twitch\.(tv|com)\/[^/]+\/?$/)) {
-                browser.tabs.sendMessage(tab.id, message);
+                thisBrowser.tabs.sendMessage(tab.id, message);
             }
         });
     });
