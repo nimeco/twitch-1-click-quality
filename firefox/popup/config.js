@@ -1,5 +1,5 @@
 let thisBrowser = null;
-if (chrome?.app) {
+if (chrome) {
     thisBrowser = chrome;
 } else {
     thisBrowser = browser;
