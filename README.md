@@ -1,4 +1,10 @@
 # twitch-1-click-quality
+1.1.3:
+
+EN: Fix: chrome.app got removed and broke the extension.
+
+PT: Fix: chrome.app foi removido e a extensão parou de funcionar.
+
 1.1.2:
 
 EN: Fix: getStorage wouldn't return single values correctly.
