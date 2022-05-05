@@ -86,7 +86,7 @@ if (thisBrowser) {
                     detail: detail,
                 };
 
-                debounceMsg(thisBrowser, message);
+                debounceMsg(message);
             }
 
             if (option.callback) {
@@ -96,11 +96,11 @@ if (thisBrowser) {
     }
 }
 
-function messageTwitchTabs(browser, message) {
+function messageTwitchTabs(message) {
     thisBrowser.tabs.query({}, tabs => {
         tabs.forEach(tab => {
             if (tab.url.match(/^(?:https?:\/\/)?(?:[^.]+\.)?twitch\.(tv|com)\/[^/]+\/?$/)) {
-                thisBrowser.tabs.sendMessage(tab.id, message);
+                thisBrowser.tabs.sendMessage(tab.id, message, response => { console.log(response); });
             }
         });
     });

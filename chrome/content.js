@@ -186,7 +186,7 @@ document.addEventListener('save-quality?', async event => {
     }
 });
 
-thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+thisBrowser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.type === 'calculate-style') {
         cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setHeaderStyle();
@@ -194,4 +194,5 @@ thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
         cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setTransitionRule(request.detail.value);
     }
+    sendResponse({});
 });
