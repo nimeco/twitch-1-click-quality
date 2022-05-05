@@ -97,23 +97,31 @@ function getStorage(_keys) {
             keys = [keys];
         }
         let allKeysExist = true;
+        let result = [];
         for (let i = 0; i < keys.length; i++) {
-            if (!(keys[i] in cachedStorage)) {
+            if (keys[i] in cachedStorage) {
+                result.push(cachedStorage[keys[i]]);
+            } else {
                 allKeysExist = false;
                 break;
             }
         }
 
         if (allKeysExist) {
-            let result = {};
-            keys.forEach(key => {
-                result[key] = cachedStorage[key];
-            });
-            resolve(Object.values(result));
+            if (result.length === 1) {
+                resolve(result[0]);
+            } else {
+                resolve(result);
+            }
         } else {
-            thisBrowser.storage.local.get(keys, result => {
-                cachedStorage = { ...cachedStorage, ...result };
-                resolve(Object.values(result));
+            thisBrowser.storage.local.get(keys, res => {
+                cachedStorage = { ...cachedStorage, ...res };
+                let values = Object.values(res);
+                if (values.length === 1) {
+                    resolve(values[0]);
+                } else {
+                    resolve(values);
+                }
             });
         }
     });
