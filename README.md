@@ -1,4 +1,10 @@
 # twitch-1-click-quality
+1.1.2:
+
+EN: Fix: getStorage wouldn't return single values correctly.
+
+PT: Fix: getStorage não retornava um só valor corretamente.
+
 1.1.1:
 
 EN: Fixed spacing bug from v1.1, added animation toggle option.
