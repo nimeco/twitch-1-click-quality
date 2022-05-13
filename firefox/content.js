@@ -161,7 +161,7 @@ async function setHeaderStyle() {
             transformWidth = buttonWithTransform.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
         }
 
-        let transformValue = `translateX(calc(${transformWidth[1]} - 1rem - ${t} * (${totalWidth - childrenWidth}px + 1rem))) scale(${s})`;
+        let transformValue = `translateX(calc(${transformWidth[1]} - ${t} * (${totalWidth - childrenWidth}px + 3rem))) scale(${s})`;
         document.querySelector('.quality-button-header')?.style.setProperty('transform', transformValue);
     } catch (e) {
         console.log(e);
