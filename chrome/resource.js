@@ -153,7 +153,9 @@
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
     const observer = new MutationObserver(list => {
         for (let mutation of list) {
-            if (mutation.addedNodes.length > 0) {
+            if (mutation.type === 'attributes' && mutation.target?.nodeName === 'VIDEO') {
+                updateQualityButtons();
+            } else if (mutation.addedNodes.length > 0) {
                 if (mutation.addedNodes[0].innerHTML?.includes('follow-button"')) {
                     updateQualityButtons();
                 }

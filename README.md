@@ -1,4 +1,10 @@
 # twitch-1-click-quality
+1.1.6:
+
+EN: Fix: buttons weren't updating when a stream re-started without leaving the page.
+
+PT: Fix: os botões não atualizavam quando o stream era reaberto sem mudar de página.
+
 1.1.4:
 
 EN: Fix: granted "tabs" permission to chrome, messageTwitchTabs function had a minor issue.
