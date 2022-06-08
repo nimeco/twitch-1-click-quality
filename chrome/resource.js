@@ -105,8 +105,6 @@
         buttonsHeader = newNode('div', ['quality-button-header']);
         channelHeader?.prepend(buttonsHeader);
 
-        sendEvent('set-style', {});
-
         return buttonsHeader;
     }
 
@@ -114,6 +112,7 @@
         if (!document.contains(buttonsHeader) && !document.querySelector('.quality-button-header')) {
             buttonsHeader = createButtonsHeader();
         }
+        sendEvent('set-style', {});
 
         if (!document.contains(videoPlayer?.core?.mediaSinkManager?.video)) {
             videoPlayer = findPlayer();
@@ -153,10 +152,14 @@
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
     const observer = new MutationObserver(list => {
         for (let mutation of list) {
+            let nodes = mutation.addedNodes;
             if (mutation.type === 'attributes' && mutation.target?.nodeName === 'VIDEO') {
                 updateQualityButtons();
-            } else if (mutation.addedNodes.length > 0) {
-                if (mutation.addedNodes[0].innerHTML?.includes('follow-button"')) {
+            } else if (nodes.length > 0) {
+                if (nodes[0].innerHTML?.includes('data-target="channel-header-right"') ||
+                    nodes[0].innerHTML?.includes('follow-button"') ||
+                    nodes[0].innerHTML?.includes('subscribe-button"') ||
+                    nodes[0].innerHTML?.includes('subscribed-button"')) {
                     updateQualityButtons();
                 }
             }

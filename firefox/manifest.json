@@ -2,7 +2,7 @@
     "description": "Adds buttons to change qualities with one click.",
     "manifest_version": 2,
     "name": "1-click quality for Twitch",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "icons": {
         "48": "icons/quality-48.png",
         "96": "icons/quality-96.png"

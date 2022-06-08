@@ -146,7 +146,7 @@ async function setHeaderStyle() {
 
         let node = document.querySelector('[data-target="channel-header-right"]');
 
-        let totalWidth = node.parentNode.getBoundingClientRect().width;
+        let totalWidth = node.parentNode?.getBoundingClientRect().width;
 
         let childrenNodes = [];
         [...node.children].forEach(n => {
@@ -156,12 +156,12 @@ async function setHeaderStyle() {
         let childrenWidth = childrenNodes.reduce((a, b) => a + b, 0);
 
         let buttonWithTransform = document.querySelector('.quality-button-header ~ div div[style*="translateX"]');
-        let transformWidth = ['', '0px'];
+        let transformWidth = ['', '0'];
         if (buttonWithTransform) {
-            transformWidth = buttonWithTransform.style.getPropertyValue('transform').match(/translateX\(([^)]+)\)/);
+            transformWidth = buttonWithTransform.style.getPropertyValue('transform').match(/translateX\(([^)]+)px\)/);
         }
 
-        let transformValue = `translateX(calc(${transformWidth[1]} - ${t} * (${totalWidth - childrenWidth}px + 3rem))) scale(${s})`;
+        let transformValue = `translateX(calc((${transformWidth[1] - 45}px) - ${t} * (${totalWidth - childrenWidth}px + 3rem))) scale(${s})`;
         document.querySelector('.quality-button-header')?.style.setProperty('transform', transformValue);
     } catch (e) {
         console.log(e);
