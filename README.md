@@ -1,4 +1,10 @@
 # twitch-1-click-quality
+1.1.7:
+
+EN: Fix: sometimes buttons wouldn't update or show up
+
+PT: Fix: algumas vezes os botões não atualizavam ou apareciam
+
 1.1.6:
 
 EN: Fix: buttons weren't updating when a stream re-started without leaving the page.
