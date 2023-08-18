@@ -1,4 +1,4 @@
-:root {
+:root {/*{{{*//*{{{*//*}}}*/
     font-size: 62.5%;
     --border-width-default: 1px;
     --border-width-input: 2px;
@@ -808,7 +808,7 @@
     --shadow-tab-focus: 0 4px 6px -4px var(--color-twitch-purple-11);
     --shadow-balloon: 0 1px 1px var(--color-opac-b-5);
     --shadow-scrollbar: 0 0 1px 1px var(--color-opac-w-5);
-}
+}/*}}}*/
 
 * {
     box-sizing: border-box;
@@ -823,9 +823,10 @@ body {
     color: var(--color-text-base);
     border: 3px solid var(--color-twitch-purple-12);
     border-radius: 9px;
-    width: 280px;
+    width: 380px;
+    height: 600px;
     font: var(--font-size-base) 'Inter', Arial, sans-serif;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .purple {
@@ -834,53 +835,40 @@ body {
 .wrapper {
     display: grid;
     margin: 20px 0 25px;
-    grid-template: repeat(5, 2.4rem) / 17px 5fr 4fr;
+    grid-template: repeat(5, 2.4rem) repeat(4, 220px) 2.4rem / 17px 5fr 4fr 17px;
     grid-gap: 5px 2px;
     align-items: center;
 }
 .wrapper [id$='-tooltip'] {
     height: 1.4rem;
 }
-#option-quality-tooltip {
-    grid-area: 1 / 1 / 1 / 1;
-}
-#option-quality-label {
-    grid-area: 1 / 2 / 1 / 2;
-}
-#option-quality-save {
-    grid-area: 1 / 3 / 1 / 3;
-}
+#option-quality-tooltip { grid-area: 1 / 1 / 1 / 1; }
+#option-quality-label { grid-area: 1 / 2 / 1 / 2; }
+#option-quality-save { grid-area: 1 / 3 / 1 / 3; }
 
-#option-margin-label {
-    grid-area: 2 / 2 / 2 / 2;
-}
-#option-button-margin {
-    grid-area: 2 / 3 / 2 / 3;
-}
+#option-margin-label { grid-area: 2 / 2 / 2 / 2; }
+#option-button-margin { grid-area: 2 / 3 / 2 / 3; }
 
-#option-scale-label {
-    grid-area: 3 / 2 / 3 / 2;
-}
-#option-button-scale {
-    grid-area: 3 / 3 / 3 / 3;
-}
+#option-scale-label { grid-area: 3 / 2 / 3 / 2; }
+#option-button-scale { grid-area: 3 / 3 / 3 / 3; }
 
-#option-toggle-transition-label {
-    grid-area: 4 / 2 / 4 / 2;
-}
-#option-toggle-transition {
-    grid-area: 4 / 3 / 4 / 3;
-}
+#option-toggle-transition-label { grid-area: 4 / 2 / 4 / 2; }
+#option-toggle-transition { grid-area: 4 / 3 / 4 / 3; }
 
-#option-language-label {
-    grid-area: 5 / 2 / 5 / 2;
-}
-#option-language-save {
-    grid-area: 5 / 3 / 5 / 3;
-}
+#option-language-label { grid-area: 5 / 2 / 5 / 2; }
+#option-language-save { grid-area: 5 / 3 / 5 / 3; }
 
+#option-color-text-selected-label { grid-area: 6 / 2 / 6 / 2; }
+#option-color-text-selected { grid-area: 6 / 3 / 6 / 4; }
+#option-color-background-selected-label { grid-area: 7 / 2 / 7 / 2; }
+#option-color-background-selected { grid-area: 7 / 3 / 7 / 4; }
+
+#option-color-text-label { grid-area: 8 / 2 / 8 / 2; }
+#option-color-text { grid-area: 8 / 3 / 8 / 4; }
+#option-color-background-label { grid-area: 9 / 2 / 9 / 2; }
+#option-color-background { grid-area: 9 / 3 / 9 / 4; }
 #option-reset {
-    grid-area: 6 / 2 / 6 / 4;
+    grid-area: 10 / 2 / 10 / 4;
     text-align: left;
 }
 
@@ -994,7 +982,7 @@ div[id$='-tooltip'] > span:after {
     font-size: var(--button-text-default);
     height: var(--button-size-default);
     background-color: var(--color-background-button-primary-default);
-    color: var(--color-text-overlay);
+    color: var(--color-text-button-primary);
     padding: 0px var(--button-padding-x);
 }
 .footer .button:not(:first-child) {
@@ -1003,6 +991,9 @@ div[id$='-tooltip'] > span:after {
 .button:hover {
     background-color: var(--color-background-button-primary-hover);
     color: var(--color-text-button-primary);
+}
+.button:active {
+    background-color: var(--color-background-button-primary-active);
 }
 .button[data-selected='1'] {
     background-color: var(--color-twitch-purple-7);
@@ -1254,6 +1245,47 @@ select:focus,
 select:focus option {
     border-color: var(--color-border-input-focus);
     background-color: var(--color-background-input-focus);
+}
+
+#option-color-text,
+#option-color-background,
+#option-color-text-selected,
+#option-color-background-selected {
+    position: relative;
+}
+
+.canvas-slider {
+    height: 8px;
+    width: 150px;
+}
+#canvas-color-text-selected,
+#canvas-color-background-selected,
+#canvas-color-text,
+#canvas-color-background {
+    height: 150px;
+    width: 150px;
+    position: relative;
+}
+.canvas-pointer,
+.canvas-pointer-slider {
+    position: absolute;
+    z-index: 1;
+    box-sizing: border-box;
+    transform: translate(-50%,-50%);
+    /* background-color: #fff; */
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    pointer-events: none;
+}
+.canvas-pointer {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.canvas-pointer-slider {
+    width: 7px;
+    height: 13px;
+    border-radius: 30%;
 }
 
 .lang {
