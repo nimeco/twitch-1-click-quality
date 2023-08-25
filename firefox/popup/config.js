@@ -126,116 +126,15 @@ document.querySelectorAll('.tooltip').forEach(elem => {
     });
 });
 
-function drawGradient(canvas, color = '#f00') {
-    canvas.setAttribute('width', window.getComputedStyle(canvas, null).getPropertyValue('width'));
-    canvas.setAttribute('height', window.getComputedStyle(canvas, null).getPropertyValue('height'));
-    let context = canvas.getContext('2d');
-
-    let gradientH = context.createLinearGradient(0, 0, context.canvas.width, 0);
-    gradientH.addColorStop(0, '#fff');
-    gradientH.addColorStop(1, color);
-    context.fillStyle = gradientH;
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-    let gradientV = context.createLinearGradient(0, 0, 0, context.canvas.height);
-    gradientV.addColorStop(0, 'rgba(0,0,0,0)');
-    gradientV.addColorStop(1, '#000');
-    context.fillStyle = gradientV;
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-    return context;
-}
-
-function loadSliderCanvas(canvas) {
-    canvas.setAttribute('width', '150px');
-    canvas.setAttribute('height', '8px');
-    // canvas.setAttribute('width', window.getComputedStyle(canvas, null).getPropertyValue('width'));
-    // canvas.setAttribute('height', window.getComputedStyle(canvas, null).getPropertyValue('height'));
-    let context = canvas.getContext('2d');
-
-    let gradient = context.createLinearGradient(0, 0, context.canvas.width, 0);
-    gradient.addColorStop(0, '#f00');
-    gradient.addColorStop(0.17, '#ff0');
-    gradient.addColorStop(0.33, '#0f0');
-    gradient.addColorStop(0.50, '#0ff');
-    gradient.addColorStop(0.67, '#00f');
-    gradient.addColorStop(0.83, '#f0f');
-    gradient.addColorStop(1, '#f00');
-
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-
-    return context;
-}
 
 function clamp(n, min, max) {
     return Math.min(Math.max(n, min), max);
 }
-function getCursorPosition(canvas, event) {
-    const rect = canvas.getBoundingClientRect();
+function getCursorPosition(element, event) {
+    const rect = element.getBoundingClientRect();
     const clampedX = clamp(event.clientX, rect.left, rect.right - 1);
     const clampedY = clamp(event.clientY, rect.top, rect.bottom - 1);
-    return [clampedX - rect.left + canvas.offsetLeft, clampedY - rect.top + canvas.offsetTop];
-}
-function getColorAt(x, y, context) {
-    const pixel = context.getImageData(parseInt(x), parseInt(y), 1, 1).data;
-    return `rgb(${pixel[0]},${pixel[1]},${pixel[2]})`;
-}
-function onMouseDown(downEvent) {
-    let targetNode = downEvent.currentTarget;
-    function onMouseMove(event) {
-        const [x, y] = getCursorPosition(targetNode, event);
-        const rgb = getColorAt(x, y, targetNode.ctx);
-        targetNode.cursor.style.top = `${y}px`;
-        targetNode.cursor.style.left = `${x}px`;
-        targetNode.inputHex.value = rgb;
-        targetNode.x = x;
-        targetNode.y = y;
-        document.body.style.background = rgb;
-        let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
-        const key = targetNode.parentElement.getAttribute('id');
-        debounceSet({ [key]: rgb });
-        messageTwitchTabs({
-            type: 'select-color',
-            'requested-key': key,
-            detail: {
-                color: rgb,
-            },
-        });
-    }
-    function onMouseUp() {
-        cleanMouseEvents();
-    }
-    function cleanMouseEvents() {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-    }
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    window.addEventListener('mouseup', onMouseUp, { passive: true });
-}
-function onMouseDownSlider(downEvent) {
-    let targetNode = downEvent.currentTarget;
-    function onMouseMoveSlider(event) {
-        const [x] = getCursorPosition(targetNode, event);
-        const y = targetNode.offsetTop + (targetNode.getBoundingClientRect().height / 2);
-        const rgb = getColorAt(x, 0, targetNode.ctx);
-        targetNode.cursor.style.top = `${y}px`;
-        targetNode.cursor.style.left = `${x}px`;
-        drawGradient(targetNode.respectiveCanvas, rgb);
-
-        const mainRgb = getColorAt(targetNode.respectiveCanvas.x, targetNode.respectiveCanvas.y, targetNode.respectiveCanvas.ctx);
-        document.body.style.background = mainRgb;
-        targetNode.respectiveCanvas.inputHex.value = mainRgb;
-    }
-    function onMouseUpSlider() {
-        cleanMouseEvents();
-    }
-    function cleanMouseEvents() {
-        window.removeEventListener('mousemove', onMouseMoveSlider);
-        window.removeEventListener('mouseup', onMouseUpSlider);
-    }
-    window.addEventListener('mousemove', onMouseMoveSlider, { passive: true });
-    window.addEventListener('mouseup', onMouseUpSlider, { passive: true });
+    return [clampedX - rect.left, clampedY - rect.top];
 }
 
 function newElement(nodeName, attributes) {
@@ -245,47 +144,179 @@ function newElement(nodeName, attributes) {
     }
     return node;
 }
-function initCanvas(parentName) {
-    const parentNode = document.getElementById(parentName);
 
-    const inputHex = newElement('input', { type: "text" });
-
-    const mainCursor = newElement('div', { classList: 'canvas-pointer' });
-    const mainCanvas = newElement('canvas', {
-        id: 'canvas-color-text-selected',
-        cursor: mainCursor,
-        inputHex: inputHex,
-        x: 0,
-        y: 0,
-    });
-    const mainContext = drawGradient(mainCanvas);
-    mainCanvas.ctx = mainContext;
-
-    const sliderCursor = newElement('div', { classList: 'canvas-pointer-slider' });
-    const sliderCanvas = newElement('canvas', {
-        classList: 'canvas-slider',
-        cursor: sliderCursor,
-        respectiveCanvas: mainCanvas,
-    });
-    const sliderContext = loadSliderCanvas(sliderCanvas);
-    sliderCanvas.ctx = sliderContext;
-
-    parentNode.appendChild(mainCanvas);
-    parentNode.appendChild(mainCursor);
-    mainCanvas.addEventListener('mousedown', onMouseDown, { passive: true });
-
-    parentNode.appendChild(sliderCanvas);
-    parentNode.appendChild(sliderCursor);
-    sliderCanvas.addEventListener('mousedown', onMouseDownSlider, { passive: true });
-
-    parentNode.appendChild(inputHex);
+function truncDigits(color, digits = 2) {
+    return [
+        Number(color[0]).toFixed(digits),
+        Number(color[1]).toFixed(digits),
+        Number(color[2]).toFixed(digits),
+    ];
 }
-function initCanvases() {
-    initCanvas('option-color-text-selected');
-    // initCanvas('canvas-color-background-selected');
-    // initCanvas('canvas-color-background');
-    // initCanvas('canvas-color-text');
+
+function hsv2hsl(h, s, v) {
+    const l = v - v*s/2;
+    let sl = 0;
+    if (l > 0 && l < 1) {
+        sl = (v - l) / Math.min(l, 1-l);
+    }
+    return [h, sl, l];
 }
+
+function hsv2rgb2(h, s, v) {
+    const c = s * v;
+    const h_line = h / 60;
+    const x = c * (1 - Math.abs((h_line % 2) - 1));
+
+    const rgb_table = [
+        [c, x, 0],
+        [x, c, 0],
+        [0, c, x],
+        [0, x, c],
+        [x, 0, c],
+        [c, 0, x],
+        [c, x, 0],
+    ];
+
+    const m = v - c;
+    const rgb = rgb_table[Math.floor(h_line)];
+
+    return [rgb[0] + m, rgb[1] + m, rgb[2] + m];
+}
+
+function hsv2rgb(h, s, v) {
+    const f = (n, k = (n + h/60)%6) => v - v*s*Math.max(Math.min(k, 4 - k, 1), 0);
+    return [f(5), f(3), f(1)];
+}
+function rgb2hsv(r, g, b) {
+    const v = Math.max(r, g, b), c = v-Math.min(r, g, b);
+    const h = c && (v===r ? (g-b)/c : v===g ? 2+(b-r)/c : 4+(r-g)/c);
+    return [60*(h<0?h+6:h), v&&c/v, v];
+}
+
+function rgb2hex(r, g, b) {
+    return (1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase();
+}
+function hex2rgb(hex) {
+    const bigInt = parseInt(hex, 16);
+    const r = (bigInt >> 16) & 255;
+    const g = (bigInt >> 8) & 255;
+    const b = bigInt & 255;
+    return [r, g, b];
+}
+
+function normalizeRgb(r, g, b) {
+    return [r, g, b].map(v => v / 255);
+}
+
+function mouseMovePickerHandler(event, target, cursor, textNodes) {
+    const [cursorX, cursorY] = getCursorPosition(target, event);
+    const rect = target.getBoundingClientRect();
+    const width = rect.width - 1;
+    const height = rect.height - 1;
+    const valueY = height - cursorY;
+
+    setCursorCoords(cursor, cursorX, cursorY);
+    const hsl = truncDigits(hsv2hsl(...[0, cursorX / width, valueY / height]));
+    const rgb = truncDigits(hsv2rgb(...[0, cursorX / width, valueY / height]));
+
+    textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(valueY).toFixed(2)}`;
+    textNodes.rgbText.value = `${rgb2hex(...rgb)}`;
+    textNodes.hsvText.value = `0.00 ${Number(cursorX / width).toFixed(2)} ${Number(valueY / height).toFixed(2)}`;
+    textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
+    document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+}
+
+function mouseMoveSliderHandler(event, target, cursor, textNodes) {
+    const [cursorX,] = getCursorPosition(target, event);
+    const rect = target.getBoundingClientRect();
+    const width = rect.width - 1;
+    const height = rect.height - 1;
+    const valueY = 0;
+
+    const degrees = 360 * cursorX / width;
+    setCursorCoords(cursor, cursorX, valueY);
+    const hsl = truncDigits(hsv2hsl(...[degrees, cursorX / width, valueY / height]));
+    const rgb = truncDigits(hsv2rgb(...[degrees, cursorX / width, valueY / height]));
+    target.parentElement.parentElement.querySelector('.hue').style.setProperty('--h', `${Math.round(degrees)}`);
+
+    textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(valueY).toFixed(2)}`;
+    textNodes.rgbText.value = `${rgb2hex(...rgb)}`;
+    textNodes.hsvText.value = `${Number(degrees).toFixed(2)} ${Number(cursorX / width).toFixed(2)} ${Number(valueY / height).toFixed(2)}`;
+    textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
+    document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+}
+function mouseDown(eventDown, fn, cursor, textNodes) {
+    const originalTarget = eventDown.target;
+    fn(eventDown, originalTarget, cursor, textNodes);
+    function mouseMove(event) {
+        fn(event, originalTarget, cursor, textNodes);
+    }
+    function mouseUp() {
+        clearEvents();
+    }
+    function clearEvents() {
+        window.removeEventListener('mousemove', mouseMove);
+        window.removeEventListener('mouseup', mouseUp);
+    }
+    window.addEventListener('mousemove', mouseMove, { passive: true });
+    window.addEventListener('mouseup', mouseUp, { passive: true });
+}
+
+function setCursorCoords(cursor, x, y) {
+    cursor.style.left = `${Math.round(x)}px`;
+    cursor.style.top = `${Math.round(y)}px`;
+}
+
+function initColorPicker(id) {
+    const colorPicker = document.getElementById(id);
+
+    const coordText = newElement('input', { type: 'text', classList: 'color-picker-input' });
+    const rgbText = newElement('input', { type: 'text', classList: 'color-picker-input' });
+    const hsvText = newElement('input', { type: 'text', classList: 'color-picker-input' });
+    const hslText = newElement('input', { type: 'text', classList: 'color-picker-input' });
+    const textNodes = { coordText, rgbText, hsvText, hslText };
+
+    const colorPickerNode = colorPicker.getElementsByClassName('hue')[0];
+    const colorPickerCursor = newElement('div', { classList: 'color-picker-cursor' });
+    colorPickerNode.appendChild(colorPickerCursor);
+    colorPickerNode.addEventListener('mousedown', event => {
+        mouseDown(event, mouseMovePickerHandler, colorPickerCursor, textNodes);
+    }, { passive: true });
+
+    const colorPickerSliderNode = colorPicker.getElementsByClassName('color-slider')[0];
+    const colorPickerSliderCursor = newElement('div', { classList: 'color-picker-slider-cursor' });
+    colorPickerSliderNode.appendChild(colorPickerSliderCursor);
+    colorPickerSliderNode.addEventListener('mousedown', event => {
+        mouseDown(event, mouseMoveSliderHandler, colorPickerSliderCursor, textNodes);
+    }, { passive: true });
+
+    colorPicker.appendChild(coordText);
+    colorPicker.appendChild(rgbText);
+    colorPicker.appendChild(hsvText);
+    colorPicker.appendChild(hslText);
+
+    function pinpointCursor(rgb) {
+        const hsv = rgb2hsv(...normalizeRgb(...rgb));
+        const hsl = hsv2hsl(...hsv);
+
+        const pickerRect = colorPickerNode.getBoundingClientRect();
+        const sliderRect = colorPickerSliderNode.getBoundingClientRect();
+        setCursorCoords(colorPickerCursor, hsv[1]*(pickerRect.width-1), (1-hsv[2])*(pickerRect.height-1));
+        setCursorCoords(colorPickerSliderCursor, hsv[0]/360*(sliderRect.width-1), 0);
+
+        document.body.style.backgroundColor = `hsl(${hsl[0]}deg ${hsl[1]*100}% ${hsl[2]*100}%)`;
+    }
+    rgbText.addEventListener('focusout', event => {
+        const value = event.target.value;
+        const rgb = hex2rgb(value);
+        pinpointCursor(rgb);
+    });
+}
+
+function initColorPickers() {
+    initColorPicker('option-color-background-selected');
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
@@ -310,5 +341,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    initCanvases();
+    initColorPickers();
 });

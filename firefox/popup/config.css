@@ -838,6 +838,7 @@ body {
     grid-template: repeat(5, 2.4rem) repeat(4, 220px) 2.4rem / 17px 5fr 4fr 17px;
     grid-gap: 5px 2px;
     align-items: center;
+    user-select: none;
 }
 .wrapper [id$='-tooltip'] {
     height: 1.4rem;
@@ -1247,16 +1248,99 @@ select:focus option {
     background-color: var(--color-background-input-focus);
 }
 
-#option-color-text,
-#option-color-background,
-#option-color-text-selected,
-#option-color-background-selected {
+.hue,
+.saturation,
+.brightness {
+    width: 150px;
+    height: 150px;
+}
+.saturation,
+.brightness {
+    pointer-events: none;
+}
+.hue {
+    --h: 0;
+    background-color: hsl(var(--h), 100%, 50%);
     position: relative;
 }
-
-.canvas-slider {
-    height: 8px;
+.saturation {
+    background-image: linear-gradient(to bottom, transparent, hsl(var(--h), 0%, 0%));
+    position: absolute;
+}
+.brightness {
+    background-image: linear-gradient(to right, hsl(var(--h), 100%, 100%), transparent);
+    position: absolute;
+}
+.color-slider {
+    --height: 10;
+    height: calc(var(--height) * 1px);
     width: 150px;
+    background: linear-gradient(90deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);
+    margin-top: 15px;
+    border-radius: 2px;
+    position: relative;
+}
+.color-picker-slider-cursor {
+    position: absolute;
+    z-index: 1;
+    box-sizing: border-box;
+    transform: translate(-50%, -5px);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #FFF;
+    border-bottom: 5px solid #FFF;
+    pointer-events: none;
+    width: 8px;
+    height: calc(var(--height) * 1px + 10px);
+    border-radius: 10%;
+}
+.color-picker-cursor {
+    position: absolute;
+    z-index: 1;
+    box-sizing: border-box;
+    transform: translate(-50%,-50%);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    pointer-events: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.color-picker-input {
+    border-radius: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-family: inherit;
+    appearance: none;
+    background-clip: padding-box;
+    line-height: 1.5;
+    transition: border var(--timing-short) ease-in,background-color var(--timing-short) ease-in;
+    border-style: solid;
+    border-width: var(--border-width-input-none);
+    border-color: transparent;
+    box-shadow: inset 0 0 0 var(--border-width-input-small) var(--color-border-input);
+    color: var(--color-text-input);
+    background-color: var(--color-background-input);
+    display: flex;
+    height: var(--input-size-default);
+    font-size: var(--input-text-default);
+    width: 15rem;
+}
+
+.color-picker-input:hover {
+    outline: none;
+    border-color: var(--color-border-input-hover);
+    box-shadow: inset 0 0 0 var(--border-width-input) var(--color-border-input-hover);
+    background-color: var(--color-background-input);
+}
+.color-picker.input-:focus, .color-picker-input:focus:hover {
+    outline: solid 2px var(--color-border-input-focus);
+    outline-offset: -1px;
+    border-color: var(--color-border-input-focus);
+    box-shadow: 0 0 0 var(--border-width-input) var(--color-border-input-focus),inset 0 0 0 var(--border-width-input) var(--color-border-input-focus);
+    background-color: var(--color-background-input-focus);
+    box-shadow: 0 0 0 var(--border-width-input) var(--color-border-input-focus),inset 0 0 0 var(--border-width-input) var(--color-border-input-focus);
+    outline: 0px;
 }
 #canvas-color-text-selected,
 #canvas-color-background-selected,
@@ -1265,27 +1349,6 @@ select:focus option {
     height: 150px;
     width: 150px;
     position: relative;
-}
-.canvas-pointer,
-.canvas-pointer-slider {
-    position: absolute;
-    z-index: 1;
-    box-sizing: border-box;
-    transform: translate(-50%,-50%);
-    /* background-color: #fff; */
-    border: 2px solid #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,.2);
-    pointer-events: none;
-}
-.canvas-pointer {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-.canvas-pointer-slider {
-    width: 7px;
-    height: 13px;
-    border-radius: 30%;
 }
 
 .lang {
