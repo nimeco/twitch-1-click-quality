@@ -48,8 +48,9 @@ async function initCSS() {
     transition = await getStorage('option-toggle-transition');
     let buttonCss = `
         :root {
-            --option-color-background: var(--color-background-button-primary-default);
             --option-color-text: var(--color-text-overlay);
+            --option-color-background: var(--color-background-button-primary-default);
+            --option-color-text-selected: var(--color-text-overlay);
             --option-color-background-selected: var(--color-twitch-purple-7);
         }
         .quality-button {
@@ -173,8 +174,8 @@ function setTransitionRule(enabled) {
 }
 
 function setButtonColor(request) {
-    const key = request['requested-key'];
-    document.documentElement.style.setProperty(`--${key}`, request.detail.color);
+    const key = request.detail['requested-key'];
+    document.documentElement.style.setProperty(`--${key}`, request.detail.value);
     // document.querySelector('.quality-button-header button')?.style.setProperty(properties[request['requested-key']], request.detail.color);
 }
 

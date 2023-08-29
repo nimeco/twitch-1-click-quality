@@ -50,7 +50,38 @@ const options = {
         property: 'checked',
         message: 'toggle-transition',
     },
-    // 'option-color-background': {}
+    'option-color-text-selected': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            console.log(value, id);
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-background-selected': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            console.log(value, id);
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-text': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            console.log(value, id);
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-background': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            console.log(value, id);
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
     'option-reset': {
         type: '',
         event: 'click',
@@ -59,42 +90,67 @@ const options = {
             setControlValue('#range-margin', 'value', 0, 'input');
             setControlValue('#range-scale', 'value', 100, 'input');
             setControlValue('#checkbox-transition', 'checked', true, 'click');
+
+            const colorTextSelected = "#FFFFFF",
+                colorBackgroundSelected = "#5C16C5",
+                colorText = "#FFFFFF",
+                colorBackground = "#9147FF";
+
+            setControlValue('#option-color-text-selected .color-picker-input', 'value', colorTextSelected, 'focusout');
+            setControlValue('#option-color-background-selected .color-picker-input', 'value', colorBackgroundSelected, 'focusout');
+            setControlValue('#option-color-text .color-picker-input', 'value', colorText, 'focusout');
+            setControlValue('#option-color-background .color-picker-input', 'value', colorBackground, 'focusout');
+            thisBrowser.storage.local.set({
+                'option-color-text-selected': colorTextSelected,
+                'option-color-background-selected': colorBackgroundSelected,
+                'option-color-text': colorText,
+                'option-color-background': colorBackground,
+            });
         },
     },
 };
 
+let savedParams = {};
+// let savedX = 0;
+// let savedY = 0;
+// let savedH = 0;
+// let savedW = 0;
+// let savedSliderX = 0;
+// let savedSliderW = 0;
+
+// init control values and set listeners (except color pickers)
 if (thisBrowser) {
-    for (let [optionId, option] of Object.entries(options)) {
-        let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
-        let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
-        let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
-        node.addEventListener(option.event, () => {
-            if (option.property) {
-                debounceSet({ [optionId]: node[option.property] });
-            }
-
-            if (option.message) {
-                let value = node[option.property];
-                if (option.calc) {
-                    value = option.calc(value);
-                }
-                let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
-                detail.value = value;
-                detail['requested-key'] = optionId;
-
-                let message = {
-                    type: option.message,
-                    detail: detail,
-                };
-
-                debounceMsg(message);
-            }
-
-            if (option.callback) {
-                option.callback(node[option.property]);
-            }
-        });
-    }
+    // for (let [optionId, option] of Object.entries(options)) {
+    //     let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
+    //     let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
+    //     let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
+    //     node.addEventListener(option.event, () => {
+    //         if (option.property) {
+    //             debounceSet({ [optionId]: node[option.property] });
+    //         }
+    //
+    //         if (option.message) {
+    //             let value = node[option.property];
+    //             if (option.calc) {
+    //                 value = option.calc(value);
+    //             }
+    //             let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+    //             detail.value = value;
+    //             detail['requested-key'] = optionId;
+    //
+    //             let message = {
+    //                 type: option.message,
+    //                 detail: detail,
+    //             };
+    //
+    //             debounceMsg(message);
+    //         }
+    //
+    //         if (option.callback) {
+    //             option.callback(node[option.property]);
+    //         }
+    //     });
+    // }
 }
 
 function messageTwitchTabs(message) {
@@ -140,7 +196,9 @@ function getCursorPosition(element, event) {
 function newElement(nodeName, attributes) {
     const node = document.createElement(nodeName);
     if (attributes) {
-        Object.assign(node, attributes);
+        Object.entries(attributes).forEach(e => {
+            node.setAttribute(e[0], e[1]);
+        });
     }
     return node;
 }
@@ -194,9 +252,12 @@ function rgb2hsv(r, g, b) {
 }
 
 function rgb2hex(r, g, b) {
-    return (1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase();
+    return '#' + (1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase();
 }
 function hex2rgb(hex) {
+    if (hex[0] === '#') {
+        hex = hex.substring(1);
+    }
     const bigInt = parseInt(hex, 16);
     const r = (bigInt >> 16) & 255;
     const g = (bigInt >> 8) & 255;
@@ -207,49 +268,86 @@ function hex2rgb(hex) {
 function normalizeRgb(r, g, b) {
     return [r, g, b].map(v => v / 255);
 }
-
-function mouseMovePickerHandler(event, target, cursor, textNodes) {
+function validateHexRgb(hex) {
+    return /^#?[0-9A-F]{3}([0-9A-F]{3})?$/i.test(hex);
+}
+function rgb2css(r, g, b) {
+    return `rgb(${r*255},${g*255},${b*255})`;
+}
+function sendColorToTab(id, value) {
+    messageTwitchTabs({
+        type: "select-color",
+        detail: {
+            'requested-key': id,
+            value: value,
+        }
+    });
+}
+function mouseMovePickerHandler(event, id, target, cursor, textNodes) {
     const [cursorX, cursorY] = getCursorPosition(target, event);
-    const rect = target.getBoundingClientRect();
-    const width = rect.width - 1;
-    const height = rect.height - 1;
-    const valueY = height - cursorY;
+
+    // savedX = cursorX;
+    // savedY = cursorY;
+    savedParams[id].savedX = cursorX;
+    savedParams[id].savedY = cursorY;
+    let savedSliderX = savedParams[id].savedSliderX;
+    let savedX = savedParams[id].savedX;
+    let savedY = savedParams[id].savedY;
+    let savedW = savedParams[id].savedW;
+    let savedH = savedParams[id].savedH;
+
+    const degrees = 360 * savedSliderX / savedW;
+    const convertedY = savedH - savedY;
 
     setCursorCoords(cursor, cursorX, cursorY);
-    const hsl = truncDigits(hsv2hsl(...[0, cursorX / width, valueY / height]));
-    const rgb = truncDigits(hsv2rgb(...[0, cursorX / width, valueY / height]));
+    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX/savedW, convertedY/savedH]));
+    const rgbHex = rgb2hex(...rgbDec);
+    textNodes.rgbText.value = rgbHex;
+    textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
 
-    textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(valueY).toFixed(2)}`;
-    textNodes.rgbText.value = `${rgb2hex(...rgb)}`;
-    textNodes.hsvText.value = `0.00 ${Number(cursorX / width).toFixed(2)} ${Number(valueY / height).toFixed(2)}`;
-    textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
-    document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+    sendColorToTab(id, rgbHex);
+
+    // const hsl = truncDigits(hsv2hsl(...[degrees, savedX/savedW, convertedY/savedH]));
+    // textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(convertedY).toFixed(2)}`;
+    // textNodes.hsvText.value = `${Number(degrees).toFixed(2)} ${Number(savedX/savedW).toFixed(2)} ${Number(convertedY/savedH).toFixed(2)}`;
+    // textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
+    // // document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+    // document.body.style.backgroundColor = rgb2css(...rgbDec);
 }
 
-function mouseMoveSliderHandler(event, target, cursor, textNodes) {
+function mouseMoveSliderHandler(event, id, target, cursor, textNodes) {
     const [cursorX,] = getCursorPosition(target, event);
-    const rect = target.getBoundingClientRect();
-    const width = rect.width - 1;
-    const height = rect.height - 1;
-    const valueY = 0;
 
-    const degrees = 360 * cursorX / width;
-    setCursorCoords(cursor, cursorX, valueY);
-    const hsl = truncDigits(hsv2hsl(...[degrees, cursorX / width, valueY / height]));
-    const rgb = truncDigits(hsv2rgb(...[degrees, cursorX / width, valueY / height]));
-    target.parentElement.parentElement.querySelector('.hue').style.setProperty('--h', `${Math.round(degrees)}`);
+    savedParams[id].savedSliderX = cursorX;
+    let savedSliderX = savedParams[id].savedSliderX;
+    let savedX = savedParams[id].savedX;
+    let savedY = savedParams[id].savedY;
+    let savedW = savedParams[id].savedW;
+    let savedH = savedParams[id].savedH;
+    const degrees = 360 * savedSliderX / savedW;
+    const convertedY = savedH - savedY;
 
-    textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(valueY).toFixed(2)}`;
-    textNodes.rgbText.value = `${rgb2hex(...rgb)}`;
-    textNodes.hsvText.value = `${Number(degrees).toFixed(2)} ${Number(cursorX / width).toFixed(2)} ${Number(valueY / height).toFixed(2)}`;
-    textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
-    document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+    setCursorCoords(cursor, cursorX, 0);
+    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX/savedW, convertedY/savedH]));
+    const rgbHex = rgb2hex(...rgbDec);
+    textNodes.rgbText.value = rgbHex;
+    textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
+
+    sendColorToTab(id, rgbHex);
+    target.parentElement.querySelector('.color-picker').style.setProperty('--hue', `${Math.round(degrees)}`);
+
+    // const hsl = truncDigits(hsv2hsl(...[degrees, savedX/savedW, convertedY/savedH]));
+    // textNodes.coordText.value = `${Number(cursorX).toFixed(2)} ${Number(convertedY).toFixed(2)}`;
+    // textNodes.hsvText.value = `${Number(degrees).toFixed(2)} ${Number(savedX/savedW).toFixed(2)} ${Number(convertedY/savedH).toFixed(2)}`;
+    // textNodes.hslText.value = `${hsl[0]} ${hsl[1]} ${hsl[2]}`;
+    // // document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
+    // document.body.style.backgroundColor = rgb2css(...rgbDec);
 }
-function mouseDown(eventDown, fn, cursor, textNodes) {
+function mouseDown(eventDown, id, fn, cursor, textNodes) {
     const originalTarget = eventDown.target;
-    fn(eventDown, originalTarget, cursor, textNodes);
+    fn(eventDown, id, originalTarget, cursor, textNodes);
     function mouseMove(event) {
-        fn(event, originalTarget, cursor, textNodes);
+        fn(event, id, originalTarget, cursor, textNodes);
     }
     function mouseUp() {
         clearEvents();
@@ -270,53 +368,182 @@ function setCursorCoords(cursor, x, y) {
 function initColorPicker(id) {
     const colorPicker = document.getElementById(id);
 
-    const coordText = newElement('input', { type: 'text', classList: 'color-picker-input' });
-    const rgbText = newElement('input', { type: 'text', classList: 'color-picker-input' });
-    const hsvText = newElement('input', { type: 'text', classList: 'color-picker-input' });
-    const hslText = newElement('input', { type: 'text', classList: 'color-picker-input' });
-    const textNodes = { coordText, rgbText, hsvText, hslText };
+    // const coordText = newElement('input', { type: 'text', class: 'color-picker-input' });
+    const rgbText = newElement('input', { type: 'text', class: 'color-picker-input', maxlength: 7, value: '#' });
+    // const hsvText = newElement('input', { type: 'text', class: 'color-picker-input' });
+    // const hslText = newElement('input', { type: 'text', class: 'color-picker-input' });
+    // const textNodes = { coordText, rgbText, hsvText, hslText };
+    const textNodes = { rgbText };
 
-    const colorPickerNode = colorPicker.getElementsByClassName('hue')[0];
-    const colorPickerCursor = newElement('div', { classList: 'color-picker-cursor' });
+    const confirmButton = newElement('button', { class: 'button' });
+    confirmButton.textContent = 'Confirm';
+
+    const colorPickerNode = colorPicker.getElementsByClassName('color-picker')[0];
+    const colorPickerCursor = newElement('div', { class: 'color-picker-cursor' });
     colorPickerNode.appendChild(colorPickerCursor);
     colorPickerNode.addEventListener('mousedown', event => {
-        mouseDown(event, mouseMovePickerHandler, colorPickerCursor, textNodes);
+        mouseDown(event, id, mouseMovePickerHandler, colorPickerCursor, textNodes);
     }, { passive: true });
 
     const colorPickerSliderNode = colorPicker.getElementsByClassName('color-slider')[0];
-    const colorPickerSliderCursor = newElement('div', { classList: 'color-picker-slider-cursor' });
+    const colorPickerSliderCursor = newElement('div', { class: 'color-picker-slider-cursor' });
     colorPickerSliderNode.appendChild(colorPickerSliderCursor);
     colorPickerSliderNode.addEventListener('mousedown', event => {
-        mouseDown(event, mouseMoveSliderHandler, colorPickerSliderCursor, textNodes);
+        mouseDown(event, id, mouseMoveSliderHandler, colorPickerSliderCursor, textNodes);
     }, { passive: true });
 
-    colorPicker.appendChild(coordText);
+    // colorPicker.appendChild(coordText);
     colorPicker.appendChild(rgbText);
-    colorPicker.appendChild(hsvText);
-    colorPicker.appendChild(hslText);
+    colorPicker.appendChild(confirmButton);
+    // colorPicker.appendChild(hsvText);
+    // colorPicker.appendChild(hslText);
 
-    function pinpointCursor(rgb) {
-        const hsv = rgb2hsv(...normalizeRgb(...rgb));
-        const hsl = hsv2hsl(...hsv);
-
-        const pickerRect = colorPickerNode.getBoundingClientRect();
-        const sliderRect = colorPickerSliderNode.getBoundingClientRect();
-        setCursorCoords(colorPickerCursor, hsv[1]*(pickerRect.width-1), (1-hsv[2])*(pickerRect.height-1));
-        setCursorCoords(colorPickerSliderCursor, hsv[0]/360*(sliderRect.width-1), 0);
-
-        document.body.style.backgroundColor = `hsl(${hsl[0]}deg ${hsl[1]*100}% ${hsl[2]*100}%)`;
+    const rectPicker = colorPickerNode.getBoundingClientRect();
+    if (!(id in savedParams)) {
+        savedParams[id] = {};
+        savedParams[id].savedX = 0;
+        savedParams[id].savedY = 0;
+        savedParams[id].savedW = 0;
+        savedParams[id].savedW = 0;
+        savedParams[id].savedSliderX = 0;
+        savedParams[id].savedSliderW = 0;
     }
+    savedParams[id].savedH = rectPicker.height - 1;
+    savedParams[id].savedW = rectPicker.width - 1;
+    savedParams[id].savedSliderW = colorPickerSliderNode.getBoundingClientRect().width - 1;
+
+    function pinpointCursor(r, g, b) {
+        const rgbNormalized = normalizeRgb(r, g, b);
+        const hsv = rgb2hsv(...rgbNormalized);
+
+        let savedSliderW = savedParams[id].savedSliderW;
+        let savedW = savedParams[id].savedW;
+        let savedH = savedParams[id].savedH;
+
+        savedParams[id].savedSliderX = hsv[0] / 360 * savedSliderW;
+        savedParams[id].savedX = hsv[1] * savedW;
+        savedParams[id].savedY = savedH - hsv[2] * savedH;
+
+        let savedSliderX = savedParams[id].savedSliderX;
+
+        setCursorCoords(colorPickerCursor, hsv[1]*savedW, (1-hsv[2])*savedH);
+        setCursorCoords(colorPickerSliderCursor, savedSliderX, 0);
+
+        colorPickerNode.style.setProperty('--hue', `${Math.round(hsv[0])}`);
+        // document.body.style.backgroundColor = rgb2css(...rgbNormalized);
+    }
+    function preSelectColor(rgbHex, successCallback) {
+        if (validateHexRgb(rgbHex)) {
+            if (rgbHex.length === 4) {
+                rgbHex = rgbHex.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
+                rgbText.value = rgbHex;
+            }
+            const rgbDec = hex2rgb(rgbHex);
+            pinpointCursor(...rgbDec);
+            sendColorToTab(id, rgbHex);
+            if (successCallback) {
+                successCallback();
+            }
+        }
+    }
+
+    rgbText.addEventListener('input', event => {
+        let rgbHex = event.target.value;
+        confirmButton.classList.remove('confirm-button');
+        if (rgbHex.length === 0) {
+            event.target.value = '#';
+        } else if (rgbHex.length === 1 && rgbHex !== "#") {
+            event.target.value = `#${rgbHex}`;
+        }
+
+        if ((rgbHex.length === 4 || rgbHex.length === 7) && /#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?$/.test(rgbHex)) {
+            confirmButton.removeAttribute('disabled');
+        } else {
+            confirmButton.setAttribute('disabled', '');
+        }
+    });
+    rgbText.addEventListener('keydown', event => {
+        let rgbHex = event.target.value;
+        if (event.key === "Backspace" && rgbHex.length === 1) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (event.key === "Enter") {
+            confirmButton.dispatchEvent(new Event("click", { bubbles: true }));
+        }
+    });
     rgbText.addEventListener('focusout', event => {
-        const value = event.target.value;
-        const rgb = hex2rgb(value);
-        pinpointCursor(rgb);
+        preSelectColor(rgbText.value);
+        // let value = rgbText.value;
+        // if (validateHexRgb(value)) {
+        //     if (value.length === 4) {
+        //         value = value.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
+        //         rgbText.value = value;
+        //     }
+        //     const rgb = hex2rgb(value);
+        //     pinpointCursor(...rgb);
+        // }
+    });
+    confirmButton.addEventListener('click', event => {
+        preSelectColor(rgbText.value, () => {
+            event.target.classList.add('confirm-button');
+            thisBrowser.storage.local.set({ [id]: rgbText.value });
+        });
+        // preSelectColor(rgbText.value, () => {
+        // });
+        // let value = rgbText.value;
+        // if (validateHexRgb(value)) {
+        //     if (value.length === 4) {
+        //         value = value.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
+        //         rgbText.value = value;
+        //     }
+        //     const rgb = hex2rgb(value);
+        //     pinpointCursor(...rgb);
+        //     event.target.classList.add('confirm-button');
+        // }
     });
 }
 
 function initColorPickers() {
+    initColorPicker('option-color-text');
+    initColorPicker('option-color-background');
+    initColorPicker('option-color-text-selected');
     initColorPicker('option-color-background-selected');
 }
+function initControls() {
+    for (let [optionId, option] of Object.entries(options)) {
+        let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
+        let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
+        let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
+        if (option.event) {
+            node.addEventListener(option.event, () => {
+                if (option.property) {
+                    debounceSet({ [optionId]: node[option.property] });
+                }
 
+                if (option.message) {
+                    let value = node[option.property];
+                    if (option.calc) {
+                        value = option.calc(value);
+                    }
+                    let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+                    detail.value = value;
+                    detail['requested-key'] = optionId;
+
+                    let message = {
+                        type: option.message,
+                        detail: detail,
+                    };
+
+                    debounceMsg(message);
+                }
+
+                if (option.callback) {
+                    option.callback(node[option.property]);
+                }
+            });
+        }
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
@@ -328,18 +555,19 @@ document.addEventListener('DOMContentLoaded', () => {
             node[options[optionId].property] = option;
 
             if (options[optionId].callback) {
-                options[optionId].callback(option);
+                options[optionId].callback(option, optionId);
             }
         }
 
-        for (let e of document.querySelectorAll('input[type="range"]')) {
-            e.style.setProperty('--value', e.value);
-            e.style.setProperty('--min', e.min === '' ? '0' : e.min);
-            e.style.setProperty('--max', e.max === '' ? '100' : e.max);
-            e.addEventListener('input', () => e.style.setProperty('--value', e.value));
-            e.addEventListener('change', () => e.style.setProperty('--value', e.value));
+        for (let elem of document.querySelectorAll('input[type="range"]')) {
+            elem.style.setProperty('--value', elem.value);
+            elem.style.setProperty('--min', elem.min === '' ? '0' : elem.min);
+            elem.style.setProperty('--max', elem.max === '' ? '100' : elem.max);
+            elem.addEventListener('input', () => elem.style.setProperty('--value', elem.value));
+            elem.addEventListener('change', () => elem.style.setProperty('--value', elem.value));
         }
     });
 
     initColorPickers();
+    initControls();
 });
