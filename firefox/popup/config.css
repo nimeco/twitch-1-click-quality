@@ -847,7 +847,7 @@ body {
 .wrapper {
     display: grid;
     margin: 20px 0 25px;
-    grid-template: repeat(5, 2.4rem) repeat(4, 220px) 2.4rem / 17px 5fr 4fr 17px;
+    grid-template: repeat(5, 2.4rem) repeat(4, auto) 2.4rem / 17px 5fr 4fr 17px;
     grid-gap: 5px 2px;
     align-items: center;
     user-select: none;
@@ -873,6 +873,7 @@ body {
 
 #option-color-text-selected-label { grid-area: 6 / 2 / 6 / 2; }
 #option-color-text-selected { grid-area: 6 / 3 / 6 / 4; }
+#option-color-text-selectedw { grid-area: 6 / 3 / 6 / 4; }
 #option-color-background-selected-label { grid-area: 7 / 2 / 7 / 2; }
 #option-color-background-selected { grid-area: 7 / 3 / 7 / 4; }
 
@@ -1045,8 +1046,7 @@ button {
     line-height: 2rem;
 }
 input[type='checkbox'] {
-    position: absolute;
-    opacity: 0;
+    display: none;
 }
 input[type='checkbox']:checked + .input-toggle-label {
     border-color: var(--color-border-toggle-checked);
@@ -1391,6 +1391,50 @@ select:focus option {
 .confirm-button:active {
     background-color: var(--color-background-button-success-active);
     color: transparent;
+}
+
+.toggle-label {
+    display: block;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1rem;
+    color: #A77B0E;
+    background: #FAE042;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.25s ease-out;
+}
+.toggle-label:hover {
+    color: #7C5A0B;
+}
+.toggle-label::before {
+    content: ' ';
+    display: inline-block;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid transparent;
+    vertical-align: middle;
+    margin-right: .7rem;
+    transform: translateY(-2px);
+    transition: transform .2s ease-out;
+}
+.collapsible-content {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height .25s ease-in-out;
+}
+.toggle:checked + .toggle-label::before {
+    transform: rotate(90deg) translateX(-3px);
+}
+.toggle:checked + .toggle-label + .collapsible-content {
+    max-height: 100vh;
+}
+.toggle:checked + .toggle-label {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .lang {

@@ -54,7 +54,6 @@ const options = {
         type: 'input',
         property: 'value',
         callback: (value, id) => {
-            console.log(value, id);
             document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
         }
     },
@@ -62,7 +61,6 @@ const options = {
         type: 'input',
         property: 'value',
         callback: (value, id) => {
-            console.log(value, id);
             document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
         }
     },
@@ -70,7 +68,6 @@ const options = {
         type: 'input',
         property: 'value',
         callback: (value, id) => {
-            console.log(value, id);
             document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
         }
     },
@@ -78,7 +75,6 @@ const options = {
         type: 'input',
         property: 'value',
         callback: (value, id) => {
-            console.log(value, id);
             document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
         }
     },
@@ -117,41 +113,6 @@ let savedParams = {};
 // let savedW = 0;
 // let savedSliderX = 0;
 // let savedSliderW = 0;
-
-// init control values and set listeners (except color pickers)
-if (thisBrowser) {
-    // for (let [optionId, option] of Object.entries(options)) {
-    //     let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
-    //     let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
-    //     let debounceMsg = debounce((...args) => messageTwitchTabs(...args));
-    //     node.addEventListener(option.event, () => {
-    //         if (option.property) {
-    //             debounceSet({ [optionId]: node[option.property] });
-    //         }
-    //
-    //         if (option.message) {
-    //             let value = node[option.property];
-    //             if (option.calc) {
-    //                 value = option.calc(value);
-    //             }
-    //             let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
-    //             detail.value = value;
-    //             detail['requested-key'] = optionId;
-    //
-    //             let message = {
-    //                 type: option.message,
-    //                 detail: detail,
-    //             };
-    //
-    //             debounceMsg(message);
-    //         }
-    //
-    //         if (option.callback) {
-    //             option.callback(node[option.property]);
-    //         }
-    //     });
-    // }
-}
 
 function messageTwitchTabs(message) {
     thisBrowser.tabs.query({}, tabs => {
@@ -324,6 +285,7 @@ function mouseMoveSliderHandler(event, id, target, cursor, textNodes) {
     let savedY = savedParams[id].savedY;
     let savedW = savedParams[id].savedW;
     let savedH = savedParams[id].savedH;
+
     const degrees = 360 * savedSliderX / savedW;
     const convertedY = savedH - savedY;
 
@@ -509,6 +471,7 @@ function initColorPickers() {
     initColorPicker('option-color-text-selected');
     initColorPicker('option-color-background-selected');
 }
+// init control values and set listeners (except color pickers)
 function initControls() {
     for (let [optionId, option] of Object.entries(options)) {
         let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
