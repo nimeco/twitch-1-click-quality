@@ -50,20 +50,6 @@ const options = {
         property: 'checked',
         message: 'toggle-transition',
     },
-    'option-color-text-selected': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-background-selected': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
     'option-color-text': {
         type: 'input',
         property: 'value',
@@ -78,29 +64,59 @@ const options = {
             document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
         }
     },
+    'option-color-text-hover': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-background-hover': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-text-selected': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
+    'option-color-background-selected': {
+        type: 'input',
+        property: 'value',
+        callback: (value, id) => {
+            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        }
+    },
     'option-reset': {
         type: '',
         event: 'click',
         callback: () => {
-            setControlValue('#checkbox-save', 'checked', true, 'click');
-            setControlValue('#range-margin', 'value', 0, 'input');
-            setControlValue('#range-scale', 'value', 100, 'input');
-            setControlValue('#checkbox-transition', 'checked', true, 'click');
+            thisBrowser.storage.local.get(null, items => {
+                console.log(items);
+                setControlValue('#checkbox-save', 'checked', items['reset-quality-save'], 'click');
+                setControlValue('#range-margin', 'value', items['reset-button-margin'], 'input');
+                setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
+                setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
+                setControlValue('#option-color-text .color-picker-input', 'value', items['reset-color-text'], 'focusout');
+                setControlValue('#option-color-background .color-picker-input', 'value', items['reset-color-background'], 'focusout');
+                setControlValue('#option-color-text-hover .color-picker-input', 'value', items['reset-color-text-hover'], 'focusout');
+                setControlValue('#option-color-background-hover .color-picker-input', 'value', items['reset-color-background-hover'], 'focusout');
+                setControlValue('#option-color-text-selected .color-picker-input', 'value', items['reset-color-text-selected'], 'focusout');
+                setControlValue('#option-color-background-selected .color-picker-input', 'value', items['reset-color-background-selected'], 'focusout');
 
-            const colorTextSelected = "#FFFFFF",
-                colorBackgroundSelected = "#5C16C5",
-                colorText = "#FFFFFF",
-                colorBackground = "#9147FF";
-
-            setControlValue('#option-color-text-selected .color-picker-input', 'value', colorTextSelected, 'focusout');
-            setControlValue('#option-color-background-selected .color-picker-input', 'value', colorBackgroundSelected, 'focusout');
-            setControlValue('#option-color-text .color-picker-input', 'value', colorText, 'focusout');
-            setControlValue('#option-color-background .color-picker-input', 'value', colorBackground, 'focusout');
-            thisBrowser.storage.local.set({
-                'option-color-text-selected': colorTextSelected,
-                'option-color-background-selected': colorBackgroundSelected,
-                'option-color-text': colorText,
-                'option-color-background': colorBackground,
+                thisBrowser.storage.local.set({
+                    'option-color-text': items['reset-color-text'],
+                    'option-color-background': items['reset-color-background'],
+                    'option-color-text-hover': items['reset-color-text-hover'],
+                    'option-color-background-hover': items['reset-color-background-hover'],
+                    'option-color-text-selected': items['reset-color-text-selected'],
+                    'option-color-background-selected': items['reset-color-background-selected'],
+                });
             });
         },
     },
@@ -173,10 +189,10 @@ function truncDigits(color, digits = 2) {
 }
 
 function hsv2hsl(h, s, v) {
-    const l = v - v*s/2;
+    const l = v - v * s / 2;
     let sl = 0;
     if (l > 0 && l < 1) {
-        sl = (v - l) / Math.min(l, 1-l);
+        sl = (v - l) / Math.min(l, 1 - l);
     }
     return [h, sl, l];
 }
@@ -203,13 +219,13 @@ function hsv2rgb2(h, s, v) {
 }
 
 function hsv2rgb(h, s, v) {
-    const f = (n, k = (n + h/60)%6) => v - v*s*Math.max(Math.min(k, 4 - k, 1), 0);
+    const f = (n, k = (n + h / 60) % 6) => v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
     return [f(5), f(3), f(1)];
 }
 function rgb2hsv(r, g, b) {
-    const v = Math.max(r, g, b), c = v-Math.min(r, g, b);
-    const h = c && (v===r ? (g-b)/c : v===g ? 2+(b-r)/c : 4+(r-g)/c);
-    return [60*(h<0?h+6:h), v&&c/v, v];
+    const v = Math.max(r, g, b), c = v - Math.min(r, g, b);
+    const h = c && (v === r ? (g - b) / c : v === g ? 2 + (b - r) / c : 4 + (r - g) / c);
+    return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
 }
 
 function rgb2hex(r, g, b) {
@@ -233,7 +249,7 @@ function validateHexRgb(hex) {
     return /^#?[0-9A-F]{3}([0-9A-F]{3})?$/i.test(hex);
 }
 function rgb2css(r, g, b) {
-    return `rgb(${r*255},${g*255},${b*255})`;
+    return `rgb(${r * 255},${g * 255},${b * 255})`;
 }
 function sendColorToTab(id, value) {
     messageTwitchTabs({
@@ -261,7 +277,7 @@ function mouseMovePickerHandler(event, id, target, cursor, textNodes) {
     const convertedY = savedH - savedY;
 
     setCursorCoords(cursor, cursorX, cursorY);
-    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX/savedW, convertedY/savedH]));
+    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX / savedW, convertedY / savedH]));
     const rgbHex = rgb2hex(...rgbDec);
     textNodes.rgbText.value = rgbHex;
     textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
@@ -290,7 +306,7 @@ function mouseMoveSliderHandler(event, id, target, cursor, textNodes) {
     const convertedY = savedH - savedY;
 
     setCursorCoords(cursor, cursorX, 0);
-    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX/savedW, convertedY/savedH]));
+    const rgbDec = truncDigits(hsv2rgb(...[degrees, savedX / savedW, convertedY / savedH]));
     const rgbHex = rgb2hex(...rgbDec);
     textNodes.rgbText.value = rgbHex;
     textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
@@ -305,11 +321,11 @@ function mouseMoveSliderHandler(event, id, target, cursor, textNodes) {
     // // document.body.style.backgroundColor = `hsl(${hsl[0]}deg, ${hsl[1] * 100}%, ${hsl[2] * 100}%)`;
     // document.body.style.backgroundColor = rgb2css(...rgbDec);
 }
-function mouseDown(eventDown, id, fn, cursor, textNodes) {
+function mouseDown(eventDown, id, func, cursor, textNodes) {
     const originalTarget = eventDown.target;
-    fn(eventDown, id, originalTarget, cursor, textNodes);
+    func(eventDown, id, originalTarget, cursor, textNodes);
     function mouseMove(event) {
-        fn(event, id, originalTarget, cursor, textNodes);
+        func(event, id, originalTarget, cursor, textNodes);
     }
     function mouseUp() {
         clearEvents();
@@ -360,6 +376,9 @@ function initColorPicker(id) {
     // colorPicker.appendChild(hsvText);
     // colorPicker.appendChild(hslText);
 
+    // const loadColor = getStorage(id);
+    // preSelectColor(loadColor);
+
     const rectPicker = colorPickerNode.getBoundingClientRect();
     if (!(id in savedParams)) {
         savedParams[id] = {};
@@ -388,13 +407,13 @@ function initColorPicker(id) {
 
         let savedSliderX = savedParams[id].savedSliderX;
 
-        setCursorCoords(colorPickerCursor, hsv[1]*savedW, (1-hsv[2])*savedH);
+        setCursorCoords(colorPickerCursor, hsv[1] * savedW, (1 - hsv[2]) * savedH);
         setCursorCoords(colorPickerSliderCursor, savedSliderX, 0);
 
         colorPickerNode.style.setProperty('--hue', `${Math.round(hsv[0])}`);
         // document.body.style.backgroundColor = rgb2css(...rgbNormalized);
     }
-    function preSelectColor(rgbHex, successCallback) {
+    function preSelectColor(rgbHex, func) {
         if (validateHexRgb(rgbHex)) {
             if (rgbHex.length === 4) {
                 rgbHex = rgbHex.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
@@ -403,8 +422,8 @@ function initColorPicker(id) {
             const rgbDec = hex2rgb(rgbHex);
             pinpointCursor(...rgbDec);
             sendColorToTab(id, rgbHex);
-            if (successCallback) {
-                successCallback();
+            if (func) {
+                func();
             }
         }
     }
@@ -468,6 +487,8 @@ function initColorPicker(id) {
 function initColorPickers() {
     initColorPicker('option-color-text');
     initColorPicker('option-color-background');
+    initColorPicker('option-color-text-hover');
+    initColorPicker('option-color-background-hover');
     initColorPicker('option-color-text-selected');
     initColorPicker('option-color-background-selected');
 }

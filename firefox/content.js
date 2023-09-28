@@ -47,12 +47,16 @@ async function initCSS() {
     let transition = true;
     transition = await getStorage('option-toggle-transition');
     const colors = await getStorage([
-        'option-color-text', 'option-color-background', 'option-color-text-selected', 'option-color-background-selected'
+        'option-color-text', 'option-color-background',
+        'option-color-text-hover', 'option-color-background-hover',
+        'option-color-text-selected', 'option-color-background-selected'
     ]);
     let buttonCss = `
         :root {
             --option-color-text: ${colors['option-color-text']};
             --option-color-background: ${colors['option-color-background']};
+            --option-color-text-hover: ${colors['option-color-text-hover']};
+            --option-color-background-hover: ${colors['option-color-background-hover']};
             --option-color-text-selected: ${colors['option-color-text-selected']};
             --option-color-background-selected: ${colors['option-color-background-selected']};
         }
@@ -75,13 +79,14 @@ async function initCSS() {
         .quality-button:not(:first-child) {
             margin-left: 1rem;
         }
-        .quality-button:hover {
-            background-color: var(--color-background-button-primary-hover);
-            color: var(--color-text-button-primary);
+        .quality-button:hover,
+        .quality-button[data-selected='1']:hover {
+            color: var(--option-color-text-hover);
+            background-color: var(--option-color-background-hover);
         }
         .quality-button[data-selected='1'] {
-            background-color: var(--option-color-background-selected);
             color: var(--option-color-text-selected);
+            background-color: var(--option-color-background-selected);
         }
         .quality-button-header {
             display: flex;
@@ -103,9 +108,12 @@ initCSS();
 function getStorage(_keys) {
     return new Promise(resolve => {
         let keys = _keys;
+        let oneArgument = false;
         if (typeof _keys === "string") {
             keys = [keys];
+            oneArgument = true;
         }
+
         let allKeysExist = true;
         let result = {};
         for (let i = 0; i < keys.length; i++) {
@@ -118,22 +126,19 @@ function getStorage(_keys) {
         }
 
         if (allKeysExist) {
-            let values = Object.values(result);
-            if (values.length === 1) {
-                resolve(values[0]);
+            if (oneArgument) {
+                resolve(Object.values(result)[0]);
             } else {
                 resolve(result);
             }
         } else {
-            thisBrowser.storage.local.get(keys, res => {
-                cachedStorage = { ...cachedStorage, ...res };
-                result = res;
+            thisBrowser.storage.local.get(keys, items => {
+                cachedStorage = { ...cachedStorage, ...items };
 
-                let values = Object.values(result);
-                if (values.length === 1) {
-                    resolve(values[0]);
+                if (oneArgument) {
+                    resolve(Object.values(items)[0]);
                 } else {
-                    resolve(result);
+                    resolve(items);
                 }
             });
         }
@@ -154,8 +159,8 @@ const innerDimensions = node => {
 async function setHeaderStyle() {
     try {
         let opts = await getStorage(['option-button-margin', 'option-button-scale']);
-        let t = opts['option-button-margin']/100;
-        let s = opts['option-button-scale']/100;
+        let t = opts['option-button-margin'] / -100;
+        let s = opts['option-button-scale'] / 100;
 
         let node = document.querySelector('[data-target="channel-header-right"]');
 
