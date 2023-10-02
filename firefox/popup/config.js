@@ -13,6 +13,38 @@ function setControlValue(selector, property, value, event) {
     });
 }
 
+const defaultLocale = "en";
+let locale;
+let translations = {};
+
+function setLocale(newLocale) {
+    if (newLocale === locale) return;
+    locale = newLocale;
+    translatePage();
+}
+
+async function fetchTranslations() {
+    const response = await fetch(`translations.json`);
+    return response.json();
+}
+
+async function translatePage() {
+    if (Object.keys(translations).length === 0) {
+        translations = await fetchTranslations();
+    }
+    document.querySelectorAll("[data-i18n-key]").forEach(translateElement);
+}
+
+function translateElement(element) {
+    const key = element.dataset.i18nKey;
+    const translation = translations[locale][key];
+    if (key === "qualityTooltip") {
+        element.dataset.description = translation;
+    } else {
+        element.innerText = translation;
+    }
+}
+
 const options = {
     'option-quality-save': {
         type: 'input',
@@ -40,8 +72,8 @@ const options = {
         event: 'change',
         property: 'value',
         callback: value => {
-            document.body.removeAttribute('class');
-            document.body.classList.add(value);
+            setLocale(value);
+            translatePage();
         },
     },
     'option-toggle-transition': {
@@ -229,7 +261,7 @@ function rgb2hsv(r, g, b) {
 }
 
 function rgb2hex(r, g, b) {
-    return '#' + (1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase();
+    return `#${(1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase()}`;
 }
 function hex2rgb(hex) {
     if (hex[0] === '#') {
@@ -550,8 +582,11 @@ document.addEventListener('DOMContentLoaded', () => {
             elem.addEventListener('input', () => elem.style.setProperty('--value', elem.value));
             elem.addEventListener('change', () => elem.style.setProperty('--value', elem.value));
         }
+
+        // document.querySelectorAll('[data-i18n-key]').forEach(translateElement);
     });
 
+    setLocale(defaultLocale);
     initColorPickers();
     initControls();
 });

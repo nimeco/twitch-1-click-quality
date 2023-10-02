@@ -1400,32 +1400,30 @@ select:focus option {
     color: transparent;
 }
 
-.lang {
-    display: none;
+#toggle {
+    visibility: hidden;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
 }
-.lang-de .lang.de {
-    display: inline;
+#toggle:checked ~ dialog {
+    display: block;
 }
-.lang-en .lang.en {
-    display: inline;
+label {
+    background: skyblue;
+    color: white;
+    padding: .5em 1em;
+    border-radius: 4px;
 }
-.lang-es .lang.es {
-    display: inline;
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 }
-.lang-fr .lang.fr {
-    display: inline;
-}
-.lang-it .lang.it {
-    display: inline;
-}
-.lang-pt .lang.pt {
-    display: inline;
-}
-.lang-ru .lang.ru {
-    display: inline;
-}
-.lang-jp .lang.jp {
-    display: inline;
+dialog {
+    animation: appear 350ms ease-in 1;
+    max-width: 500px;
 }
 
 .no-transition {
