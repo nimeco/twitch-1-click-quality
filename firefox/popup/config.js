@@ -129,7 +129,6 @@ const options = {
         event: 'click',
         callback: () => {
             thisBrowser.storage.local.get(null, items => {
-                console.log(items);
                 setControlValue('#checkbox-save', 'checked', items['reset-quality-save'], 'click');
                 setControlValue('#range-margin', 'value', items['reset-button-margin'], 'input');
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
@@ -155,12 +154,6 @@ const options = {
 };
 
 let savedParams = {};
-// let savedX = 0;
-// let savedY = 0;
-// let savedH = 0;
-// let savedW = 0;
-// let savedSliderX = 0;
-// let savedSliderW = 0;
 
 function messageTwitchTabs(message) {
     thisBrowser.tabs.query({}, tabs => {
@@ -297,13 +290,12 @@ function mouseMovePickerHandler(event, id, target, cursor, textNodes) {
 
     // savedX = cursorX;
     // savedY = cursorY;
-    savedParams[id].savedX = cursorX;
-    savedParams[id].savedY = cursorY;
-    let savedSliderX = savedParams[id].savedSliderX;
-    let savedX = savedParams[id].savedX;
-    let savedY = savedParams[id].savedY;
-    let savedW = savedParams[id].savedW;
-    let savedH = savedParams[id].savedH;
+    savedParams[id] = {
+        ...savedParams[id],
+        savedX: cursorX,
+        savedY: cursorY,
+    };
+    let { savedSliderX, savedX, savedY, savedW, savedH } = savedParams[id];
 
     const degrees = 360 * savedSliderX / savedW;
     const convertedY = savedH - savedY;
@@ -328,11 +320,7 @@ function mouseMoveSliderHandler(event, id, target, cursor, textNodes) {
     const [cursorX,] = getCursorPosition(target, event);
 
     savedParams[id].savedSliderX = cursorX;
-    let savedSliderX = savedParams[id].savedSliderX;
-    let savedX = savedParams[id].savedX;
-    let savedY = savedParams[id].savedY;
-    let savedW = savedParams[id].savedW;
-    let savedH = savedParams[id].savedH;
+    let { savedSliderX, savedX, savedY, savedW, savedH } = savedParams[id];
 
     const degrees = 360 * savedSliderX / savedW;
     const convertedY = savedH - savedY;
@@ -412,32 +400,38 @@ function initColorPicker(id) {
     // preSelectColor(loadColor);
 
     const rectPicker = colorPickerNode.getBoundingClientRect();
+    const rectPickerSlider = colorPickerSliderNode.getBoundingClientRect();
     if (!(id in savedParams)) {
-        savedParams[id] = {};
-        savedParams[id].savedX = 0;
-        savedParams[id].savedY = 0;
-        savedParams[id].savedW = 0;
-        savedParams[id].savedW = 0;
-        savedParams[id].savedSliderX = 0;
-        savedParams[id].savedSliderW = 0;
+        savedParams[id] = {
+            savedX: 0,
+            savedY: 0,
+            savedW: 0,
+            savedH: 0,
+            savedSliderX: 0,
+            savedSliderW: 0,
+        };
     }
-    savedParams[id].savedH = rectPicker.height - 1;
-    savedParams[id].savedW = rectPicker.width - 1;
-    savedParams[id].savedSliderW = colorPickerSliderNode.getBoundingClientRect().width - 1;
+    savedParams[id] = {
+        ...savedParams[id],
+        savedH: rectPicker.height - 1,
+        savedW: rectPicker.width - 1,
+        savedSliderW: rectPickerSlider.width - 1,
+    };
 
     function pinpointCursor(r, g, b) {
         const rgbNormalized = normalizeRgb(r, g, b);
         const hsv = rgb2hsv(...rgbNormalized);
 
-        let savedSliderW = savedParams[id].savedSliderW;
-        let savedW = savedParams[id].savedW;
-        let savedH = savedParams[id].savedH;
+        let { savedSliderW, savedW, savedH } = savedParams[id];
 
-        savedParams[id].savedSliderX = hsv[0] / 360 * savedSliderW;
-        savedParams[id].savedX = hsv[1] * savedW;
-        savedParams[id].savedY = savedH - hsv[2] * savedH;
+        savedParams[id] = {
+            ...savedParams[id],
+            savedSliderX: hsv[0] / 360 * savedSliderW,
+            savedX: hsv[1] * savedW,
+            savedY: savedH - hsv[2] * savedH,
+        };
 
-        let savedSliderX = savedParams[id].savedSliderX;
+        let { savedSliderX } = savedParams[id];
 
         setCursorCoords(colorPickerCursor, hsv[1] * savedW, (1 - hsv[2]) * savedH);
         setCursorCoords(colorPickerSliderCursor, savedSliderX, 0);
@@ -517,12 +511,14 @@ function initColorPicker(id) {
 }
 
 function initColorPickers() {
-    initColorPicker('option-color-text');
-    initColorPicker('option-color-background');
-    initColorPicker('option-color-text-hover');
-    initColorPicker('option-color-background-hover');
-    initColorPicker('option-color-text-selected');
-    initColorPicker('option-color-background-selected');
+    [
+        'option-color-text',
+        'option-color-background',
+        'option-color-text-hover',
+        'option-color-background-hover',
+        'option-color-text-selected',
+        'option-color-background-selected',
+    ].forEach(currentOption => initColorPicker(currentOption));
 }
 // init control values and set listeners (except color pickers)
 function initControls() {
@@ -582,8 +578,6 @@ document.addEventListener('DOMContentLoaded', () => {
             elem.addEventListener('input', () => elem.style.setProperty('--value', elem.value));
             elem.addEventListener('change', () => elem.style.setProperty('--value', elem.value));
         }
-
-        // document.querySelectorAll('[data-i18n-key]').forEach(translateElement);
     });
 
     setLocale(defaultLocale);
