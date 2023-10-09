@@ -838,7 +838,7 @@ body {
     width: 380px;
     height: 600px;
     font: var(--font-size-base) 'Inter', Arial, sans-serif;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .purple {
@@ -872,9 +872,9 @@ body {
 #option-language-save { grid-area: 5 / 3 / 5 / 3; }
 
 #option-color-text-label { grid-area: 6 / 2 / 6 / 2; }
-#option-color-text { grid-area: 6 / 3 / 6 / 4; }
+#option-color-text ~ label[for="option-color-text"] { grid-area: 6 / 3 / 6 / 4; }
 #option-color-background-label { grid-area: 7 / 2 / 7 / 2; }
-#option-color-background { grid-area: 7 / 3 / 7 / 4; }
+#option-color-background ~ label[for="option-color-background"] { grid-area: 7 / 3 / 7 / 4; }
 
 #option-color-text-hover-label { grid-area: 8 / 2 / 8 / 2; }
 #option-color-text-hover { grid-area: 8 / 3 / 8 / 4; }
@@ -886,15 +886,28 @@ body {
 #option-color-background-selected-label { grid-area: 11 / 2 / 11 / 2; }
 #option-color-background-selected { grid-area: 11 / 3 / 11 / 4; }
 
+#option-color-text-hover-label,
+#option-color-background-hover-label,
+#option-color-text-selected-label,
+#option-color-background-selected-label,
+#option-color-text-hover,
+#option-color-background-hover,
+#option-color-text-selected,
+#option-color-background-selected {
+    display: none;
+}
 
+.saturation,
+.brightness,
+.color-picker,
 #option-color-text,
 #option-color-background,
 #option-color-text-hover,
 #option-color-background-hover,
 #option-color-text-selected,
 #option-color-background-selected {
-    --picker-height: 150px;
-    --picker-width: 150px;
+    --picker-height: 350px;
+    --picker-width: 350px;
 }
 
 #option-reset {
@@ -1299,11 +1312,11 @@ select:focus option {
     cursor: pointer;
 }
 .saturation {
-    background-image: linear-gradient(to bottom, transparent, hsl(var(--hue), 0%, 0%));
+    background-image: linear-gradient(to bottom, transparent, #000);
     position: absolute;
 }
 .brightness {
-    background-image: linear-gradient(to right, hsl(var(--hue), 100%, 100%), transparent);
+    background-image: linear-gradient(to right, #FFF, transparent);
     position: absolute;
 }
 .color-slider {
@@ -1400,30 +1413,35 @@ select:focus option {
     color: transparent;
 }
 
-#toggle {
+#input-color-text {
     visibility: hidden;
     opacity: 0;
     position: relative;
     z-index: 1;
 }
-#toggle:checked ~ dialog {
+#option-color-text:checked ~ #dialog-color-picker,
+#option-color-background:checked ~ #dialog-color-picker {
+    /* animation: disappear 350ms cubic-bezier(.17, .84, .44, 1) 1; */
     display: block;
+    transform: translateY(0);
+    transition: all 1s;
+    opacity: 1;
 }
-label {
-    background: skyblue;
-    color: white;
-    padding: .5em 1em;
-    border-radius: 4px;
-}
-@keyframes appear {
-    0% {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-}
-dialog {
-    animation: appear 350ms ease-in 1;
+#dialog-color-picker {
+    /* animation: appear 350ms cubic-bezier(.17, .84, .44, 1) 1; */
     max-width: 500px;
+    background: #381818;
+    border: 0px;
+    border-radius: 6px;
+    height: 594px;
+    width: 374px;
+    top: 3px;
+    left: 3px;
+    padding: 12px;
+    z-index: 2;
+    transition: all 1s;
+    opacity: 0;
+    transform: translateY(-50%);
 }
 
 .no-transition {

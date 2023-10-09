@@ -90,80 +90,93 @@
             <div id="option-color-text-label">
                 <span data-i18n-key="textColor"></span>
             </div>
-            <div id="option-color-text">
-                <input type="checkbox" id="toggle">
-                <label for="toggle">text Color</label>
-
-                <dialog>
-                    <div class="color-picker">
-                        <div class="brightness"></div>
-                        <div class="saturation"></div>
-                    </div>
-                    <div class="color-slider"></div>
-                    <label for="toggle">close overlay</label>
-                </dialog>
-
-            </div>
+            <input type="checkbox" id="option-color-text">
+            <label data-i18n-key="textColor" for="option-color-text" class="button">Text Color</label>
+            <!-- <div id="option-color-text"> -->
+            <!-- </div> -->
 
 
             <div id="option-color-background-label">
                 <span data-i18n-key="backColor"></span>
             </div>
-            <div id="option-color-background">
+            <input type="checkbox" id="option-color-background">
+            <label data-i18n-key="backColor" for="option-color-background" class="button">Background Color</label>
+
+
+            <dialog id="dialog-color-picker">
+                <span data-i18n-key="textColor">Text Color</span>
                 <div class="color-picker">
                     <div class="brightness"></div>
                     <div class="saturation"></div>
+                    <div class="color-picker-cursor"></div>
                 </div>
-                <div class="color-slider"></div>
-            </div>
-
-
-            <div id="option-color-text-hover-label">
-                <span data-i18n-key="hoverTextColor"></span>
-            </div>
-            <div id="option-color-text-hover">
-                <div class="color-picker">
-                    <div class="brightness"></div>
-                    <div class="saturation"></div>
+                <div class="color-slider">
+                    <div class="color-picker-slider-cursor"></div>
                 </div>
-                <div class="color-slider"></div>
-            </div>
+                <input class="color-picker-input" type="text" maxlength="7" value="#">
+                <button class="button">Confirm</button>
+                <label for="toggle-picker" class="button close">close overlay</label>
+            </dialog>
 
 
-            <div id="option-color-background-hover-label">
-                <span data-i18n-key="hoverBackColor"></span>
-            </div>
-            <div id="option-color-background-hover">
-                <div class="color-picker">
-                    <div class="brightness"></div>
-                    <div class="saturation"></div>
-                </div>
-                <div class="color-slider"></div>
-            </div>
-
-
-            <div id="option-color-text-selected-label">
-                <span data-i18n-key="selectedTextColor"></span>
-            </div>
-            <div id="option-color-text-selected">
-                <div class="color-picker">
-                    <div class="brightness"></div>
-                    <div class="saturation"></div>
-                </div>
-                <div class="color-slider"></div>
-            </div>
-
-
-            <div id="option-color-background-selected-label">
-                <span data-i18n-key="selectedBackColor"></span>
-            </div>
-            <div id="option-color-background-selected">
-                <div class="color-picker">
-                    <div class="brightness"></div>
-                    <div class="saturation"></div>
-                </div>
-                <div class="color-slider"></div>
-            </div>
+            <!-- <div id="option-color-background-label"> -->
+            <!--     <span data-i18n-key="backColor"></span> -->
+            <!-- </div> -->
+            <!-- <div id="option-color-background"> -->
+            <!--     <div class="color-picker"> -->
+            <!--         <div class="brightness"></div> -->
+            <!--         <div class="saturation"></div> -->
+            <!--     </div> -->
+            <!--     <div class="color-slider"></div> -->
+            <!-- </div> -->
+            <!---->
+            <!---->
+            <!-- <div id="option-color-text-hover-label"> -->
+            <!--     <span data-i18n-key="hoverTextColor"></span> -->
+            <!-- </div> -->
+            <!-- <div id="option-color-text-hover"> -->
+            <!--     <div class="color-picker"> -->
+            <!--         <div class="brightness"></div> -->
+            <!--         <div class="saturation"></div> -->
+            <!--     </div> -->
+            <!--     <div class="color-slider"></div> -->
+            <!-- </div> -->
+            <!---->
+            <!---->
+            <!-- <div id="option-color-background-hover-label"> -->
+            <!--     <span data-i18n-key="hoverBackColor"></span> -->
+            <!-- </div> -->
+            <!-- <div id="option-color-background-hover"> -->
+            <!--     <div class="color-picker"> -->
+            <!--         <div class="brightness"></div> -->
+            <!--         <div class="saturation"></div> -->
+            <!--     </div> -->
+            <!--     <div class="color-slider"></div> -->
+            <!-- </div> -->
+            <!---->
+            <!---->
+            <!-- <div id="option-color-text-selected-label"> -->
+            <!--     <span data-i18n-key="selectedTextColor"></span> -->
+            <!-- </div> -->
+            <!-- <div id="option-color-text-selected"> -->
+            <!--     <div class="color-picker"> -->
+            <!--         <div class="brightness"></div> -->
+            <!--         <div class="saturation"></div> -->
+            <!--     </div> -->
+            <!--     <div class="color-slider"></div> -->
+            <!-- </div> -->
+            <!---->
+            <!---->
+            <!-- <div id="option-color-background-selected-label"> -->
+            <!--     <span data-i18n-key="selectedBackColor"></span> -->
+            <!-- </div> -->
+            <!-- <div id="option-color-background-selected"> -->
+            <!--     <div class="color-picker"> -->
+            <!--         <div class="brightness"></div> -->
+            <!--         <div class="saturation"></div> -->
+            <!--     </div> -->
+            <!--     <div class="color-slider"></div> -->
+            <!-- </div> -->
 
 
             <div id="option-reset">

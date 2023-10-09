@@ -82,48 +82,72 @@ const options = {
         property: 'checked',
         message: 'toggle-transition',
     },
-    'option-color-text': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-background': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-text-hover': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-background-hover': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-text-selected': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
-    'option-color-background-selected': {
-        type: 'input',
-        property: 'value',
-        callback: (value, id) => {
-            document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
-        }
-    },
+    // 'option-color-text': {
+    //     type: 'input',
+    //     event: 'change',
+    //     property: 'checked',
+        // callback: (value, id) => {
+        //     const toggle = document.querySelector(`#${id} input`);
+        //     const dialog = document.getElementById('dialog-color-picker');
+        //     // toggle.addEventListener('change', event => {
+        //     if (toggle.checked) {
+        //         dialog.style.display = "block";
+        //         const colorPickerNode = document.querySelector('#dialog-color-picker .color-picker');
+        //         const colorPickerSliderNode = document.querySelector('#dialog-color-picker .color-slider');
+        //         const rectPicker = colorPickerNode.getBoundingClientRect();
+        //         const rectPickerSlider = colorPickerSliderNode.getBoundingClientRect();
+        //         savedParams[id] = {
+        //             savedX: 0,
+        //             savedY: 0,
+        //             savedW: rectPicker.width - 1,
+        //             savedH: rectPicker.height - 1,
+        //             savedSliderX: 0,
+        //             savedSliderW: rectPickerSlider.width - 1,
+        //         };
+        //         console.log('a');
+        //     } else {
+        //         dialog.style.display = "";
+        //     }
+        //     // });
+        //
+        //     // document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+        // }
+    // },
+    // 'option-color-background': {
+    //     type: 'input',
+    //     property: 'value',
+    //     callback: (value, id) => {
+    //         document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+    //     }
+    // },
+    // 'option-color-text-hover': {
+    //     type: 'input',
+    //     property: 'value',
+    //     callback: (value, id) => {
+    //         document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+    //     }
+    // },
+    // 'option-color-background-hover': {
+    //     type: 'input',
+    //     property: 'value',
+    //     callback: (value, id) => {
+    //         document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+    //     }
+    // },
+    // 'option-color-text-selected': {
+    //     type: 'input',
+    //     property: 'value',
+    //     callback: (value, id) => {
+    //         document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+    //     }
+    // },
+    // 'option-color-background-selected': {
+    //     type: 'input',
+    //     property: 'value',
+    //     callback: (value, id) => {
+    //         document.getElementById(id).querySelector('input.color-picker-input').dispatchEvent(new Event('focusout', { bubbles: true }));
+    //     }
+    // },
     'option-reset': {
         type: '',
         event: 'click',
@@ -134,12 +158,12 @@ const options = {
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
                 setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
                 setControlValue('#option-color-text .color-picker-input', 'value', items['reset-color-text'], 'focusout');
-                setControlValue('#option-color-background .color-picker-input', 'value', items['reset-color-background'], 'focusout');
-                setControlValue('#option-color-text-hover .color-picker-input', 'value', items['reset-color-text-hover'], 'focusout');
-                setControlValue('#option-color-background-hover .color-picker-input', 'value', items['reset-color-background-hover'], 'focusout');
-                setControlValue('#option-color-text-selected .color-picker-input', 'value', items['reset-color-text-selected'], 'focusout');
-                setControlValue('#option-color-background-selected .color-picker-input', 'value', items['reset-color-background-selected'], 'focusout');
-
+                // setControlValue('#option-color-background .color-picker-input', 'value', items['reset-color-background'], 'focusout');
+                // setControlValue('#option-color-text-hover .color-picker-input', 'value', items['reset-color-text-hover'], 'focusout');
+                // setControlValue('#option-color-background-hover .color-picker-input', 'value', items['reset-color-background-hover'], 'focusout');
+                // setControlValue('#option-color-text-selected .color-picker-input', 'value', items['reset-color-text-selected'], 'focusout');
+                // setControlValue('#option-color-background-selected .color-picker-input', 'value', items['reset-color-background-selected'], 'focusout');
+                //
                 thisBrowser.storage.local.set({
                     'option-color-text': items['reset-color-text'],
                     'option-color-background': items['reset-color-background'],
@@ -363,36 +387,54 @@ function setCursorCoords(cursor, x, y) {
     cursor.style.top = `${Math.round(y)}px`;
 }
 
+function initColorPickerToggle(id) {
+    const inputToggle = document.getElementById(id);
+    inputToggle.addEventListener('change', event => {
+        if (event.target.checked) {
+            const dialogPicker = document.getElementById("dialog-color-picker");
+            dialogPicker.querySelector('label.close').setAttribute('for', id);
+            console.log('checked');
+        } else {
+            console.log('nchecked');
+        }
+    });
+}
+
 function initColorPicker(id) {
-    const colorPicker = document.getElementById(id);
+    const dialogPicker = document.getElementById("dialog-color-picker");
+    // const colorPicker = document.getElementById(id);
 
     // const coordText = newElement('input', { type: 'text', class: 'color-picker-input' });
-    const rgbText = newElement('input', { type: 'text', class: 'color-picker-input', maxlength: 7, value: '#' });
+    // const rgbText = newElement('input', { type: 'text', class: 'color-picker-input', maxlength: 7, value: '#' });
+    const rgbText = dialogPicker.querySelector(".color-picker-input");
     // const hsvText = newElement('input', { type: 'text', class: 'color-picker-input' });
     // const hslText = newElement('input', { type: 'text', class: 'color-picker-input' });
     // const textNodes = { coordText, rgbText, hsvText, hslText };
     const textNodes = { rgbText };
 
-    const confirmButton = newElement('button', { class: 'button' });
-    confirmButton.textContent = 'Confirm';
+    // const confirmButton = newElement('button', { class: 'button' });
+    // confirmButton.textContent = 'Confirm';
+    const confirmButton = dialogPicker.querySelector("button");
 
-    const colorPickerNode = colorPicker.getElementsByClassName('color-picker')[0];
-    const colorPickerCursor = newElement('div', { class: 'color-picker-cursor' });
-    colorPickerNode.appendChild(colorPickerCursor);
+    const colorPickerNode = dialogPicker.querySelector('.color-picker');
+    // const colorPickerCursor = newElement('div', { class: 'color-picker-cursor' });
+    const colorPickerCursor = dialogPicker.querySelector(".color-picker-cursor");
+    // colorPickerNode.appendChild(colorPickerCursor);
     colorPickerNode.addEventListener('mousedown', event => {
         mouseDown(event, id, mouseMovePickerHandler, colorPickerCursor, textNodes);
     }, { passive: true });
 
-    const colorPickerSliderNode = colorPicker.getElementsByClassName('color-slider')[0];
-    const colorPickerSliderCursor = newElement('div', { class: 'color-picker-slider-cursor' });
-    colorPickerSliderNode.appendChild(colorPickerSliderCursor);
+    const colorPickerSliderNode = dialogPicker.querySelector('.color-slider');
+    // const colorPickerSliderCursor = newElement('div', { class: 'color-picker-slider-cursor' });
+    const colorPickerSliderCursor = dialogPicker.querySelector('.color-picker-slider-cursor');
+    // colorPickerSliderNode.appendChild(colorPickerSliderCursor);
     colorPickerSliderNode.addEventListener('mousedown', event => {
         mouseDown(event, id, mouseMoveSliderHandler, colorPickerSliderCursor, textNodes);
     }, { passive: true });
 
     // colorPicker.appendChild(coordText);
-    colorPicker.appendChild(rgbText);
-    colorPicker.appendChild(confirmButton);
+    // colorPicker.getElementsByTagName('dialog')[0].appendChild(rgbText);
+    // colorPicker.getElementsByTagName('dialog')[0].appendChild(confirmButton);
     // colorPicker.appendChild(hsvText);
     // colorPicker.appendChild(hslText);
 
@@ -513,11 +555,11 @@ function initColorPicker(id) {
 function initColorPickers() {
     [
         'option-color-text',
-        'option-color-background',
-        'option-color-text-hover',
-        'option-color-background-hover',
-        'option-color-text-selected',
-        'option-color-background-selected',
+        // 'option-color-background',
+        // 'option-color-text-hover',
+        // 'option-color-background-hover',
+        // 'option-color-text-selected',
+        // 'option-color-background-selected',
     ].forEach(currentOption => initColorPicker(currentOption));
 }
 // init control values and set listeners (except color pickers)
@@ -582,5 +624,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setLocale(defaultLocale);
     initColorPickers();
+    [
+        'option-color-text',
+        'option-color-background',
+    ].forEach(id => initColorPickerToggle(id));
     initControls();
 });
