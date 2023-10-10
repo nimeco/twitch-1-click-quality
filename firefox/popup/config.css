@@ -835,10 +835,13 @@ body {
     color: var(--color-text-base);
     border: 3px solid var(--color-twitch-purple-12);
     border-radius: 9px;
-    width: 380px;
-    height: 600px;
+    width: 330px;
+    height: 520px;
     font: var(--font-size-base) 'Inter', Arial, sans-serif;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 .purple {
@@ -846,8 +849,7 @@ body {
 }
 .wrapper {
     display: grid;
-    margin: 20px 0 25px;
-    grid-template: repeat(5, 2.4rem) repeat(6, auto) 2.4rem / 17px 5fr 4fr 17px;
+    grid-template: repeat(5, 2.4rem) repeat(6, 32px) 2.4rem / 17px 5fr 4fr 17px;
     grid-gap: 5px 2px;
     align-items: center;
     user-select: none;
@@ -877,24 +879,28 @@ body {
 #option-color-background ~ label[for="option-color-background"] { grid-area: 7 / 3 / 7 / 4; }
 
 #option-color-text-hover-label { grid-area: 8 / 2 / 8 / 2; }
-#option-color-text-hover { grid-area: 8 / 3 / 8 / 4; }
+#option-color-text-hover ~ label[for="option-color-text-hover"] { grid-area: 8 / 3 / 8 / 4; }
 #option-color-background-hover-label { grid-area: 9 / 2 / 9 / 2; }
-#option-color-background-hover { grid-area: 9 / 3 / 9 / 4; }
+#option-color-background-hover ~ label[for="option-color-background-hover"] { grid-area: 9 / 3 / 9 / 4; }
 
 #option-color-text-selected-label { grid-area: 10 / 2 / 10 / 2; }
-#option-color-text-selected { grid-area: 10 / 3 / 10 / 4; }
+#option-color-text-selected ~ label[for="option-color-text-selected"] { grid-area: 10 / 3 / 10 / 4; }
 #option-color-background-selected-label { grid-area: 11 / 2 / 11 / 2; }
-#option-color-background-selected { grid-area: 11 / 3 / 11 / 4; }
+#option-color-background-selected ~ label[for="option-color-background-selected"] { grid-area: 11 / 3 / 11 / 4; }
 
-#option-color-text-hover-label,
-#option-color-background-hover-label,
-#option-color-text-selected-label,
-#option-color-background-selected-label,
-#option-color-text-hover,
-#option-color-background-hover,
-#option-color-text-selected,
-#option-color-background-selected {
-    display: none;
+.xuca {
+/* #option-color-background-selected ~ label[for="option-color-background-selected"]::before { */
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    position: absolute;
+    left: 0px;
+    margin-left: 5px;
+    /* box-shadow: 2px 2px 5px black; */
+    border-radius: 3px;
+    border: 1px solid black;
+    grid-area: 11 / 3 / 11 / 4;
 }
 
 .saturation,
@@ -906,8 +912,8 @@ body {
 #option-color-background-hover,
 #option-color-text-selected,
 #option-color-background-selected {
-    --picker-height: 350px;
-    --picker-width: 350px;
+    --picker-height: 300px;
+    --picker-width: 300px;
 }
 
 #option-reset {
@@ -916,9 +922,9 @@ body {
 }
 
 .title {
-    font-size: 1.6rem;
+    font-size: 2.4rem;
     text-align: center;
-    margin: 3px 0;
+    margin-top: 5px;
     white-space: nowrap;
     font-weight: bold;
 }
@@ -970,7 +976,7 @@ div[id$='-tooltip'] > span:after {
 .footer {
     display: flex;
     justify-content: center;
-    margin: 13px 0 3px;
+    margin: 35px 0 5px;
 }
 .link {
     color: var(--color-text-brand);
@@ -1053,6 +1059,7 @@ div[id$='-tooltip'] > span:after {
     font-weight: var(--font-weight-normal);
     height: var(--button-size-small);
     cursor: pointer;
+    margin-top: 40px;
 }
 button {
     background: none;
@@ -1285,6 +1292,7 @@ select {
     border-radius: 0.4rem !important;
     font-size: var(--font-size-6) !important;
     width: 100%;
+    height: 24px;
 }
 select:hover {
     outline: currentcolor none medium;
@@ -1373,10 +1381,11 @@ select:focus option {
     display: inline-flex;
     height: var(--input-size-default);
     font-size: var(--input-text-default);
-    width: 7.7rem;
+    width: 8rem;
     text-transform: uppercase;
     margin-right: 0.3em;
     margin-top: 1.2em;
+    outline: none;
 }
 
 .color-picker-input:hover {
@@ -1420,28 +1429,63 @@ select:focus option {
     z-index: 1;
 }
 #option-color-text:checked ~ #dialog-color-picker,
-#option-color-background:checked ~ #dialog-color-picker {
-    /* animation: disappear 350ms cubic-bezier(.17, .84, .44, 1) 1; */
-    display: block;
+#option-color-background:checked ~ #dialog-color-picker,
+#option-color-text-hover:checked ~ #dialog-color-picker,
+#option-color-background-hover:checked ~ #dialog-color-picker,
+#option-color-text-selected:checked ~ #dialog-color-picker,
+#option-color-background-selected:checked ~ #dialog-color-picker {
+    visibility: visible;
     transform: translateY(0);
-    transition: all 1s;
+    transition: all 0.25s cubic-bezier(.17, .84, .44, 1);
     opacity: 1;
 }
 #dialog-color-picker {
-    /* animation: appear 350ms cubic-bezier(.17, .84, .44, 1) 1; */
-    max-width: 500px;
-    background: #381818;
+    display: block;
+    visibility: hidden;
+    background: #18181B;
     border: 0px;
     border-radius: 6px;
-    height: 594px;
-    width: 374px;
+    height: 514px;
+    width: 324px;
     top: 3px;
     left: 3px;
     padding: 12px;
     z-index: 2;
-    transition: all 1s;
+    transition: all 0.25s cubic-bezier(.17, .84, .44, 1);
     opacity: 0;
-    transform: translateY(-50%);
+    transform: translateY(-10%);
+}
+#dialog-title {
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 30px 0 10px 0;
+    color: var(--color-text-base);
+}
+.close-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    border-radius: var(--border-radius-medium);
+    height: var(--button-size-default);
+    width: var(--button-size-default);
+    background-color: var(--color-background-button-text-default);
+    color: var(--color-fill-button-icon);
+    position: absolute;
+    vertical-align: middle;
+    overflow: hidden;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 20 20'%3E%3Cg fill='%23efeff1'%3E%3Cpath d='M8.5 10 4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 20 20'%3E%3Cpath d='M8.5 10 4 5.5 5.5 4 10 8.5 14.5 4 16 5.5 11.5 10l4.5 4.5-1.5 1.5-4.5-4.5L5.5 16 4 14.5 8.5 10z'%3E%3C/path%3E%3C/svg%3E"); */
+    top: 10px;
+    right: 10px;
+}
+.close-button:hover {
+    background-color: var(--color-background-button-text-hover);
+    color: var(--color-fill-button-icon-hover);
+}
+.close-button:active {
+    background-color: var(--color-background-button-text-active);
+    color: var(--color-fill-button-icon-active);
 }
 
 .no-transition {

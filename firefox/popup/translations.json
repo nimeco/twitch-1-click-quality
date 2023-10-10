@@ -12,6 +12,9 @@
         "hoverBackColor": "Hintergrundfarbe bei Hover",
         "selectedTextColor": "Textfarbe ausgewählt",
         "selectedBackColor": "Hintergrundfarbe ausgewählt",
+        "changeColor": "Ändern",
+        "changeColor2": "Farbe ändern",
+        "confirmButton": "Bestätigen",
         "reset": "Einstellungen zürucksetzen"
     },
     "en": {
@@ -27,6 +30,9 @@
         "hoverBackColor": "Hover background color",
         "selectedTextColor": "Selected text color",
         "selectedBackColor": "Selected background color",
+        "changeColor": "Change",
+        "changeColor2": "Change color",
+        "confirmButton": "Confirm",
         "reset": "Reset settings"
     },
     "es": {
@@ -42,6 +48,9 @@
         "hoverBackColor": "Color de fondo al pasar el mouse",
         "selectedTextColor": "Color del texto seleccionado",
         "selectedBackColor": "Color de fondo seleccionado",
+        "changeColor": "Cambiar",
+        "changeColor2": "Cambiar color",
+        "confirmButton": "Confirmar",
         "reset": "Restablecer configuración"
     },
     "fr": {
@@ -57,6 +66,9 @@
         "hoverBackColor": "Couleur de fond au survole",
         "selectedTextColor": "Couleur du texte sélectionné",
         "selectedBackColor": "Couleur de fond sélectionné",
+        "changeColor": "Changer",
+        "changeColor2": "Changer la couleur",
+        "confirmButton": "Confirmer",
         "reset": "Réinitialiser les paramètres"
     },
     "it": {
@@ -72,6 +84,9 @@
         "hoverBackColor": "Colore di sfondo al passagio del mouse",
         "selectedTextColor": "Colore del testo selezionato",
         "selectedBackColor": "Colore di sfondo selezionato",
+        "changeColor": "Cambia",
+        "changeColor2": "Cambia colore",
+        "confirmButton": "Conferma",
         "reset": "Ripristina impostazioni"
     },
     "pt": {
@@ -87,7 +102,28 @@
         "hoverBackColor": "Cor de fundo ao passar o mouse",
         "selectedTextColor": "Cor do texto selecionado",
         "selectedBackColor": "Cor de fundo selecionado",
+        "changeColor": "Alterar",
+        "changeColor2": "Alterar cor",
+        "confirmButton": "Confirmar",
         "reset": "Restaurar configurações"
+    },
+    "tr": {
+        "quality": "Kaliteyi koru",
+        "qualityTooltip": "Mevcutsa son seçilen kaliteyi varsayılan olarak kaydeder.",
+        "margin": "Konum",
+        "scale": "Boyut",
+        "language": "Dil",
+        "animation": "Animasyon",
+        "textColor": "Metin rengi",
+        "backColor": "Arka plan rengi",
+        "hoverTextColor": "Üzerine gelindiğinde metin rengi",
+        "hoverBackColor": "Üzerine gelindiğinde arka plan rengi",
+        "selectedTextColor": "Seçilen metin rengi",
+        "selectedBackColor": "Seçilen arka plan rengi",
+        "changeColor": "Değiştir",
+        "changeColor2": "Rengi değiştir",
+        "confirmButton": "Onayla",
+        "reset": "Ayarları sıfırla"
     },
     "ru": {
         "quality": "Сохранить качество",
@@ -102,22 +138,10 @@
         "hoverBackColor": "Цвет фона при наведении",
         "selectedTextColor": "Цвет выделенного текста",
         "selectedBackColor": "Цвет выделенного фона",
+        "changeColor": "Изменить",
+        "changeColor2": "Изменить цвет",
+        "confirmButton": "Подтвердить",
         "reset": "Сбросить настройки"
-    },
-    "tr": {
-        "quality": "Kaliteyi Koru",
-        "qualityTooltip": "Mevcutsa son seçilen kaliteyi varsayılan olarak kaydeder.",
-        "margin": "Konum",
-        "scale": "Boyut",
-        "language": "Dil",
-        "animation": "Animasyon",
-        "textColor": "Metin Rengi",
-        "backColor": "Arka Plan Rengi",
-        "hoverTextColor": "Üzerine Gelindiğinde Metin Rengi",
-        "hoverBackColor": "Üzerine Gelindiğinde Arka Plan Rengi",
-        "selectedTextColor": "Seçilen Metin Rengi",
-        "selectedBackColor": "Seçilen Arka Plan Rengi",
-        "reset": "Ayarları Sıfırla"
     },
     "hi": {
         "quality": "गुणवत्ता बनाए रखें",
@@ -132,37 +156,10 @@
         "hoverBackColor": "होवर पृष्ठभूमि रंग",
         "selectedTextColor": "चयनित टेक्स्ट रंग",
         "selectedBackColor": "चयनित पृष्ठभूमि रंग",
+        "changeColor": "बदलें",
+        "changeColor2": "रंग बदलें",
+        "confirmButton": "पुष्टि करें",
         "reset": "सेटिंग्स रीसेट करें"
-    },
-    "jp": {
-        "quality": "画質を保存します",
-        "qualityTooltip": "可能な場合は、最後に選択した画質をデフォルトとして保存します。",
-        "margin": "ポジション",
-        "scale": "サイズ",
-        "language": "言語",
-        "animation": "アニメーション",
-        "textColor": "テキストの色",
-        "backColor": "背景色",
-        "hoverTextColor": "ホバーテキストの色",
-        "hoverBackColor": "ホバー背景色",
-        "selectedTextColor": "選択されたテキストの色",
-        "selectedBackColor": "選択された背景色",
-        "reset": "設定をリセットする"
-    },
-    "kr": {
-        "quality": "품질 유지",
-        "qualityTooltip": "가능한 경우, 마지막으로 선택한 품질을 기본값으로 저장합니다.",
-        "margin": "위치",
-        "scale": "크기",
-        "language": "언어",
-        "animation": "애니메이션",
-        "textColor": "텍스트 색상",
-        "backColor": "배경 색상",
-        "hoverTextColor": "호버 텍스트 색상",
-        "hoverBackColor": "호버 배경 색상",
-        "selectedTextColor": "선택된 텍스트 색상",
-        "selectedBackColor": "선택된 배경 색상",
-        "reset": "설정 초기화"
     },
     "zn-cn": {
         "quality": "保持质量",
@@ -177,6 +174,9 @@
         "hoverBackColor": "悬停背景颜色",
         "selectedTextColor": "选定文本颜色",
         "selectedBackColor": "选定背景颜色",
+        "changeColor": "更改",
+        "changeColor2": "更改颜色",
+        "confirmButton": "确认",
         "reset": "重置设置"
     },
     "zn-tw": {
@@ -192,6 +192,45 @@
         "hoverBackColor": "懸停背景顏色",
         "selectedTextColor": "選定文字顏色",
         "selectedBackColor": "選定背景顏色",
+        "changeColor": "更改",
+        "changeColor2": "更改顏色",
+        "confirmButton": "確認",
         "reset": "重設設定"
+    },
+    "jp": {
+        "quality": "画質を保存します",
+        "qualityTooltip": "可能な場合は、最後に選択した画質をデフォルトとして保存します。",
+        "margin": "ポジション",
+        "scale": "サイズ",
+        "language": "言語",
+        "animation": "アニメーション",
+        "textColor": "テキストの色",
+        "backColor": "背景色",
+        "hoverTextColor": "ホバーテキストの色",
+        "hoverBackColor": "ホバー背景色",
+        "selectedTextColor": "選択されたテキストの色",
+        "selectedBackColor": "選択された背景色",
+        "changeColor": "変える",
+        "changeColor2": "色を変える",
+        "confirmButton": "確定",
+        "reset": "設定をリセットする"
+    },
+    "kr": {
+        "quality": "품질 유지",
+        "qualityTooltip": "가능한 경우, 마지막으로 선택한 품질을 기본값으로 저장합니다.",
+        "margin": "위치",
+        "scale": "크기",
+        "language": "언어",
+        "animation": "애니메이션",
+        "textColor": "텍스트 색상",
+        "backColor": "배경 색상",
+        "hoverTextColor": "호버 텍스트 색상",
+        "hoverBackColor": "호버 배경 색상",
+        "selectedTextColor": "선택된 텍스트 색상",
+        "selectedBackColor": "선택된 배경 색상",
+        "changeColor": "변경",
+        "changeColor2": "색상 변경",
+        "confirmButton": "확인",
+        "reset": "설정 초기화"
     }
 }
