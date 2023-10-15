@@ -1,6 +1,6 @@
-let thisBrowser;
 let cachedStorage = {};
 
+let thisBrowser = null;
 if (chrome) {
     thisBrowser = chrome;
 } else {
@@ -187,7 +187,6 @@ function setTransitionRule(enabled) {
 function setButtonColor(request) {
     const key = request.detail['requested-key'];
     document.documentElement.style.setProperty(`--${key}`, request.detail.value);
-    // document.querySelector('.quality-button-header button')?.style.setProperty(properties[request['requested-key']], request.detail.color);
 }
 
 injectScripts();
@@ -205,22 +204,12 @@ document.addEventListener('save-quality?', async event => {
 });
 
 thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+    cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
     if (request.type === 'calculate-style') {
-        cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setHeaderStyle();
     } else if (request.type === 'toggle-transition') {
-        cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setTransitionRule(request.detail.value);
     } else if (request.type === 'select-color') {
-        cachedStorage = { ...cachedStorage, ...{ [request.detail['requested-key']]: request.detail.value } };
         setButtonColor(request);
-        console.log(request);
     }
-    // sendResponse({});
 });
-
-// alert(window.localStorage.getItem('video-quality'));
-/*
- {'default': 'chunked'}
- {'default': '480p30'}
- */

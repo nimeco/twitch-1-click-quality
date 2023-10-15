@@ -8,7 +8,10 @@
         "96": "icons/quality-96.png"
     },
     "background": {
-        "scripts": ["background.js"]
+        "scripts": [
+            "browser-polyfill.min.js",
+            "background.js"
+        ]
     },
     "content_scripts": [{
         "js": ["content.js"],

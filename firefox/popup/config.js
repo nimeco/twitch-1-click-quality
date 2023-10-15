@@ -50,6 +50,7 @@ const options = {
         type: 'input',
         event: 'click',
         property: 'checked',
+        message: 'update-cache',
     },
     'option-button-margin': {
         type: 'input',
@@ -92,19 +93,16 @@ const options = {
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
                 setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
 
+                const resetColors = {};
                 [
                     'text', 'background', 'text-hover',
                     'background-hover', 'text-selected', 'background-selected'
-                ].forEach(color => sendColorToTab(`option-color-${color}`, `reset-color-${color}`));
-
-                thisBrowser.storage.local.set({
-                    'option-color-text': items['reset-color-text'],
-                    'option-color-background': items['reset-color-background'],
-                    'option-color-text-hover': items['reset-color-text-hover'],
-                    'option-color-background-hover': items['reset-color-background-hover'],
-                    'option-color-text-selected': items['reset-color-text-selected'],
-                    'option-color-background-selected': items['reset-color-background-selected'],
+                ].forEach(color => {
+                    sendColorToTab(`option-color-${color}`, items[`reset-color-${color}`]);
+                    resetColors[`option-color-${color}`] = items[`reset-color-${color}`];
                 });
+
+                thisBrowser.storage.local.set(resetColors);
             });
         },
     },
@@ -264,30 +262,10 @@ function setCursorCoords(cursor, x, y) {
     cursor.style.top = `${Math.round(y)}px`;
 }
 
-function initOpenDialogButton(id) {
-    const inputToggle = document.getElementById(id);
-
-    inputToggle.addEventListener('change', event => {
-        const dialogPicker = document.getElementById("dialog-color-picker");
-        const dialogTitle = document.getElementById("dialog-title");
-        const confirmButton = dialogPicker.querySelector("button");
-
-        if (event.target.checked) {
-            dialogPicker.querySelector('label.close-button').setAttribute('for', id);
-            // translateElement(confirmButton);
-            dialogTitle.textContent = document.querySelector(`#${event.target.id}-label > span`).textContent;
-            currentId.id = id;
-        } else {
-            confirmButton.classList.remove('confirm-button');
-        }
-    });
-}
-
 function initColorPicker() {
     const dialogPicker = document.getElementById("dialog-color-picker");
     const rgbText = dialogPicker.querySelector(".color-picker-input");
     const textNodes = { rgbText };
-    const confirmButton = dialogPicker.querySelector("button");
 
     const colorPickerNode = dialogPicker.querySelector('.color-picker');
     const colorPickerCursor = dialogPicker.querySelector(".color-picker-cursor");
@@ -311,6 +289,33 @@ function initColorPicker() {
         savedSliderX: 0,
         savedSliderW: parseInt(rectPickerSlider.width) - 1,
     };
+}
+
+let eventsSet = false;
+function initOpenDialogButton(id) {
+    const inputToggle = document.getElementById(id);
+    const dialogPicker = document.getElementById("dialog-color-picker");
+    const confirmButton = dialogPicker.querySelector("button");
+    const rgbText = dialogPicker.querySelector(".color-picker-input");
+    const colorPickerNode = dialogPicker.querySelector('.color-picker');
+    const colorPickerCursor = dialogPicker.querySelector(".color-picker-cursor");
+    const colorPickerSliderCursor = dialogPicker.querySelector('.color-picker-slider-cursor');
+
+    inputToggle.addEventListener('change', async event => {
+        currentId.id = id;
+        event.target.checked = !event.target.checked;
+        const currentColor = await thisBrowser.storage.local.get(id);
+        preSelectColor(currentColor[id]);
+        event.target.checked = !event.target.checked;
+        const dialogTitle = document.getElementById("dialog-title");
+
+        if (event.target.checked) {
+            dialogPicker.querySelector('label.close-button').setAttribute('for', id);
+            dialogTitle.textContent = document.querySelector(`#${event.target.id}-label > span`).textContent;
+        } else {
+            confirmButton.classList.remove('confirm-button');
+        }
+    });
 
     function pinpointCursor(r, g, b) {
         const rgbNormalized = normalizeRgb(r, g, b);
@@ -336,52 +341,53 @@ function initColorPicker() {
         if (validateHexRgb(rgbHex)) {
             if (rgbHex.length === 4) {
                 rgbHex = rgbHex.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
-                rgbText.value = rgbHex;
             }
+            rgbText.value = rgbHex;
             const rgbDec = hex2rgb(rgbHex);
             pinpointCursor(...rgbDec);
-            const id = currentId.id;
-            sendColorToTab(id, rgbHex);
+            sendColorToTab(currentId.id, rgbHex);
             if (func) {
                 func();
             }
         }
     }
 
-    rgbText.addEventListener('input', event => {
-        let rgbHex = event.target.value;
-        confirmButton.classList.remove('confirm-button');
-        if (rgbHex.length === 0) {
-            event.target.value = '#';
-        } else if (rgbHex.length === 1 && rgbHex !== "#") {
-            event.target.value = `#${rgbHex}`;
-        }
+    if (!eventsSet) {
+        rgbText.addEventListener('input', event => {
+            let rgbHex = event.target.value;
+            confirmButton.classList.remove('confirm-button');
+            if (rgbHex.length === 0) {
+                event.target.value = '#';
+            } else if (rgbHex.length === 1 && rgbHex !== "#") {
+                event.target.value = `#${rgbHex}`;
+            }
 
-        if ((rgbHex.length === 4 || rgbHex.length === 7) && /#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?$/.test(rgbHex)) {
-            confirmButton.removeAttribute('disabled');
-        } else {
-            confirmButton.setAttribute('disabled', '');
-        }
-    });
-    rgbText.addEventListener('keydown', event => {
-        let rgbHex = event.target.value;
-        if (event.key === "Backspace" && rgbHex.length === 1) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else if (event.key === "Enter") {
-            confirmButton.dispatchEvent(new Event("click", { bubbles: true }));
-        }
-    });
-    rgbText.addEventListener('focusout', () => {
-        preSelectColor(rgbText.value);
-    });
-    confirmButton.addEventListener('click', event => {
-        preSelectColor(rgbText.value, () => {
-            event.target.classList.add('confirm-button');
-            const id = currentId.id;
-            thisBrowser.storage.local.set({ [id]: rgbText.value });
+            if ((rgbHex.length === 4 || rgbHex.length === 7) && /#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?$/.test(rgbHex)) {
+                confirmButton.removeAttribute('disabled');
+            } else {
+                confirmButton.setAttribute('disabled', '');
+            }
         });
-    });
+        rgbText.addEventListener('keydown', event => {
+            let rgbHex = event.target.value;
+            if (event.key === "Backspace" && rgbHex.length === 1) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else if (event.key === "Enter") {
+                confirmButton.dispatchEvent(new Event("click", { bubbles: true }));
+            }
+        });
+        rgbText.addEventListener('focusout', () => {
+            preSelectColor(rgbText.value);
+        });
+        confirmButton.addEventListener('click', event => {
+            preSelectColor(rgbText.value, () => {
+                event.target.classList.add('confirm-button');
+                thisBrowser.storage.local.set({ [currentId.id]: rgbText.value });
+            });
+        });
+        eventsSet = true;
+    }
 }
 
 // init control values and set listeners (except color pickers)

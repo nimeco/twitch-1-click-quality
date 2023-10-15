@@ -6,9 +6,10 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="fonts.css">
         <link rel="stylesheet" href="config.css">
+        <link rel="shortcut icon" href="../icons/quality-128.png">
     </head>
 
-    <body class="lang-en">
+    <body>
         <svg class="svg-info svg-definition">
             <g id="info_svg">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 8V6h2v2H9zm0 6V9h2v5H9z" clip-rule="evenodd">
@@ -20,24 +21,10 @@
         </div>
         <div class='wrapper'>
             <div id="option-quality-tooltip">
-                <span class='lang de' data-description="Speichert die zuletzt ausgewählte Qualität als Standard, falls verfügbar."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang en' data-description="Saves the last selected quality as default, if available."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang es' data-description="Guarda la última calidad seleccionada como predeterminada, si está disponible."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang fr' data-description="Enregistrer la dernière qualité sélectionnée par défaut, si disponible."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang it' data-description="Salva l'ultima qualità selezionata come predefinita, se disponibile."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang pt' data-description="Salva a última qualidade selecionada como padrão, se estiver disponível."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang ru' data-description="Сохраняет последнее выбранное качество по умолчанию, если оно доступно."><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
-                <span class='lang jp' data-description="可能な場合は、最後に選択した画質をデフォルトとして保存します。"><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
+                <span data-i18n-key="qualityTooltip" data-description=""><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
             </div>
             <div id="option-quality-label">
-                <span class="lang de">Qualität speichern</span>
-                <span class="lang en">Keep quality</span>
-                <span class="lang es">Guardar calidad</span>
-                <span class="lang fr">Enregistrer la qualité</span>
-                <span class="lang it">Risparmia qualità</span>
-                <span class="lang pt">Salvar qualidade</span>
-                <span class="lang ru">Сохранить качество</span>
-                <span class="lang jp">画質を保存します</span>
+                <span data-i18n-key="quality"></span>
             </div>
             <div id="option-quality-save">
                 <div class="input-toggle">
@@ -48,14 +35,7 @@
 
 
             <div id="option-margin-label">
-                <span class="lang de">Position</span>
-                <span class="lang en">Position</span>
-                <span class="lang es">Posición</span>
-                <span class="lang fr">Position</span>
-                <span class="lang it">Posizione</span>
-                <span class="lang pt">Posição</span>
-                <span class="lang ru">Позиция</span>
-                <span class="lang jp">ポジション</span>
+                <span data-i18n-key="margin"></span>
             </div>
             <div id="option-button-margin">
                 <div class="range-container">
@@ -65,14 +45,7 @@
 
 
             <div id="option-scale-label">
-                <span class="lang de">Größe</span>
-                <span class="lang en">Size</span>
-                <span class="lang es">Talla</span>
-                <span class="lang fr">Taille</span>
-                <span class="lang it">Dimensione</span>
-                <span class="lang pt">Tamanho</span>
-                <span class="lang ru">Размер</span>
-                <span class="lang jp">サイズ</span>
+                <span data-i18n-key="scale"></span>
             </div>
             <div id="option-button-scale">
                 <div class="range-container">
@@ -82,38 +55,29 @@
 
 
             <div id="option-language-label">
-                <span class="lang de">Sprache</span>
-                <span class="lang en">Language</span>
-                <span class="lang es">Idioma</span>
-                <span class="lang fr">Langue</span>
-                <span class="lang it">Lingua</span>
-                <span class="lang pt">Idioma</span>
-                <span class="lang ru">Язык</span>
-                <span class="lang jp">言語</span>
+                <span data-i18n-key="language"></span>
             </div>
             <div id="option-language-save">
                 <select class='input'>
-                    <option value="lang-de">Deutsch</option>
-                    <option value="lang-en">English</option>
-                    <option value="lang-es">Español</option>
-                    <option value="lang-fr">Français</option>
-                    <option value="lang-it">Italiano</option>
-                    <option value="lang-pt">Português</option>
-                    <option value="lang-ru">Русский</option>
-                    <option value="lang-jp">日本語</option>
+                    <option value="de">Deutsch</option>
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Português</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="ru">Русский</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="zn-cn">中文　简体</option>
+                    <option value="zn-tw">中文　繁體</option>
+                    <option value="jp">日本語</option>
+                    <option value="kr">한국어</option>
                 </select>
             </div>
 
 
             <div id="option-toggle-transition-label">
-                <span class="lang de">Animation</span>
-                <span class="lang en">Animation</span>
-                <span class="lang es">Animación</span>
-                <span class="lang fr">Animation</span>
-                <span class="lang it">Animazione</span>
-                <span class="lang pt">Animação</span>
-                <span class="lang ru">Анимация</span>
-                <span class="lang jp">アニメーション</span>
+                <span data-i18n-key="animation"></span>
             </div>
             <div id="option-toggle-transition">
                 <div class="input-toggle">
@@ -123,20 +87,69 @@
             </div>
 
 
+            <div id="option-color-text-label">
+                <span data-i18n-key="textColor">Text color</span>
+            </div>
+            <input type="checkbox" id="option-color-text">
+            <label data-i18n-key="changeColor" for="option-color-text" class="button">Change</label>
+
+            <div id="option-color-background-label">
+                <span data-i18n-key="backColor">Background color</span>
+            </div>
+            <input type="checkbox" id="option-color-background">
+            <label data-i18n-key="changeColor" for="option-color-background" class="button">Change</label>
+
+
+            <div id="option-color-text-hover-label">
+                <span data-i18n-key="hoverTextColor">Hover text color</span>
+            </div>
+            <input type="checkbox" id="option-color-text-hover">
+            <label data-i18n-key="changeColor" for="option-color-text-hover" class="button">Change</label>
+
+            <div id="option-color-background-hover-label">
+                <span data-i18n-key="hoverBackColor">Hover background color</span>
+            </div>
+            <input type="checkbox" id="option-color-background-hover">
+            <label data-i18n-key="changeColor" for="option-color-background-hover" class="button">Change</label>
+
+
+            <div id="option-color-text-selected-label">
+                <span data-i18n-key="selectedTextColor">Selected text color</span>
+            </div>
+            <input type="checkbox" id="option-color-text-selected">
+            <label data-i18n-key="changeColor" for="option-color-text-selected" class="button">Change</label>
+
+            <div id="option-color-background-selected-label">
+                <span data-i18n-key="selectedBackColor">Selected background color</span>
+            </div>
+            <input type="checkbox" id="option-color-background-selected">
+            <label data-i18n-key="changeColor" for="option-color-background-selected" class="button">Change</label>
+            <!-- <div class="xuca"></div> -->
+
+
+            <dialog id="dialog-color-picker">
+                <div data-i18n-key="textColor" id="dialog-title">Text Color</div>
+                <div class="color-picker">
+                    <div class="brightness"></div>
+                    <div class="saturation"></div>
+                    <div class="color-picker-cursor"></div>
+                </div>
+                <div class="color-slider">
+                    <div class="color-picker-slider-cursor"></div>
+                </div>
+                <input class="color-picker-input" type="text" maxlength="7" value="#">
+                <button data-i18n-key="confirmButton" class="button">Confirm</button>
+                <label for="toggle-picker" class="button close-button"></label>
+            </dialog>
+
+
             <div id="option-reset">
-                <button class="lang de button reset-button">Einstellungen zürucksetzen</button>
-                <button class="lang en button reset-button">Reset settings</button>
-                <button class="lang es button reset-button">Restablecer la configuración</button>
-                <button class="lang fr button reset-button">Réinitialiser les paramètres</button>
-                <button class="lang it button reset-button">Ripristinare le impostazioni</button>
-                <button class="lang pt button reset-button">Resetar as configurações</button>
-                <button class="lang ru button reset-button">Сбросить настройки</button>
-                <button class="lang jp button reset-button">リセット設定</button>
+                <button data-i18n-key="reset" class="button reset-button"></button>
             </div>
 
         </div>
         <div class='footer'>
-            <a target="_blank" class="link" href="https://www.twitter.com/ttvxuxameneghel">Twitter</a>
+            <a target="_blank" class="link" href="https://www.twitter.com/twitchxuxa">Twitter</a>
             <a target="_blank" class="link" href="https://github.com/nimeco/twitch-1-click-quality">GitHub</a>
             <a target="_blank" class="link link-donate" href="https://www.paypal.com/donate/?business=NJ6EEA8PWCZW2&no_recurring=0&currency_code=BRL">Donate</a>
         </div>
