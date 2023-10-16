@@ -69,6 +69,7 @@ body {
 .saturation,
 .brightness,
 .color-picker,
+.color-slider,
 #option-color-text,
 #option-color-background,
 #option-color-text-hover,
@@ -545,8 +546,6 @@ select:focus option {
     font-size: var(--input-text-default);
     width: 8rem;
     text-transform: uppercase;
-    margin-right: 0.3em;
-    margin-top: 1.2em;
     outline: none;
 }
 
@@ -618,10 +617,23 @@ select:focus option {
     transform: translateY(-10%);
 }
 #dialog-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     text-align: center;
-    margin: 30px 0 10px 0;
+    margin: 45px 0 10px 0;
     color: var(--color-text-base);
+}
+#picked-color {
+    --size: 30px;
+    height: var(--size);
+    width: var(--size);
+    background-color: red;
+    display: inline-block;
+    border-radius: var(--border-radius-medium);
+}
+#dialog-controls {
+    display: flex;
+    column-gap: 10px;
+    margin-top: 15px;
 }
 .close-button {
     display: inline-flex;

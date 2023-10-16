@@ -4,8 +4,8 @@
     let buttons = [];
     let lastButton = null;
 
-    function findPlayer() {
-        function findReactNode(root, constraint) {
+    const findPlayer = () => {
+        const findReactNode = (root, constraint) => {
             if (root.stateNode && constraint(root.stateNode)) {
                 return root.stateNode;
             }
@@ -18,7 +18,7 @@
                 node = node.sibling;
             }
             return null;
-        }
+        };
 
         try {
             videoPlayer = null;
@@ -37,7 +37,7 @@
 
             videoPlayer = findReactNode(
                 reactRootNode,
-                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance,
+                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance
             );
             videoPlayer =
                 videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ?
@@ -51,17 +51,17 @@
             console.log(err);
         }
         return null;
-    }
+    };
 
-    function highlightSelectedButton(button) {
+    const highlightSelectedButton = button => {
         if (lastButton) {
             lastButton.removeAttribute('data-selected');
         }
         button.dataset.selected = '1';
         lastButton = button;
-    }
+    };
 
-    function newNode(nodeName, classes, options, dataset) {
+    const newNode = (nodeName, classes, options, dataset) => {
         let node = document.createElement(nodeName);
         if (classes) {
             Object.assign(node, { classList: classes.join(' ') });
@@ -73,9 +73,9 @@
             Object.assign(node.dataset, dataset);
         }
         return node;
-    }
+    };
 
-    function createButton(data) {
+    const createButton = data => {
         let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
 
         button.addEventListener('click', event => {
@@ -85,30 +85,30 @@
         });
 
         return button;
-    }
+    };
 
-    function sendEvent(name, detail) {
+    const sendEvent = (name, detail) => {
         let customEvent = new CustomEvent(name, { detail: detail });
         document.dispatchEvent(customEvent);
-    }
+    };
 
-    function createButtons(properties) {
+    const createButtons = properties => {
         buttons = [];
         for (let property of properties) {
             buttons.push(createButton(property));
         }
         return buttons;
-    }
+    };
 
-    function createButtonsHeader() {
+    const createButtonsHeader = () => {
         let channelHeader = document.querySelector('div[data-target="channel-header-right"]');
         buttonsHeader = newNode('div', ['quality-button-header']);
         channelHeader?.prepend(buttonsHeader);
 
         return buttonsHeader;
-    }
+    };
 
-    function updateQualityButtons() {
+    const updateQualityButtons = () => {
         if (!document.contains(buttonsHeader) && !document.querySelector('.quality-button-header')) {
             buttonsHeader = createButtonsHeader();
         }
@@ -146,7 +146,7 @@
                 }
             }
         }
-    }
+    };
 
     const targetNode = document.getElementById('root');
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };

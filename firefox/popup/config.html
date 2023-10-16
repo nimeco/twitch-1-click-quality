@@ -124,10 +124,10 @@
             </div>
             <input type="checkbox" id="option-color-background-selected">
             <label data-i18n-key="changeColor" for="option-color-background-selected" class="button">Change</label>
-            <!-- <div class="xuca"></div> -->
 
 
             <dialog id="dialog-color-picker">
+                <label for="toggle-picker" class="button close-button"></label>
                 <div data-i18n-key="textColor" id="dialog-title">Text Color</div>
                 <div class="color-picker">
                     <div class="brightness"></div>
@@ -137,9 +137,11 @@
                 <div class="color-slider">
                     <div class="color-picker-slider-cursor"></div>
                 </div>
-                <input class="color-picker-input" type="text" maxlength="7" value="#">
-                <button data-i18n-key="confirmButton" class="button">Confirm</button>
-                <label for="toggle-picker" class="button close-button"></label>
+                <div id="dialog-controls">
+                    <input class="color-picker-input" type="text" maxlength="7" value="#">
+                    <div id="picked-color"></div>
+                    <button data-i18n-key="confirmButton" class="button">Confirm</button>
+                </div>
             </dialog>
 
 
