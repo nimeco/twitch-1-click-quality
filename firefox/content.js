@@ -78,7 +78,7 @@ const getStorage = _keys => new Promise(resolve => {
             }
         });
     }
-})_;
+});
 const initCSS = async() => {
     let transition = true;
     transition = await getStorage('option-toggle-transition');
