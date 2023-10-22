@@ -2,6 +2,8 @@
     "de": {
         "quality": "Qualität speichern",
         "qualityTooltip": "Speichert die zuletzt ausgewählte Qualität als Standard, falls verfügbar.",
+        "muteOnLowest": "Stummschalten (niedrigste Qualität)",
+        "unmuteOnHighest": "Stummschaltung aufheben (höchste Qualität)",
         "margin": "Position",
         "scale": "Größe",
         "language": "Sprache",
@@ -20,6 +22,8 @@
     "en": {
         "quality": "Keep quality",
         "qualityTooltip": "Saves the last selected quality as default, if available.",
+        "muteOnLowest": "Mute (lowest quality)",
+        "unmuteOnHighest": "Unmute (highest quality)",
         "margin": "Position",
         "scale": "Size",
         "language": "Language",
@@ -38,6 +42,8 @@
     "es": {
         "quality": "Mantener calidad",
         "qualityTooltip": "Mantener la última calidad seleccionada como predeterminada, si está disponible.",
+        "muteOnLowest": "Silenciar (calidad más baja)",
+        "unmuteOnHighest": "Activar sonido (calidad más alta)",
         "margin": "Posición",
         "scale": "Tamaño",
         "language": "Idioma",
@@ -56,6 +62,8 @@
     "fr": {
         "quality": "Maintenir la qualité",
         "qualityTooltip": "Maintenir la dernière qualité sélectionnée par défaut, si disponible.",
+        "muteOnLowest": "Muet (qualité la plus basse)",
+        "unmuteOnHighest": "Activer le son (qualité la plus élevée)",
         "margin": "Position",
         "scale": "Taille",
         "language": "Langue",
@@ -74,6 +82,8 @@
     "it": {
         "quality": "Mantenere la qualità",
         "qualityTooltip": "Mantenga l'ultima qualità selezionata come predefinita, se disponibile.",
+        "muteOnLowest": "Silenzia (qualità più bassa)",
+        "unmuteOnHighest": "Riattiva audio (qualità più alta)",
         "margin": "Posizione",
         "scale": "Dimensione",
         "language": "Lingua",
@@ -92,6 +102,8 @@
     "pt": {
         "quality": "Salvar qualidade",
         "qualityTooltip": "Salva a última qualidade selecionada como padrão, se estiver disponível.",
+        "muteOnLowest": "Silenciar (qualidade mais baixa)",
+        "unmuteOnHighest": "Ativar som (qualidade mais alta)",
         "margin": "Posição",
         "scale": "Tamanho",
         "language": "Língua",
@@ -110,6 +122,8 @@
     "tr": {
         "quality": "Kaliteyi koru",
         "qualityTooltip": "Mevcutsa son seçilen kaliteyi varsayılan olarak kaydeder.",
+        "muteOnLowest": "Sesi kapat (en düşük kalitede)",
+        "unmuteOnHighest": "Sesi aç (en yüksek kalitede)",
         "margin": "Konum",
         "scale": "Boyut",
         "language": "Dil",
@@ -128,6 +142,8 @@
     "ru": {
         "quality": "Сохранить качество",
         "qualityTooltip": "Сохраняет последнее выбранное качество по умолчанию, если оно доступно.",
+        "muteOnLowest": "Выключить звук (низкое качество)",
+        "unmuteOnHighest": "Включить звук (высокое качество)",
         "margin": "Позиция",
         "scale": "Размер",
         "language": "Язык",
@@ -146,6 +162,8 @@
     "hi": {
         "quality": "गुणवत्ता बनाए रखें",
         "qualityTooltip": "अगर संभावना है तो आखिरी चयनित गुणवत्ता को डिफ़ॉल्ट के रूप में सहेजता है।",
+        "muteOnLowest": "म्यूट करें (न्यूनतम गुणवत्ता)",
+        "unmuteOnHighest": "म्यूट बंद करें (सबसे उच्च गुणवत्ता)" ,
         "margin": "स्थिति",
         "scale": "आकार",
         "language": "भाषा",
@@ -164,6 +182,8 @@
     "zn-cn": {
         "quality": "保持质量",
         "qualityTooltip": "将最后选择的质量保存为默认值（如果可用）。",
+        "muteOnLowest": "静音（最低画质）",
+        "unmuteOnHighest": "解除静音（最高画质）",
         "margin": "位置",
         "scale": "尺寸",
         "language": "语言",
@@ -182,6 +202,8 @@
     "zn-tw": {
         "quality": "保持品質",
         "qualityTooltip": "將最後選擇的品質儲存為預設值（如果可用）。",
+        "muteOnLowest": "靜音（最低畫質）",
+        "unmuteOnHighest": "解除静音（最高畫質）",
         "margin": "位置",
         "scale": "尺寸",
         "language": "語言",
@@ -200,6 +222,8 @@
     "jp": {
         "quality": "画質を保存します",
         "qualityTooltip": "可能な場合は、最後に選択した画質をデフォルトとして保存します。",
+        "muteOnLowest": "ミュート（最低画質）",
+        "unmuteOnHighest": "ミュート解除（最高画質）",
         "margin": "ポジション",
         "scale": "サイズ",
         "language": "言語",
@@ -218,6 +242,8 @@
     "kr": {
         "quality": "품질 유지",
         "qualityTooltip": "가능한 경우, 마지막으로 선택한 품질을 기본값으로 저장합니다.",
+        "muteOnLowest": "음소거 (최하 화질)",
+        "unmuteOnHighest": "음소거 해제 (최상 화질)",
         "margin": "위치",
         "scale": "크기",
         "language": "언어",

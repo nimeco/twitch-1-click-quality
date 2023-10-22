@@ -75,13 +75,21 @@
         return node;
     };
 
+    let lowestQuality = "";
+    let highestQuality = "";
     const createButton = data => {
         let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
 
         button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
+            // if (data.quality.name === "160p") {
+            //     videoPlayer.setMuted(true);
+            // } else {
+            //     videoPlayer.setMuted(false);
+            // }
             highlightSelectedButton(event.target);
-            sendEvent('save-quality?', { group: data.quality.group });
+            sendEvent('event-save-quality', { group: data.quality.group });
+            sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
         });
 
         return button;
@@ -120,6 +128,8 @@
 
         if (videoPlayer && buttonsHeader) {
             let qualities = [...videoPlayer.getQualities()];
+            lowestQuality = qualities[qualities.length - 1].group;
+            highestQuality = qualities[0].group;
             qualities.unshift(Object.assign({}, qualities[0]));
             qualities[0].name = 'Auto';
             qualities[0].group = 'auto';
@@ -166,4 +176,8 @@
         }
     });
     observer.observe(targetNode, config);
+
+    document.addEventListener('event-response-mute-video', data => {
+        videoPlayer.setMuted(data.detail);
+    });
 })();

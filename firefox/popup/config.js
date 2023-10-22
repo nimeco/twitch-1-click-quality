@@ -52,6 +52,18 @@ const options = {
         property: 'checked',
         message: 'update-cache',
     },
+    'option-mute-on-lowest': {
+        type: 'input',
+        event: 'click',
+        property: 'checked',
+        message: 'update-cache',
+    },
+    'option-unmute-on-highest': {
+        type: 'input',
+        event: 'click',
+        property: 'checked',
+        message: 'update-cache',
+    },
     'option-button-margin': {
         type: 'input',
         event: 'input',

@@ -78,7 +78,7 @@ const getStorage = _keys => new Promise(resolve => {
             }
         });
     }
-});
+})_;
 const initCSS = async() => {
     let transition = true;
     transition = await getStorage('option-toggle-transition');
@@ -191,11 +191,22 @@ document.addEventListener('set-style', _event => {
     setHeaderStyle();
 });
 
-document.addEventListener('save-quality?', async event => {
+document.addEventListener('event-save-quality', async event => {
     let detail = event.detail;
     let isSaveEnabled = await getStorage('option-quality-save');
     if (isSaveEnabled) {
         window.localStorage.setItem('video-quality', JSON.stringify({ default: detail.group }));
+    }
+});
+
+document.addEventListener('event-mute-video', async event => {
+    let detail = event.detail;
+    let muteOptions = await getStorage(['option-mute-on-lowest', 'option-unmute-on-highest']);
+
+    if (detail.group === detail.highest && muteOptions['option-unmute-on-highest']) {
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: false }));
+    } else if (detail.group === detail.lowest && muteOptions['option-mute-on-lowest']) {
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: true }));
     }
 });
 
