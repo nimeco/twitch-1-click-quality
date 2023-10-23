@@ -37,8 +37,8 @@ const translatePage = async() => {
 
 const translateElement = element => {
     const key = element.dataset.i18nKey;
-    const translation = translations[locale][key];
-    if (key === "qualityTooltip") {
+    const translation = translations[key][locale];
+    if (element.classList.contains("tooltip")) {
         element.dataset.description = translation;
     } else {
         element.innerText = translation;
@@ -101,17 +101,27 @@ const options = {
         callback: () => {
             thisBrowser.storage.local.get(null, items => {
                 setControlValue('#checkbox-save', 'checked', items['reset-quality-save'], 'click');
+                setControlValue('#checkbox-mute-on-lowest', 'checked', items['reset-mute-on-lowest'], 'click');
+                setControlValue('#checkbox-unmute-on-highest', 'checked', items['reset-unmute-on-highest'], 'click');
                 setControlValue('#range-margin', 'value', items['reset-button-margin'], 'input');
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
                 setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
 
                 const resetColors = {};
                 [
-                    'text', 'background', 'text-hover',
-                    'background-hover', 'text-selected', 'background-selected'
+                    'text',
+                    'background',
+                    'text-hover',
+                    'background-hover',
+                    'text-selected',
+                    'background-selected'
                 ].forEach(color => {
-                    sendColorToTab(`option-color-${color}`, items[`reset-color-${color}`]);
-                    resetColors[`option-color-${color}`] = items[`reset-color-${color}`];
+                    const optionColor = `option-color-${color}`;
+                    const resetColor = `reset-color-${color}`;
+
+                    sendColorToTab(optionColor, items[resetColor]);
+                    setColorPreviewDot(optionColor);
+                    resetColors[optionColor] = items[resetColor];
                 });
 
                 thisBrowser.storage.local.set(resetColors);
@@ -320,6 +330,17 @@ const getStorage = _keys => new Promise(resolve => {
         }
     });
 });
+
+const setColorPreviewDot = async(id, color) => {
+    const selector = `#${id}-tooltip > span.color-tooltip`;
+    if (!color) {
+        color = await getStorage(id);
+    }
+    const element = document.querySelector(selector);
+    element.style.backgroundColor = color;
+    element.dataset.description = color;
+};
+
 let eventsSet = false;
 const initOpenDialogButton = id => {
     const inputToggle = document.getElementById(id);
@@ -412,8 +433,13 @@ const initOpenDialogButton = id => {
         });
         confirmButton.addEventListener('click', event => {
             preSelectColor(rgbText.value, () => {
+                rgbText.value = rgbText.value.toUpperCase();
                 event.target.classList.add('confirm-button');
                 thisBrowser.storage.local.set({ [currentId.id]: rgbText.value });
+
+                setColorPreviewDot(currentId.id, rgbText.value);
+                // const selector = `#${currentId.id}-tooltip > span.color-tooltip`;
+                // document.querySelector(selector).style.backgroundColor = rgbText.value;
             });
         });
         eventsSet = true;
@@ -482,13 +508,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setLocale(defaultLocale);
     initColorPicker();
-    [
+    const colorIds = [
         'option-color-text',
         'option-color-background',
         'option-color-text-hover',
         'option-color-background-hover',
         'option-color-text-selected',
         'option-color-background-selected',
-    ].forEach(id => initOpenDialogButton(id));
+    ];
+    colorIds.forEach(id => initOpenDialogButton(id));
+    colorIds.forEach(id => setColorPreviewDot(id));
     initControls();
 });

@@ -29,20 +29,20 @@ body {
     display: grid;
     --row-height: 32;
     grid-template:
-        "tip-quality label-quality           opt-quality ." calc(var(--row-height) * 1px)
-        ".           label-mute-on-lowest    opt-mute-on-lowest ." calc(var(--row-height) * 1px)
-        ".           label-unmute-on-highest opt-unmute-on-highest ." calc(var(--row-height) * 1px)
-        ".           label-margin            opt-margin ." calc(var(--row-height) * 1px)
-        ".           label-scale             opt-scale ." calc(var(--row-height) * 1px)
-        ".           label-transition        opt-transition ." calc(var(--row-height) * 1px)
-        ".           label-language          opt-language ." calc(var(--row-height) * 1px)
-        ".           label-color-text        opt-color-text ." calc(var(--row-height) * 1px)
-        ".           label-color-back        opt-color-back ." calc(var(--row-height) * 1px)
-        ".           label-color-text-hover  opt-color-text-hover ." calc(var(--row-height) * 1px)
-        ".           label-color-back-hover  opt-color-back-hover ." calc(var(--row-height) * 1px)
-        ".           label-color-text-select opt-color-text-select ." calc(var(--row-height) * 1px)
-        ".           label-color-back-select opt-color-back-select ." calc(var(--row-height) * 1px)
-        ".           reset-button reset-button ." calc(var(--row-height) * 1px + 10px) / 17px 6fr 3fr 17px;
+        "tip-quality           label-quality           opt-quality ." calc(var(--row-height) * 1px)
+        "tip-mute-on-lowest    label-mute-on-lowest    opt-mute-on-lowest ." calc(var(--row-height) * 1px)
+        "tip-unmute-on-highest label-unmute-on-highest opt-unmute-on-highest ." calc(var(--row-height) * 1px)
+        ".                     label-margin            opt-margin ." calc(var(--row-height) * 1px)
+        ".                     label-scale             opt-scale ." calc(var(--row-height) * 1px)
+        ".                     label-transition        opt-transition ." calc(var(--row-height) * 1px)
+        ".                     label-language          opt-language ." calc(var(--row-height) * 1px)
+        "tip-color-text        label-color-text        opt-color-text ." calc(var(--row-height) * 1px)
+        "tip-color-back        label-color-back        opt-color-back ." calc(var(--row-height) * 1px)
+        "tip-color-text-hover  label-color-text-hover  opt-color-text-hover ." calc(var(--row-height) * 1px)
+        "tip-color-back-hover  label-color-back-hover  opt-color-back-hover ." calc(var(--row-height) * 1px)
+        "tip-color-text-select label-color-text-select opt-color-text-select ." calc(var(--row-height) * 1px)
+        "tip-color-back-select label-color-back-select opt-color-back-select ." calc(var(--row-height) * 1px)
+        ".                     reset-button            reset-button ." calc(var(--row-height) * 1px + 10px) / 17px 6fr 3fr 17px;
     grid-gap: 2px 2px;
     align-items: center;
     user-select: none;
@@ -54,9 +54,11 @@ body {
 #option-quality-label { grid-area: label-quality; }
 #option-quality-save { grid-area: opt-quality; }
 
+#option-mute-on-lowest-tooltip { grid-area: tip-mute-on-lowest; }
 #option-mute-on-lowest-label { grid-area: label-mute-on-lowest; }
 #option-mute-on-lowest { grid-area: opt-mute-on-lowest; }
 
+#option-unmute-on-highest-tooltip { grid-area: tip-unmute-on-highest; }
 #option-unmute-on-highest-label { grid-area: label-unmute-on-highest; }
 #option-unmute-on-highest { grid-area: opt-unmute-on-highest; }
 
@@ -72,24 +74,46 @@ body {
 #option-language-label { grid-area: label-language; }
 #option-language-save { grid-area: opt-language; }
 
+#option-color-text-tooltip { grid-area: tip-color-text; }
 #option-color-text-label { grid-area: label-color-text; }
 #option-color-text ~ label[for="option-color-text"] { grid-area: opt-color-text; }
+
+#option-color-background-tooltip { grid-area: tip-color-back; }
 #option-color-background-label { grid-area: label-color-back; }
 #option-color-background ~ label[for="option-color-background"] { grid-area: opt-color-back; }
 
+#option-color-text-hover-tooltip { grid-area: tip-color-text-hover; }
 #option-color-text-hover-label { grid-area: label-color-text-hover; }
 #option-color-text-hover ~ label[for="option-color-text-hover"] { grid-area: opt-color-text-hover; }
+
+#option-color-background-hover-tooltip { grid-area: tip-color-back-hover; }
 #option-color-background-hover-label { grid-area: label-color-back-hover; }
 #option-color-background-hover ~ label[for="option-color-background-hover"] { grid-area: opt-color-back-hover; }
 
+#option-color-text-selected-tooltip { grid-area: tip-color-text-select; }
 #option-color-text-selected-label { grid-area: label-color-text-select; }
 #option-color-text-selected ~ label[for="option-color-text-selected"] { grid-area: opt-color-text-select; }
+
+#option-color-background-selected-tooltip { grid-area: tip-color-back-select; }
 #option-color-background-selected-label { grid-area: label-color-back-select; }
 #option-color-background-selected ~ label[for="option-color-background-selected"] { grid-area: opt-color-back-select; }
 
 #option-reset {
     align-self: end;
     grid-area: reset-button;
+}
+.color-tooltip {
+    width: 11.2167px;
+    height: 11.2167px !important;
+    background-color: #FFF;
+    border-radius: var(--border-radius-rounded);
+    margin-left: 1.5px;
+    margin-top: 1.25px;
+}
+div[id$="-tooltip"] > span.color-tooltip:hover::after {
+    width: 96px;
+    display: flex !important;
+    justify-content: center;
 }
 
 .saturation,
@@ -116,10 +140,12 @@ body {
 }
 
 div[id$='-tooltip'] > span {
-    font-size: var(--button-text-x-small);
-    margin-right: 5px;
-    vertical-align: middle;
+    /* font-size: var(--button-text-x-small); */
+    /* margin-right: 5px; */
+    /* vertical-align: middle; */
     position: absolute;
+    display: inline-block;
+    height: 14px;
 }
 div[id$='-tooltip'] > span:hover {
     cursor: pointer;
@@ -148,6 +174,9 @@ div[id$='-tooltip'] > span:after {
     top: -1.2rem;
 }
 
+.svg-info:hover {
+    fill: var(--color-background-button-primary-hover);
+}
 .svg-info {
     fill: var(--color-fill-brand);
     width: 14px;
