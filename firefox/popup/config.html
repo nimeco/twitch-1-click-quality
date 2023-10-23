@@ -113,10 +113,10 @@
                     <option value="tr">Türkçe</option>
                     <option value="ru">Русский</option>
                     <option value="hi">हिन्दी</option>
-                    <option value="zn-cn">中文　简体</option>
-                    <option value="zn-tw">中文　繁體</option>
-                    <option value="jp">日本語</option>
-                    <option value="kr">한국어</option>
+                    <option value="zh-Hans">中文　简体</option>
+                    <option value="zh-Hant">中文　繁體</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
                 </select>
             </div>
 
@@ -182,7 +182,6 @@
 
 
             <dialog id="dialog-color-picker">
-                <label for="toggle-picker" class="button close-button"></label>
                 <div data-i18n-key="textColor" id="dialog-title">Text Color</div>
                 <div class="color-picker">
                     <div class="brightness"></div>
@@ -192,10 +191,13 @@
                 <div class="color-slider">
                     <div class="color-picker-slider-cursor"></div>
                 </div>
-                <div id="dialog-controls">
+                <div class="dialog-controls">
                     <input class="color-picker-input" type="text" maxlength="7" value="#">
                     <div id="picked-color"></div>
+                </div>
+                <div class="dialog-controls">
                     <button data-i18n-key="confirmButton" class="button">Confirm</button>
+                    <label data-i18n-key="closeButton" for="toggle-picker" class="button close-button">Close</label>
                 </div>
             </dialog>
 

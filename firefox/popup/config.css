@@ -192,6 +192,7 @@ div[id$='-tooltip'] > span:after {
     display: flex;
     justify-content: center;
     margin-bottom: 5px;
+    z-index: 500;
 }
 .link {
     color: var(--color-text-brand);
@@ -546,7 +547,6 @@ select:focus option {
     height: calc(var(--height) * 1px);
     width: var(--picker-width);
     background: linear-gradient(90deg, #f00 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);
-    margin-top: 15px;
     border-radius: 2px;
     position: relative;
     cursor: col-resize;
@@ -655,7 +655,10 @@ select:focus option {
     opacity: 1;
 }
 #dialog-color-picker {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     visibility: hidden;
     background: #18181B;
     border: 0px;
@@ -668,13 +671,13 @@ select:focus option {
     z-index: 2;
     transition: all 0.25s cubic-bezier(.17, .84, .44, 1);
     opacity: 0;
-    transform: translateY(-10%);
+    transform: translateY(30%);
 }
 #dialog-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
     text-align: center;
-    margin: 22px 0 10px 0;
     color: var(--color-text-base);
+    width: 74%;
 }
 #picked-color {
     --size: 30px;
@@ -684,12 +687,11 @@ select:focus option {
     display: inline-block;
     border-radius: var(--border-radius-medium);
 }
-#dialog-controls {
+.dialog-controls {
     display: flex;
     column-gap: 10px;
-    margin-top: 15px;
 }
-.close-button {
+.x-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -706,11 +708,11 @@ select:focus option {
     top: 10px;
     right: 10px;
 }
-.close-button:hover {
+.x-button:hover {
     background-color: var(--color-background-button-text-hover);
     color: var(--color-fill-button-icon-hover);
 }
-.close-button:active {
+.x-button:active {
     background-color: var(--color-background-button-text-active);
     color: var(--color-fill-button-icon-active);
 }
