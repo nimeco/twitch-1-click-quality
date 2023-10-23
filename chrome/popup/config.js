@@ -5,48 +5,60 @@ if (chrome) {
     thisBrowser = browser;
 }
 
-function setControlValue(selector, property, value, event) {
+const setControlValue = (selector, property, value, event) => {
     let node = document.querySelectorAll(selector);
     node.forEach(n => {
         n[property] = value;
         n.dispatchEvent(new Event(event, { bubbles: true }));
     });
-}
+};
 
 const defaultLocale = "en";
 let locale;
 let translations = {};
 
-function setLocale(newLocale) {
+const setLocale = newLocale => {
     if (newLocale === locale) return;
     locale = newLocale;
     translatePage();
-}
+};
 
-async function fetchTranslations() {
+const fetchTranslations = async() => {
     const response = await fetch(`translations.json`);
     return response.json();
-}
+};
 
-async function translatePage() {
+const translatePage = async() => {
     if (Object.keys(translations).length === 0) {
         translations = await fetchTranslations();
     }
     document.querySelectorAll("[data-i18n-key]").forEach(translateElement);
-}
+};
 
-function translateElement(element) {
+const translateElement = element => {
     const key = element.dataset.i18nKey;
-    const translation = translations[locale][key];
-    if (key === "qualityTooltip") {
+    const translation = translations[key][locale];
+    if (element.classList.contains("tooltip")) {
         element.dataset.description = translation;
     } else {
         element.innerText = translation;
     }
-}
+};
 
 const options = {
     'option-quality-save': {
+        type: 'input',
+        event: 'click',
+        property: 'checked',
+        message: 'update-cache',
+    },
+    'option-mute-on-lowest': {
+        type: 'input',
+        event: 'click',
+        property: 'checked',
+        message: 'update-cache',
+    },
+    'option-unmute-on-highest': {
         type: 'input',
         event: 'click',
         property: 'checked',
@@ -89,17 +101,27 @@ const options = {
         callback: () => {
             thisBrowser.storage.local.get(null, items => {
                 setControlValue('#checkbox-save', 'checked', items['reset-quality-save'], 'click');
+                setControlValue('#checkbox-mute-on-lowest', 'checked', items['reset-mute-on-lowest'], 'click');
+                setControlValue('#checkbox-unmute-on-highest', 'checked', items['reset-unmute-on-highest'], 'click');
                 setControlValue('#range-margin', 'value', items['reset-button-margin'], 'input');
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
                 setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
 
                 const resetColors = {};
                 [
-                    'text', 'background', 'text-hover',
-                    'background-hover', 'text-selected', 'background-selected'
+                    'text',
+                    'background',
+                    'text-hover',
+                    'background-hover',
+                    'text-selected',
+                    'background-selected'
                 ].forEach(color => {
-                    sendColorToTab(`option-color-${color}`, items[`reset-color-${color}`]);
-                    resetColors[`option-color-${color}`] = items[`reset-color-${color}`];
+                    const optionColor = `option-color-${color}`;
+                    const resetColor = `reset-color-${color}`;
+
+                    sendColorToTab(optionColor, items[resetColor]);
+                    setColorPreviewDot(optionColor);
+                    resetColors[optionColor] = items[resetColor];
                 });
 
                 thisBrowser.storage.local.set(resetColors);
@@ -111,7 +133,7 @@ const options = {
 let savedParams = {};
 let currentId = { id: 'option-color-text' };
 
-function messageTwitchTabs(message) {
+const messageTwitchTabs = message => {
     thisBrowser.tabs.query({}, tabs => {
         tabs.forEach(tab => {
             if (tab.url.match(/^(?:https?:\/\/)?(?:[^.]+\.)?twitch\.(tv|com)\/[^/]+\/?$/)) {
@@ -119,8 +141,8 @@ function messageTwitchTabs(message) {
             }
         });
     });
-}
-function debounce(func, timeout = 100) {
+};
+const debounce = (func, timeout = 100) => {
     let timer;
     return (...args) => {
         clearTimeout(timer);
@@ -128,7 +150,7 @@ function debounce(func, timeout = 100) {
             func.apply(this, args);
         }, timeout);
     };
-}
+};
 
 // make firefox fire resize popup by dom manipulation as hover doesn't trigger it
 document.querySelectorAll('.tooltip').forEach(elem => {
@@ -140,38 +162,35 @@ document.querySelectorAll('.tooltip').forEach(elem => {
 });
 
 
-function clamp(n, min, max) {
-    return Math.min(Math.max(n, min), max);
-}
-function getCursorPosition(element, event) {
+const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+
+const getCursorPosition = (element, event) => {
     const rect = element.getBoundingClientRect();
     const clampedX = clamp(event.clientX, rect.left, rect.right - 1);
     const clampedY = clamp(event.clientY, rect.top, rect.bottom - 1);
     return [clampedX - rect.left, clampedY - rect.top];
-}
+};
 
-function truncDigits(color, digits = 2) {
-    return [
-        Number(color[0]).toFixed(digits),
-        Number(color[1]).toFixed(digits),
-        Number(color[2]).toFixed(digits),
-    ];
-}
+const truncDigits = (color, digits = 2) => [
+    Number(color[0]).toFixed(digits),
+    Number(color[1]).toFixed(digits),
+    Number(color[2]).toFixed(digits),
+];
 
-function hsv2rgb(h, s, v) {
+
+const hsv2rgb = (h, s, v) => {
     const f = (n, k = (n + h / 60) % 6) => v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
     return [f(5), f(3), f(1)];
-}
-function rgb2hsv(r, g, b) {
+};
+const rgb2hsv = (r, g, b) => {
     const v = Math.max(r, g, b), c = v - Math.min(r, g, b);
     const h = c && (v === r ? (g - b) / c : v === g ? 2 + (b - r) / c : 4 + (r - g) / c);
     return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
-}
+};
 
-function rgb2hex(r, g, b) {
-    return `#${(1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase()}`;
-}
-function hex2rgb(hex) {
+const rgb2hex = (r, g, b) => `#${(1 << 24 | (r * 255 << 16) | (g * 255 << 8) | b * 255).toString(16).slice(1).toUpperCase()}`;
+
+const hex2rgb = hex => {
     if (hex[0] === '#') {
         hex = hex.substring(1);
     }
@@ -180,15 +199,13 @@ function hex2rgb(hex) {
     const g = (bigInt >> 8) & 255;
     const b = bigInt & 255;
     return [r, g, b];
-}
+};
 
-function normalizeRgb(r, g, b) {
-    return [r, g, b].map(v => v / 255);
-}
-function validateHexRgb(hex) {
-    return /^#?[0-9A-F]{3}([0-9A-F]{3})?$/i.test(hex);
-}
-function sendColorToTab(id, value) {
+const normalizeRgb = (r, g, b) => [r, g, b].map(v => v / 255);
+
+const validateHexRgb = hex => /^#?[0-9A-F]{3}([0-9A-F]{3})?$/i.test(hex);
+
+const sendColorToTab = (id, value) => {
     messageTwitchTabs({
         type: "select-color",
         detail: {
@@ -196,8 +213,12 @@ function sendColorToTab(id, value) {
             value: value,
         }
     });
-}
-function mouseMovePickerHandler(event, target, cursor, textNodes) {
+};
+const setPickedColor = color => {
+    const pickedColor = document.getElementById('picked-color');
+    pickedColor.style.setProperty('background-color', color);
+};
+const mouseMovePickerHandler = (event, target, cursor, textNodes) => {
     const [cursorX, cursorY] = getCursorPosition(target, event);
     const id = currentId.id;
 
@@ -216,11 +237,12 @@ function mouseMovePickerHandler(event, target, cursor, textNodes) {
     const rgbHex = rgb2hex(...rgbDec);
     textNodes.rgbText.value = rgbHex;
     textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
+    setPickedColor(rgbHex);
 
     sendColorToTab(id, rgbHex);
-}
+};
 
-function mouseMoveSliderHandler(event, target, cursor, textNodes) {
+const mouseMoveSliderHandler = (event, target, cursor, textNodes) => {
     const [cursorX,] = getCursorPosition(target, event);
     const id = currentId.id;
 
@@ -235,53 +257,35 @@ function mouseMoveSliderHandler(event, target, cursor, textNodes) {
     const rgbHex = rgb2hex(...rgbDec);
     textNodes.rgbText.value = rgbHex;
     textNodes.rgbText.dispatchEvent(new Event('input', { bubbles: true }));
+    setPickedColor(rgbHex);
 
     sendColorToTab(id, rgbHex);
     target.parentElement.querySelector('.color-picker').style.setProperty('--hue', `${Math.round(degrees)}`);
-}
-function mouseDown(eventDown, func, cursor, textNodes) {
+};
+const mouseDown = (eventDown, func, cursor, textNodes) => {
     const originalTarget = eventDown.target;
 
     func(eventDown, originalTarget, cursor, textNodes);
-    function mouseMove(event) {
+    const mouseMove = event => {
         func(event, originalTarget, cursor, textNodes);
-    }
-    function mouseUp() {
+    };
+    const mouseUp = () => {
         clearEvents();
-    }
-    function clearEvents() {
+    };
+    const clearEvents = () => {
         window.removeEventListener('mousemove', mouseMove);
         window.removeEventListener('mouseup', mouseUp);
-    }
+    };
     window.addEventListener('mousemove', mouseMove, { passive: true });
     window.addEventListener('mouseup', mouseUp, { passive: true });
-}
+};
 
-function setCursorCoords(cursor, x, y) {
+const setCursorCoords = (cursor, x, y) => {
     cursor.style.left = `${Math.round(x)}px`;
     cursor.style.top = `${Math.round(y)}px`;
-}
+};
 
-function initOpenDialogButton2(id) {
-    const inputToggle = document.getElementById(id);
-
-    inputToggle.addEventListener('change', event => {
-        const dialogPicker = document.getElementById("dialog-color-picker");
-        const dialogTitle = document.getElementById("dialog-title");
-        const confirmButton = dialogPicker.querySelector("button");
-
-        if (event.target.checked) {
-            dialogPicker.querySelector('label.close-button').setAttribute('for', id);
-            // translateElement(confirmButton);
-            dialogTitle.textContent = document.querySelector(`#${event.target.id}-label > span`).textContent;
-            currentId.id = id;
-        } else {
-            confirmButton.classList.remove('confirm-button');
-        }
-    });
-}
-
-function initColorPicker() {
+const initColorPicker = () => {
     const dialogPicker = document.getElementById("dialog-color-picker");
     const rgbText = dialogPicker.querySelector(".color-picker-input");
     const textNodes = { rgbText };
@@ -308,10 +312,37 @@ function initColorPicker() {
         savedSliderX: 0,
         savedSliderW: parseInt(rectPickerSlider.width) - 1,
     };
-}
+};
+
+const getStorage = _keys => new Promise(resolve => {
+    let keys = _keys;
+    let oneArgument = false;
+    if (typeof _keys === "string") {
+        keys = [keys];
+        oneArgument = true;
+    }
+
+    thisBrowser.storage.local.get(keys, items => {
+        if (oneArgument) {
+            resolve(Object.values(items)[0]);
+        } else {
+            resolve(items);
+        }
+    });
+});
+
+const setColorPreviewDot = async(id, color) => {
+    const selector = `#${id}-tooltip > span.color-tooltip`;
+    if (!color) {
+        color = await getStorage(id);
+    }
+    const element = document.querySelector(selector);
+    element.style.backgroundColor = color;
+    element.dataset.description = color;
+};
 
 let eventsSet = false;
-function initOpenDialogButton(id) {
+const initOpenDialogButton = id => {
     const inputToggle = document.getElementById(id);
     const dialogPicker = document.getElementById("dialog-color-picker");
     const confirmButton = dialogPicker.querySelector("button");
@@ -323,8 +354,8 @@ function initOpenDialogButton(id) {
     inputToggle.addEventListener('change', async event => {
         currentId.id = id;
         event.target.checked = !event.target.checked;
-        const currentColor = await thisBrowser.storage.local.get(id);
-        preSelectColor(currentColor[id]);
+        const currentColor = await getStorage(id);
+        preSelectColor(currentColor);
         event.target.checked = !event.target.checked;
         const dialogTitle = document.getElementById("dialog-title");
 
@@ -336,7 +367,7 @@ function initOpenDialogButton(id) {
         }
     });
 
-    function pinpointCursor(r, g, b) {
+    const pinpointCursor = (r, g, b) => {
         const rgbNormalized = normalizeRgb(r, g, b);
         const hsv = rgb2hsv(...rgbNormalized);
 
@@ -355,13 +386,14 @@ function initOpenDialogButton(id) {
         setCursorCoords(colorPickerSliderCursor, savedSliderX, 0);
 
         colorPickerNode.style.setProperty('--hue', `${Math.round(hsv[0])}`);
-    }
-    function preSelectColor(rgbHex, func) {
+    };
+    const preSelectColor = (rgbHex, func) => {
         if (validateHexRgb(rgbHex)) {
             if (rgbHex.length === 4) {
                 rgbHex = rgbHex.replaceAll(/([0-9a-fA-F])/gi, "$1$1");
             }
             rgbText.value = rgbHex;
+            setPickedColor(rgbHex);
             const rgbDec = hex2rgb(rgbHex);
             pinpointCursor(...rgbDec);
             sendColorToTab(currentId.id, rgbHex);
@@ -369,7 +401,7 @@ function initOpenDialogButton(id) {
                 func();
             }
         }
-    }
+    };
 
     if (!eventsSet) {
         rgbText.addEventListener('input', event => {
@@ -401,16 +433,21 @@ function initOpenDialogButton(id) {
         });
         confirmButton.addEventListener('click', event => {
             preSelectColor(rgbText.value, () => {
+                rgbText.value = rgbText.value.toUpperCase();
                 event.target.classList.add('confirm-button');
                 thisBrowser.storage.local.set({ [currentId.id]: rgbText.value });
+
+                setColorPreviewDot(currentId.id, rgbText.value);
+                // const selector = `#${currentId.id}-tooltip > span.color-tooltip`;
+                // document.querySelector(selector).style.backgroundColor = rgbText.value;
             });
         });
         eventsSet = true;
     }
-}
+};
 
 // init control values and set listeners (except color pickers)
-function initControls() {
+const initControls = () => {
     for (let [optionId, option] of Object.entries(options)) {
         let node = document.querySelector(`#${optionId} ${options[optionId].type}`);
         let debounceSet = debounce((...args) => thisBrowser.storage.local.set(...args));
@@ -444,7 +481,7 @@ function initControls() {
             });
         }
     }
-}
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     thisBrowser.storage.local.get(null, result => {
@@ -471,13 +508,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setLocale(defaultLocale);
     initColorPicker();
-    [
+    const colorIds = [
         'option-color-text',
         'option-color-background',
         'option-color-text-hover',
         'option-color-background-hover',
         'option-color-text-selected',
         'option-color-background-selected',
-    ].forEach(id => initOpenDialogButton(id));
+    ];
+    colorIds.forEach(id => initOpenDialogButton(id));
+    colorIds.forEach(id => setColorPreviewDot(id));
     initControls();
 });

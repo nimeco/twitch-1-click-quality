@@ -7,24 +7,23 @@ if (chrome) {
     thisBrowser = browser;
 }
 
-function injectScript(name) {
-    return new Promise((resolve, _response) => {
-        let s = document.createElement('script');
-        s.src = thisBrowser.runtime.getURL(name);
-        s.addEventListener('load', () => {
-            s.parentNode.removeChild(s);
-            resolve(true);
-        });
-        (document.head || document.documentElement).appendChild(s);
+const injectScript = name => new Promise((resolve, _response) => {
+    let s = document.createElement('script');
+    s.src = thisBrowser.runtime.getURL(name);
+    s.addEventListener('load', () => {
+        s.parentNode.removeChild(s);
+        resolve(true);
     });
-}
+    (document.head || document.documentElement).appendChild(s);
+});
 
-async function injectScripts() {
+
+const injectScripts = async() => {
     await injectScript('resource.js');
-}
+};
 
 let cssNode = null;
-function newNode(nodeName, classes, options, dataset) {
+const newNode = (nodeName, classes, options, dataset) => {
     let node = document.createElement(nodeName);
     if (classes) {
         Object.assign(node, { classList: classes.join(' ') });
@@ -36,14 +35,51 @@ function newNode(nodeName, classes, options, dataset) {
         Object.assign(node.dataset, dataset);
     }
     return node;
-}
-function createCssRules(rules) {
+};
+const createCssRules = rules => {
     let styleNode = newNode('style', null, { title: "1-click-quality" });
     styleNode.appendChild(document.createTextNode(rules));
     document.head.appendChild(styleNode);
     return cssNode;
-}
-async function initCSS() {
+};
+const getStorage = _keys => new Promise(resolve => {
+    let keys = _keys;
+    let oneArgument = false;
+    if (typeof _keys === "string") {
+        keys = [keys];
+        oneArgument = true;
+    }
+
+    let allKeysExist = true;
+    let result = {};
+    for (let i = 0; i < keys.length; i++) {
+        if (keys[i] in cachedStorage) {
+            result[keys[i]] = cachedStorage[keys[i]];
+        } else {
+            allKeysExist = false;
+            break;
+        }
+    }
+
+    if (allKeysExist) {
+        if (oneArgument) {
+            resolve(Object.values(result)[0]);
+        } else {
+            resolve(result);
+        }
+    } else {
+        thisBrowser.storage.local.get(keys, items => {
+            cachedStorage = { ...cachedStorage, ...items };
+
+            if (oneArgument) {
+                resolve(Object.values(items)[0]);
+            } else {
+                resolve(items);
+            }
+        });
+    }
+});
+const initCSS = async() => {
     let transition = true;
     transition = await getStorage('option-toggle-transition');
     const colors = await getStorage([
@@ -102,48 +138,8 @@ async function initCSS() {
         }
         `;
     cssNode = createCssRules(buttonCss);
-}
+};
 initCSS();
-
-function getStorage(_keys) {
-    return new Promise(resolve => {
-        let keys = _keys;
-        let oneArgument = false;
-        if (typeof _keys === "string") {
-            keys = [keys];
-            oneArgument = true;
-        }
-
-        let allKeysExist = true;
-        let result = {};
-        for (let i = 0; i < keys.length; i++) {
-            if (keys[i] in cachedStorage) {
-                result[keys[i]] = cachedStorage[keys[i]];
-            } else {
-                allKeysExist = false;
-                break;
-            }
-        }
-
-        if (allKeysExist) {
-            if (oneArgument) {
-                resolve(Object.values(result)[0]);
-            } else {
-                resolve(result);
-            }
-        } else {
-            thisBrowser.storage.local.get(keys, items => {
-                cachedStorage = { ...cachedStorage, ...items };
-
-                if (oneArgument) {
-                    resolve(Object.values(items)[0]);
-                } else {
-                    resolve(items);
-                }
-            });
-        }
-    });
-}
 
 const innerDimensions = node => {
     var computedStyle = getComputedStyle(node);
@@ -156,7 +152,7 @@ const innerDimensions = node => {
     return { height, width };
 };
 
-async function setHeaderStyle() {
+const setHeaderStyle = async() => {
     try {
         let opts = await getStorage(['option-button-margin', 'option-button-scale']);
         let t = opts['option-button-margin'] / -100;
@@ -178,17 +174,16 @@ async function setHeaderStyle() {
     } catch (e) {
         console.log(e);
     }
-}
+};
 
-function setTransitionRule(enabled) {
+const setTransitionRule = enabled => {
     document.querySelector('.quality-button-header')?.style.setProperty('transition', `all ${enabled ? '700' : '0'}ms ease 0s`);
-}
+};
 
-function setButtonColor(request) {
+const setButtonColor = request => {
     const key = request.detail['requested-key'];
     document.documentElement.style.setProperty(`--${key}`, request.detail.value);
-    // document.querySelector('.quality-button-header button')?.style.setProperty(properties[request['requested-key']], request.detail.color);
-}
+};
 
 injectScripts();
 
@@ -196,11 +191,22 @@ document.addEventListener('set-style', _event => {
     setHeaderStyle();
 });
 
-document.addEventListener('save-quality?', async event => {
+document.addEventListener('event-save-quality', async event => {
     let detail = event.detail;
     let isSaveEnabled = await getStorage('option-quality-save');
     if (isSaveEnabled) {
         window.localStorage.setItem('video-quality', JSON.stringify({ default: detail.group }));
+    }
+});
+
+document.addEventListener('event-mute-video', async event => {
+    let detail = event.detail;
+    let muteOptions = await getStorage(['option-mute-on-lowest', 'option-unmute-on-highest']);
+
+    if (detail.group === detail.highest && muteOptions['option-unmute-on-highest']) {
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: false }));
+    } else if (detail.group === detail.lowest && muteOptions['option-mute-on-lowest']) {
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: true }));
     }
 });
 
@@ -213,11 +219,4 @@ thisBrowser.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
     } else if (request.type === 'select-color') {
         setButtonColor(request);
     }
-    // sendResponse({});
 });
-
-// alert(window.localStorage.getItem('video-quality'));
-/*
- {'default': 'chunked'}
- {'default': '480p30'}
- */

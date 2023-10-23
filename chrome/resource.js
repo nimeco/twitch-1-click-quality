@@ -4,8 +4,8 @@
     let buttons = [];
     let lastButton = null;
 
-    function findPlayer() {
-        function findReactNode(root, constraint) {
+    const findPlayer = () => {
+        const findReactNode = (root, constraint) => {
             if (root.stateNode && constraint(root.stateNode)) {
                 return root.stateNode;
             }
@@ -18,7 +18,7 @@
                 node = node.sibling;
             }
             return null;
-        }
+        };
 
         try {
             videoPlayer = null;
@@ -37,7 +37,7 @@
 
             videoPlayer = findReactNode(
                 reactRootNode,
-                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance,
+                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance
             );
             videoPlayer =
                 videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ?
@@ -51,17 +51,17 @@
             console.log(err);
         }
         return null;
-    }
+    };
 
-    function highlightSelectedButton(button) {
+    const highlightSelectedButton = button => {
         if (lastButton) {
             lastButton.removeAttribute('data-selected');
         }
         button.dataset.selected = '1';
         lastButton = button;
-    }
+    };
 
-    function newNode(nodeName, classes, options, dataset) {
+    const newNode = (nodeName, classes, options, dataset) => {
         let node = document.createElement(nodeName);
         if (classes) {
             Object.assign(node, { classList: classes.join(' ') });
@@ -73,42 +73,50 @@
             Object.assign(node.dataset, dataset);
         }
         return node;
-    }
+    };
 
-    function createButton(data) {
+    let lowestQuality = "";
+    let highestQuality = "";
+    const createButton = data => {
         let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
 
         button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
+            // if (data.quality.name === "160p") {
+            //     videoPlayer.setMuted(true);
+            // } else {
+            //     videoPlayer.setMuted(false);
+            // }
             highlightSelectedButton(event.target);
-            sendEvent('save-quality?', { group: data.quality.group });
+            sendEvent('event-save-quality', { group: data.quality.group });
+            sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
         });
 
         return button;
-    }
+    };
 
-    function sendEvent(name, detail) {
+    const sendEvent = (name, detail) => {
         let customEvent = new CustomEvent(name, { detail: detail });
         document.dispatchEvent(customEvent);
-    }
+    };
 
-    function createButtons(properties) {
+    const createButtons = properties => {
         buttons = [];
         for (let property of properties) {
             buttons.push(createButton(property));
         }
         return buttons;
-    }
+    };
 
-    function createButtonsHeader() {
+    const createButtonsHeader = () => {
         let channelHeader = document.querySelector('div[data-target="channel-header-right"]');
         buttonsHeader = newNode('div', ['quality-button-header']);
         channelHeader?.prepend(buttonsHeader);
 
         return buttonsHeader;
-    }
+    };
 
-    function updateQualityButtons() {
+    const updateQualityButtons = () => {
         if (!document.contains(buttonsHeader) && !document.querySelector('.quality-button-header')) {
             buttonsHeader = createButtonsHeader();
         }
@@ -120,6 +128,8 @@
 
         if (videoPlayer && buttonsHeader) {
             let qualities = [...videoPlayer.getQualities()];
+            lowestQuality = qualities[qualities.length - 1].group;
+            highestQuality = qualities[0].group;
             qualities.unshift(Object.assign({}, qualities[0]));
             qualities[0].name = 'Auto';
             qualities[0].group = 'auto';
@@ -146,7 +156,7 @@
                 }
             }
         }
-    }
+    };
 
     const targetNode = document.getElementById('root');
     const config = { attributes: true, subtree: true, attributeFilter: ['src'], childList: true };
@@ -166,4 +176,8 @@
         }
     });
     observer.observe(targetNode, config);
+
+    document.addEventListener('event-response-mute-video', data => {
+        videoPlayer.setMuted(data.detail);
+    });
 })();

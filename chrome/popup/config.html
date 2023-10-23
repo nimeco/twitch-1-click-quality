@@ -21,7 +21,9 @@
         </div>
         <div class='wrapper'>
             <div id="option-quality-tooltip">
-                <span data-i18n-key="qualityTooltip" data-description=""><svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg></span>
+                <span data-i18n-key="qualityTooltip" data-description="" class="tooltip">
+                    <svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg>
+                </span>
             </div>
             <div id="option-quality-label">
                 <span data-i18n-key="quality"></span>
@@ -30,6 +32,38 @@
                 <div class="input-toggle">
                     <input type="checkbox" id="checkbox-save" class='input'>
                     <label class="input-toggle-label" for="checkbox-save"></label>
+                </div>
+            </div>
+
+
+            <div id="option-mute-on-lowest-tooltip">
+                <span data-i18n-key="muteOnLowestTooltip" data-description="" class="tooltip">
+                    <svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg>
+                </span>
+            </div>
+            <div id="option-mute-on-lowest-label">
+                <span data-i18n-key="muteOnLowest"></span>
+            </div>
+            <div id="option-mute-on-lowest">
+                <div class="input-toggle">
+                    <input type="checkbox" id="checkbox-mute-on-lowest" class='input'>
+                    <label class="input-toggle-label" for="checkbox-mute-on-lowest"></label>
+                </div>
+            </div>
+
+
+            <div id="option-unmute-on-highest-tooltip">
+                <span data-i18n-key="unmuteOnHighestTooltip" data-description="" class="tooltip">
+                    <svg class="svg-info" viewBox="0 0 20 20"><use xlink:href="#info_svg"></svg>
+                </span>
+            </div>
+            <div id="option-unmute-on-highest-label">
+                <span data-i18n-key="unmuteOnHighest"></span>
+            </div>
+            <div id="option-unmute-on-highest">
+                <div class="input-toggle">
+                    <input type="checkbox" id="checkbox-unmute-on-highest" class='input'>
+                    <label class="input-toggle-label" for="checkbox-unmute-on-highest"></label>
                 </div>
             </div>
 
@@ -54,6 +88,17 @@
             </div>
 
 
+            <div id="option-toggle-transition-label">
+                <span data-i18n-key="animation"></span>
+            </div>
+            <div id="option-toggle-transition">
+                <div class="input-toggle">
+                    <input type="checkbox" id="checkbox-transition" class='input'>
+                    <label class="input-toggle-label" for="checkbox-transition"></label>
+                </div>
+            </div>
+
+
             <div id="option-language-label">
                 <span data-i18n-key="language"></span>
             </div>
@@ -68,31 +113,27 @@
                     <option value="tr">Türkçe</option>
                     <option value="ru">Русский</option>
                     <option value="hi">हिन्दी</option>
-                    <option value="zn-cn">中文　简体</option>
-                    <option value="zn-tw">中文　繁體</option>
-                    <option value="jp">日本語</option>
-                    <option value="kr">한국어</option>
+                    <option value="zh-Hans">中文　简体</option>
+                    <option value="zh-Hant">中文　繁體</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
                 </select>
             </div>
 
 
-            <div id="option-toggle-transition-label">
-                <span data-i18n-key="animation"></span>
+            <div id="option-color-text-tooltip">
+                <span class="color-tooltip"></span>
             </div>
-            <div id="option-toggle-transition">
-                <div class="input-toggle">
-                    <input type="checkbox" id="checkbox-transition" class='input'>
-                    <label class="input-toggle-label" for="checkbox-transition"></label>
-                </div>
-            </div>
-
-
             <div id="option-color-text-label">
                 <span data-i18n-key="textColor">Text color</span>
             </div>
             <input type="checkbox" id="option-color-text">
             <label data-i18n-key="changeColor" for="option-color-text" class="button">Change</label>
 
+
+            <div id="option-color-background-tooltip">
+                <span class="color-tooltip"></span>
+            </div>
             <div id="option-color-background-label">
                 <span data-i18n-key="backColor">Background color</span>
             </div>
@@ -100,12 +141,19 @@
             <label data-i18n-key="changeColor" for="option-color-background" class="button">Change</label>
 
 
+            <div id="option-color-text-hover-tooltip">
+                <span class="color-tooltip"></span>
+            </div>
             <div id="option-color-text-hover-label">
                 <span data-i18n-key="hoverTextColor">Hover text color</span>
             </div>
             <input type="checkbox" id="option-color-text-hover">
             <label data-i18n-key="changeColor" for="option-color-text-hover" class="button">Change</label>
 
+
+            <div id="option-color-background-hover-tooltip">
+                <span class="color-tooltip"></span>
+            </div>
             <div id="option-color-background-hover-label">
                 <span data-i18n-key="hoverBackColor">Hover background color</span>
             </div>
@@ -113,18 +161,24 @@
             <label data-i18n-key="changeColor" for="option-color-background-hover" class="button">Change</label>
 
 
+            <div id="option-color-text-selected-tooltip">
+                <span class="color-tooltip"></span>
+            </div>
             <div id="option-color-text-selected-label">
                 <span data-i18n-key="selectedTextColor">Selected text color</span>
             </div>
             <input type="checkbox" id="option-color-text-selected">
             <label data-i18n-key="changeColor" for="option-color-text-selected" class="button">Change</label>
 
+
+            <div id="option-color-background-selected-tooltip">
+                <span class="color-tooltip"></span>
+            </div>
             <div id="option-color-background-selected-label">
                 <span data-i18n-key="selectedBackColor">Selected background color</span>
             </div>
             <input type="checkbox" id="option-color-background-selected">
             <label data-i18n-key="changeColor" for="option-color-background-selected" class="button">Change</label>
-            <!-- <div class="xuca"></div> -->
 
 
             <dialog id="dialog-color-picker">
@@ -137,9 +191,14 @@
                 <div class="color-slider">
                     <div class="color-picker-slider-cursor"></div>
                 </div>
-                <input class="color-picker-input" type="text" maxlength="7" value="#">
-                <button data-i18n-key="confirmButton" class="button">Confirm</button>
-                <label for="toggle-picker" class="button close-button"></label>
+                <div class="dialog-controls">
+                    <input class="color-picker-input" type="text" maxlength="7" value="#">
+                    <div id="picked-color"></div>
+                </div>
+                <div class="dialog-controls">
+                    <button data-i18n-key="confirmButton" class="button">Confirm</button>
+                    <label data-i18n-key="closeButton" for="toggle-picker" class="button close-button">Close</label>
+                </div>
             </dialog>
 
 
