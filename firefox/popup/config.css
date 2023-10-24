@@ -598,7 +598,7 @@ select:focus option {
     display: inline-flex;
     height: var(--input-size-default);
     font-size: var(--input-text-default);
-    width: 8rem;
+    width: 8.5rem;
     text-transform: uppercase;
     outline: none;
 }
