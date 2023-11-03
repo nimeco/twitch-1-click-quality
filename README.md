@@ -74,11 +74,6 @@ Uma extensão que adiciona botões abaixo da live que permitem trocar de qualida
 Caso queira ficar trocando de lives mas precisa que eles rodem em uma qualidade baixa quando não estiver assistindo (160p), é mais fácil trocar dessa forma. Foi algo que fiz exatamente com esse propósito e achei que mais alguém poderia achar útil.
 
 ## Opções
-
-A opção `Salvar qualidade` e desliga salva a última qualidade selecionada e quando um novo stream é aberto, ele inicia com a qualidade salva. Se está desligada, a última qualidade selecionada com a opção ligada ou a qualidade selecionada com os botões padrões do player será usada.
-
-
-## Options
 * `Salvar qualidade` salva a ultima qualidade clicada, de forma que quando uma live é aberta, ele inicia com a qualiadde salva. Se está desligada, a última qualidade selecionada com a opção ligada ou a qualidade selecionada com os botões padrões do player será usada.
 * `Silenciar (qualidade mais baixa)` muta a live quando a menor qualidade disponível é clicada.
 * `Ativar som (qualidade mais alta)` desmuta a live quando a maior qualidade disponível é clicada. Caso a live só tenha uma qualidade disponível, essa opção tem precedência e a live é desmutada.
