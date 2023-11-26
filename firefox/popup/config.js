@@ -64,13 +64,18 @@ const options = {
         property: 'checked',
         message: 'update-cache',
     },
+    'option-mute-volume': {
+        type: 'input',
+        event: 'input',
+        property: 'value',
+        message: 'update-cache',
+    },
     'option-button-margin': {
         type: 'input',
         event: 'input',
         property: 'value',
         selector: '.quality-button-header',
         message: 'calculate-style',
-        calc: x => `${x}`,
     },
     'option-button-scale': {
         type: 'input',
@@ -78,7 +83,6 @@ const options = {
         property: 'value',
         selector: '.quality-button-header',
         message: 'calculate-style',
-        calc: x => `${x}`,
     },
     'option-language-save': {
         type: 'select',
@@ -458,10 +462,8 @@ const initControls = () => {
 
                 if (option.message) {
                     let value = node[option.property];
-                    if (option.calc) {
-                        value = option.calc(value);
-                    }
-                    let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+                    // let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+                    let detail = option;
                     detail.value = value;
                     detail['requested-key'] = optionId;
 

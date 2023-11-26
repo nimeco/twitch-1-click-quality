@@ -59,6 +59,21 @@
         "ja": "最低画質が選択されると、音声は自動的にミュートされます。",
         "ko": "가능한 가장 낮은 화질을 선택하면 오디오가 자동으로 음소거됩니다."
     },
+    "muteVolume": {
+        "de": "Lautstärke",
+        "en": "Volume",
+        "es": "Volumen",
+        "fr": "Volume",
+        "it": "Volume",
+        "pt": "Volume",
+        "tr": "Ses düzeyi",
+        "ru": "Громкость",
+        "hi": "ध्वनि",
+        "zh-Hans": "音量",
+        "zh-Hant": "音量",
+        "ja": "音量",
+        "ko": "볼륨"
+    },
     "unmuteOnHighest": {
         "de": "Stummschaltung aufheben (höchste Qualität)",
         "en": "Unmute (highest quality)",

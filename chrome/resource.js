@@ -82,11 +82,6 @@
 
         button.addEventListener('click', event => {
             videoPlayer[data.func](data.quality);
-            // if (data.quality.name === "160p") {
-            //     videoPlayer.setMuted(true);
-            // } else {
-            //     videoPlayer.setMuted(false);
-            // }
             highlightSelectedButton(event.target);
             sendEvent('event-save-quality', { group: data.quality.group });
             sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
@@ -125,9 +120,11 @@
         if (!document.contains(videoPlayer?.core?.mediaSinkManager?.video)) {
             videoPlayer = findPlayer();
         }
-
         if (videoPlayer && buttonsHeader) {
             let qualities = [...videoPlayer.getQualities()];
+            if (!qualities?.length) {
+                return false;
+            }
             lowestQuality = qualities[qualities.length - 1].group;
             highestQuality = qualities[0].group;
             qualities.unshift(Object.assign({}, qualities[0]));
@@ -156,6 +153,7 @@
                 }
             }
         }
+        return true;
     };
 
     const targetNode = document.getElementById('root');
@@ -178,6 +176,7 @@
     observer.observe(targetNode, config);
 
     document.addEventListener('event-response-mute-video', data => {
-        videoPlayer.setMuted(data.detail);
+        videoPlayer.setMuted(data.detail === 0);
+        videoPlayer.setVolume(data.detail);
     });
 })();

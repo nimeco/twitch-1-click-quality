@@ -32,6 +32,7 @@ body {
         "tip-quality           label-quality           opt-quality ." calc(var(--row-height) * 1px)
         "tip-mute-on-lowest    label-mute-on-lowest    opt-mute-on-lowest ." calc(var(--row-height) * 1px)
         "tip-unmute-on-highest label-unmute-on-highest opt-unmute-on-highest ." calc(var(--row-height) * 1px)
+        ".                     label-volume            opt-volume ." calc(var(--row-height) * 1px)
         ".                     label-margin            opt-margin ." calc(var(--row-height) * 1px)
         ".                     label-scale             opt-scale ." calc(var(--row-height) * 1px)
         ".                     label-transition        opt-transition ." calc(var(--row-height) * 1px)
@@ -61,6 +62,9 @@ body {
 #option-unmute-on-highest-tooltip { grid-area: tip-unmute-on-highest; }
 #option-unmute-on-highest-label { grid-area: label-unmute-on-highest; }
 #option-unmute-on-highest { grid-area: opt-unmute-on-highest; }
+
+#option-mute-volume-label { grid-area: label-volume; }
+#option-mute-volume { grid-area: opt-volume; }
 
 #option-margin-label { grid-area: label-margin; }
 #option-button-margin { grid-area: opt-margin; }
@@ -598,7 +602,7 @@ select:focus option {
     display: inline-flex;
     height: var(--input-size-default);
     font-size: var(--input-text-default);
-    width: 8rem;
+    width: 8.5rem;
     text-transform: uppercase;
     outline: none;
 }
@@ -663,7 +667,7 @@ select:focus option {
     background: #18181B;
     border: 0px;
     border-radius: 6px;
-    height: 500px;
+    height: 520px;
     width: 324px;
     top: 50px;
     left: 3px;

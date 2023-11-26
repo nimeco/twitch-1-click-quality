@@ -37,7 +37,7 @@ const newNode = (nodeName, classes, options, dataset) => {
     return node;
 };
 const createCssRules = rules => {
-    let styleNode = newNode('style', null, { title: "1-click-quality" });
+    const styleNode = newNode('style', null, { title: "1-click-quality" });
     styleNode.appendChild(document.createTextNode(rules));
     document.head.appendChild(styleNode);
     return cssNode;
@@ -142,7 +142,7 @@ const initCSS = async() => {
 initCSS();
 
 const innerDimensions = node => {
-    var computedStyle = getComputedStyle(node);
+    const computedStyle = getComputedStyle(node);
 
     let width = node.clientWidth;
     let height = node.clientHeight;
@@ -154,22 +154,22 @@ const innerDimensions = node => {
 
 const setHeaderStyle = async() => {
     try {
-        let opts = await getStorage(['option-button-margin', 'option-button-scale']);
-        let t = opts['option-button-margin'] / -100;
-        let s = opts['option-button-scale'] / 100;
+        const opts = await getStorage(['option-button-margin', 'option-button-scale']);
+        const t = opts['option-button-margin'] / -100;
+        const s = opts['option-button-scale'] / 100;
 
-        let node = document.querySelector('[data-target="channel-header-right"]');
+        const node = document.querySelector('[data-target="channel-header-right"]');
 
-        let totalWidth = node.parentNode?.getBoundingClientRect().width;
+        const totalWidth = node.parentNode?.getBoundingClientRect().width;
 
         let childrenNodes = [];
         [...node.children].forEach(n => {
             childrenNodes.push(innerDimensions(n).width);
         });
         childrenNodes[0] *= s;
-        let childrenWidth = childrenNodes.reduce((a, b) => a + b, 0);
+        const childrenWidth = childrenNodes.reduce((a, b) => a + b, 0);
 
-        let transformValue = `translateX(calc(${t} * (${totalWidth - childrenWidth}px + 3rem) - 1rem)) scale(${s})`;
+        const transformValue = `translateX(calc(${t} * (${totalWidth - childrenWidth}px + 3rem) - 1rem)) scale(${s})`;
         document.querySelector('.quality-button-header')?.style.setProperty('transform', transformValue);
     } catch (e) {
         console.log(e);
@@ -191,22 +191,30 @@ document.addEventListener('set-style', _event => {
     setHeaderStyle();
 });
 
+window.addEventListener('resize', _event => {
+    setHeaderStyle();
+});
+
 document.addEventListener('event-save-quality', async event => {
-    let detail = event.detail;
-    let isSaveEnabled = await getStorage('option-quality-save');
+    const detail = event.detail;
+    const isSaveEnabled = await getStorage('option-quality-save');
     if (isSaveEnabled) {
         window.localStorage.setItem('video-quality', JSON.stringify({ default: detail.group }));
     }
 });
 
 document.addEventListener('event-mute-video', async event => {
-    let detail = event.detail;
-    let muteOptions = await getStorage(['option-mute-on-lowest', 'option-unmute-on-highest']);
+    const detail = event.detail;
+    const muteOptions = await getStorage(['option-mute-volume', 'option-mute-on-lowest', 'option-unmute-on-highest']);
+    const muteVolume = muteOptions['option-mute-volume'] / 100;
 
     if (detail.group === detail.highest && muteOptions['option-unmute-on-highest']) {
-        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: false }));
+        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: false }));
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: muteVolume }));
     } else if (detail.group === detail.lowest && muteOptions['option-mute-on-lowest']) {
-        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: true }));
+        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: true }));
+        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: 0.001 }));
+        document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: 0 }));
     }
 });
 

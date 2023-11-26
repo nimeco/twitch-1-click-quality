@@ -64,13 +64,18 @@ const options = {
         property: 'checked',
         message: 'update-cache',
     },
+    'option-mute-volume': {
+        type: 'input',
+        event: 'input',
+        property: 'value',
+        message: 'update-cache',
+    },
     'option-button-margin': {
         type: 'input',
         event: 'input',
         property: 'value',
         selector: '.quality-button-header',
         message: 'calculate-style',
-        calc: x => `${x}`,
     },
     'option-button-scale': {
         type: 'input',
@@ -78,7 +83,6 @@ const options = {
         property: 'value',
         selector: '.quality-button-header',
         message: 'calculate-style',
-        calc: x => `${x}`,
     },
     'option-language-save': {
         type: 'select',
@@ -405,15 +409,17 @@ const initOpenDialogButton = id => {
 
     if (!eventsSet) {
         rgbText.addEventListener('input', event => {
-            let rgbHex = event.target.value;
+            let rgbHex = event.target.value.toUpperCase();
             confirmButton.classList.remove('confirm-button');
             if (rgbHex.length === 0) {
                 event.target.value = '#';
-            } else if (rgbHex.length === 1 && rgbHex !== "#") {
-                event.target.value = `#${rgbHex}`;
+            } else if (rgbHex[0] === "#") {
+                event.target.value = `${rgbHex.substring(0, 7)}`;
+            } else {
+                event.target.value = `#${rgbHex.substring(0, 6)}`;
             }
 
-            if ((rgbHex.length === 4 || rgbHex.length === 7) && /#[a-fA-F0-9]{3}([a-fA-F0-9]{3})?$/.test(rgbHex)) {
+            if ((rgbHex.length === 4 || rgbHex.length === 7) && validateHexRgb(rgbHex)) {
                 confirmButton.removeAttribute('disabled');
             } else {
                 confirmButton.setAttribute('disabled', '');
@@ -433,13 +439,9 @@ const initOpenDialogButton = id => {
         });
         confirmButton.addEventListener('click', event => {
             preSelectColor(rgbText.value, () => {
-                rgbText.value = rgbText.value.toUpperCase();
                 event.target.classList.add('confirm-button');
                 thisBrowser.storage.local.set({ [currentId.id]: rgbText.value });
-
                 setColorPreviewDot(currentId.id, rgbText.value);
-                // const selector = `#${currentId.id}-tooltip > span.color-tooltip`;
-                // document.querySelector(selector).style.backgroundColor = rgbText.value;
             });
         });
         eventsSet = true;
@@ -460,10 +462,8 @@ const initControls = () => {
 
                 if (option.message) {
                     let value = node[option.property];
-                    if (option.calc) {
-                        value = option.calc(value);
-                    }
-                    let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+                    // let detail = Object.fromEntries(Object.entries(option).filter(([_, v]) => typeof v !== 'function'));
+                    let detail = option;
                     detail.value = value;
                     detail['requested-key'] = optionId;
 
