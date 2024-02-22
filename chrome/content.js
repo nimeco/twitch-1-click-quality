@@ -160,6 +160,9 @@ const setHeaderStyle = async() => {
 
         const node = document.querySelector('[data-target="channel-header-right"]');
 
+        if (!node) {
+            return;
+        }
         const totalWidth = node.parentNode?.getBoundingClientRect().width;
 
         let childrenNodes = [];
@@ -209,11 +212,8 @@ document.addEventListener('event-mute-video', async event => {
     const muteVolume = muteOptions['option-mute-volume'] / 100;
 
     if (detail.group === detail.highest && muteOptions['option-unmute-on-highest']) {
-        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: false }));
         document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: muteVolume }));
     } else if (detail.group === detail.lowest && muteOptions['option-mute-on-lowest']) {
-        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: true }));
-        // document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: 0.001 }));
         document.dispatchEvent(new CustomEvent("event-response-mute-video", { detail: 0 }));
     }
 });

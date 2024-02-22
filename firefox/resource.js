@@ -5,51 +5,19 @@
     let lastButton = null;
 
     const findPlayer = () => {
-        const findReactNode = (root, constraint) => {
-            if (root.stateNode && constraint(root.stateNode)) {
-                return root.stateNode;
-            }
-            let node = root.child;
-            while (node) {
-                const result = findReactNode(node, constraint);
-                if (result) {
-                    return result;
-                }
-                node = node.sibling;
-            }
-            return null;
-        };
-
+        let videoElement = document.querySelector('.video-player');
+        let reactKey = Object.keys(videoElement).filter(key => key.startsWith('__reactFiber$') || key.startsWith('__reactInternalInstance$'))[0];
+        let node = videoElement[reactKey];
+        let iterations = 1;
         try {
-            videoPlayer = null;
-
-            let reactRootNode = null;
-            let rootNode = document.querySelector('#root');
-
-            if (
-                rootNode &&
-                rootNode._reactRootContainer &&
-                rootNode._reactRootContainer._internalRoot &&
-                rootNode._reactRootContainer._internalRoot.current
-            ) {
-                reactRootNode = rootNode._reactRootContainer._internalRoot.current;
+            while (node.return && iterations < 100) {
+                if (node.memoizedProps?.mediaPlayerInstance?.core) {
+                    return node.memoizedProps.mediaPlayerInstance.core;
+                }
+                node = node.return;
+                iterations += 1;
             }
-
-            videoPlayer = findReactNode(
-                reactRootNode,
-                node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance
-            );
-            videoPlayer =
-                videoPlayer && videoPlayer.props && videoPlayer.props.mediaPlayerInstance ?
-                    videoPlayer.props.mediaPlayerInstance :
-                    null;
-
-            if (videoPlayer) {
-                return videoPlayer;
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        } catch (e) { console.log(e); }
         return null;
     };
 
@@ -84,7 +52,9 @@
             videoPlayer[data.func](data.quality);
             highlightSelectedButton(event.target);
             sendEvent('event-save-quality', { group: data.quality.group });
-            sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
+            if (!event.ctrlKey) {
+                sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
+            }
         });
 
         return button;
