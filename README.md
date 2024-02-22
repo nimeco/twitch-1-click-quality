@@ -42,6 +42,7 @@ The translations might not be on point, so if you got better ones, I'd appreciat
 * Fix: The saved options were reset in certain occasions.
 * Added button text and background colors.
 * Added automatically mute and unmute settings when clicking on the lowest and highest qualities.
+* The above option, if enabled, is ignored in case the buttons are clicked while holding CTRL.
 * Added the Turkish, Hindi, Simplified Chinese, Traditional Chinese and Korean languages.
 
 #### 1.1.7:
@@ -97,6 +98,7 @@ As traduções talvez não estejam certas, se você tiver melhores, adoraria cor
 * Fix: As opções salvas eram resetadas em certas ocasiões.
 * Adicionado cores de texto e fundo para os botões.
 * Adicionado opções de mutar e desmutar automatiacamente na menor e maior qualidade.
+* A opção acima, caso esteja ligada, é ignorada quando o botão é pressionado segurando a tecla CTRL.
 * Adicionado as línguas Turco, Hindi, Chinês Simplificado, Chinês Tradicional e Coreano.
 
 #### 1.1.7:
