@@ -124,7 +124,7 @@ const options = {
                     const resetColor = `reset-color-${color}`;
 
                     sendColorToTab(optionColor, items[resetColor]);
-                    setColorPreviewDot(optionColor);
+                    setColorPreviewDot(optionColor, items[resetColor]);
                     resetColors[optionColor] = items[resetColor];
                 });
 
