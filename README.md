@@ -25,6 +25,7 @@ If you want to go back and forth between many streams but want to let them runni
 * `Volume` is the volume the stream is set to when the unmute option is turned on.
 * `Position` changes the position of the buttons on the screen.
 * `Size` changes the size of the buttons on the screen.
+* `Border` changes the buttons border radius.
 * `Animation` makes the position and size changes animate.
 * `Language` lets you change the the language.
 * All color options when clicked, opens a color picker so a color can be selected. The buttons change color as a preview only, remember to save the color clicking on `Confirm`.
@@ -37,6 +38,11 @@ The translations might not be on point, so if you got better ones, I'd appreciat
 * [Twitter](https://twitter.com/twitchxuxa)
 
 ## Changes
+### 1.3
+* Fix: Buttons are working again
+* Now, when a quality is saved beforehand and the stream doesn't have that quality enabled, it selects the nearest quality instead of defaulting to Auto.
+* Added button border radius configuration.
+
 ### 1.2
 * Fix: Buttons are realigned properly when the window is resized.
 * Fix: The saved options were reset in certain occasions.
@@ -63,7 +69,7 @@ The translations might not be on point, so if you got better ones, I'd appreciat
 #### 1.1.1:
 * Fixed spacing bug from v1.1, added animation toggle option.
 
-#### 1.1:
+### 1.1:
 * Added position, scale and language customization.
 
 ---
@@ -81,6 +87,7 @@ Caso queira ficar trocando de lives mas precisa que eles rodem em uma qualidade 
 * `Volume` é o volume da live a ser colocado quando a opção de desmutar a live está ativada.
 * `Posição` muda a posição dos botões na tela.
 * `Tamanho` muda o tamanho dos botões na tela.
+* `Borda` muda o tamanho das bordas dos botões.
 * `Animação` faz com que a mudança de posição e tamanho sejam animadas.
 * `Língua` permite mudar o idioma.
 * Todas opções de cor, quando clicadas, abrem um seletor de cor onde uma cor pode ser selecionada. Os botôes refletem as cores somente como uma prévia, lembre-se de salvar a cor clicando em `Confirmar`.
@@ -93,7 +100,12 @@ As traduções talvez não estejam certas, se você tiver melhores, adoraria cor
 * [Twitter](https://twitter.com/twitchxuxa)
 
 ## Mudanças
-#### 1.2
+### 1.3
+* Fix: Os botões estão funcionando novamente.
+* Agora, quando uma qualidade está salva e a live não possui aquela qualidade disponível, a qualidade mais próxima é selecionada ao invés de ser selecionada a qualidade automatica.
+* Adicionado opções de mudar a borda dos botões.
+
+### 1.2
 * Fix: Os botões corrigem a posição quando a tela é redimensionada.
 * Fix: As opções salvas eram resetadas em certas ocasiões.
 * Adicionado cores de texto e fundo para os botões.
@@ -119,5 +131,5 @@ As traduções talvez não estejam certas, se você tiver melhores, adoraria cor
 #### 1.1.1:
 * Corrigido um bug de espaçamento da v1.1, adicionado um botão para ativar e desativar a animação.
 
-#### 1.1:
+### 1.1:
 * Adicionado configurações de posição, tamanho e idioma.
