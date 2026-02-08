@@ -27,7 +27,7 @@ body {
 }
 .wrapper {
     display: grid;
-    --row-height: 32;
+    --row-height: 30;
     grid-template:
         "tip-quality           label-quality           opt-quality ." calc(var(--row-height) * 1px)
         "tip-mute-on-lowest    label-mute-on-lowest    opt-mute-on-lowest ." calc(var(--row-height) * 1px)
@@ -35,6 +35,7 @@ body {
         ".                     label-volume            opt-volume ." calc(var(--row-height) * 1px)
         ".                     label-margin            opt-margin ." calc(var(--row-height) * 1px)
         ".                     label-scale             opt-scale ." calc(var(--row-height) * 1px)
+        ".                     label-border            opt-border ." calc(var(--row-height) * 1px)
         ".                     label-transition        opt-transition ." calc(var(--row-height) * 1px)
         ".                     label-language          opt-language ." calc(var(--row-height) * 1px)
         "tip-color-text        label-color-text        opt-color-text ." calc(var(--row-height) * 1px)
@@ -43,7 +44,7 @@ body {
         "tip-color-back-hover  label-color-back-hover  opt-color-back-hover ." calc(var(--row-height) * 1px)
         "tip-color-text-select label-color-text-select opt-color-text-select ." calc(var(--row-height) * 1px)
         "tip-color-back-select label-color-back-select opt-color-back-select ." calc(var(--row-height) * 1px)
-        ".                     reset-button            reset-button ." calc(var(--row-height) * 1px + 10px) / 17px 6fr 3fr 17px;
+        ".                     reset-button            reset-button ." calc(var(--row-height) * 1px) / 17px 6fr 3fr 17px;
     grid-gap: 2px 2px;
     align-items: center;
     user-select: none;
@@ -71,6 +72,9 @@ body {
 
 #option-scale-label { grid-area: label-scale; }
 #option-button-scale { grid-area: opt-scale; }
+
+#option-border-label { grid-area: label-border; }
+#option-button-border { grid-area: opt-border; }
 
 #option-toggle-transition-label { grid-area: label-transition; }
 #option-toggle-transition { grid-area: opt-transition; }

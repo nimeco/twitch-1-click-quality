@@ -84,6 +84,13 @@ const options = {
         selector: '.quality-button-header',
         message: 'calculate-style',
     },
+    'option-button-border': {
+        type: 'input',
+        event: 'input',
+        property: 'value',
+        selector: '.quality-button-header',
+        message: 'calculate-style',
+    },
     'option-language-save': {
         type: 'select',
         event: 'change',
@@ -109,6 +116,7 @@ const options = {
                 setControlValue('#checkbox-unmute-on-highest', 'checked', items['reset-unmute-on-highest'], 'click');
                 setControlValue('#range-margin', 'value', items['reset-button-margin'], 'input');
                 setControlValue('#range-scale', 'value', items['reset-button-scale'], 'input');
+                setControlValue('#range-border', 'value', items['reset-button-border'], 'input');
                 setControlValue('#checkbox-transition', 'checked', items['reset-toggle-transition'], 'click');
 
                 const resetColors = {};

@@ -134,6 +134,21 @@
         "ja": "サイズ",
         "ko": "크기"
     },
+    "border": {
+        "de": "Eckenradius",
+        "en": "Border radius",
+        "es": "Radio de las esquinas",
+        "fr": "Rayon des coins",
+        "it": "Raggio degli angoli",
+        "pt": "Raio dos cantos",
+        "tr": "Köşe yarıçapı",
+        "ru": "Радиус скругления",
+        "hi": "कोनों की गोलाई",
+        "zh-Hans": "圆角",
+        "zh-Hant": "圓角",
+        "ja": "角丸",
+        "ko": "모서리 둥글기"
+    },
     "language": {
         "de": "Sprache",
         "en": "Language",

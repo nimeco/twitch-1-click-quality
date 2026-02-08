@@ -1,5 +1,7 @@
 license.txt
 firefox/icons/
+firefox/web-ext-artifacts/
+firefox/.web-extension-id
 chrome/icons/
 node_modules/
 misc/

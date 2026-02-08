@@ -95,6 +95,7 @@ const initCSS = async() => {
             --option-color-background-hover: ${colors['option-color-background-hover']};
             --option-color-text-selected: ${colors['option-color-text-selected']};
             --option-color-background-selected: ${colors['option-color-background-selected']};
+            --option-border-radius: 16px;
         }
         .quality-button {
             display: inline-flex;
@@ -105,7 +106,7 @@ const initCSS = async() => {
             text-decoration: none;
             white-space: nowrap;
             font-weight: var(--font-weight-semibold);
-            border-radius: var(--border-radius-medium);
+            border-radius: var(--option-border-radius);
             font-size: var(--button-text-default);
             height: var(--button-size-default);
             background-color: var(--option-color-background);
@@ -154,9 +155,10 @@ const innerDimensions = node => {
 
 const setHeaderStyle = async() => {
     try {
-        const opts = await getStorage(['option-button-margin', 'option-button-scale']);
+        const opts = await getStorage(['option-button-margin', 'option-button-scale', 'option-button-border']);
         const t = opts['option-button-margin'] / -100;
         const s = opts['option-button-scale'] / 100;
+        const r = opts['option-button-border'];
 
         const node = document.querySelector('[data-target="channel-header-right"]');
 
@@ -174,6 +176,7 @@ const setHeaderStyle = async() => {
 
         const transformValue = `translateX(calc(${t} * (${totalWidth - childrenWidth}px + 3rem) - 1rem)) scale(${s})`;
         document.querySelector('.quality-button-header')?.style.setProperty('transform', transformValue);
+        document.querySelector('.quality-button-header')?.style.setProperty(`--option-border-radius`, `${r}px`);
     } catch (e) {
         console.log(e);
     }

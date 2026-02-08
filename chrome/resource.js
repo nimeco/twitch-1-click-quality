@@ -11,8 +11,8 @@
         let iterations = 1;
         try {
             while (node.return && iterations < 100) {
-                if (node.memoizedProps?.mediaPlayerInstance?.core) {
-                    return node.memoizedProps.mediaPlayerInstance.core;
+                if (node.dependencies?.firstContext?.memoizedValue?.mediaPlayerInstance?.playerInstance?.core) {
+                    return node.dependencies.firstContext.memoizedValue.mediaPlayerInstance.playerInstance.core;
                 }
                 node = node.return;
                 iterations += 1;
@@ -43,8 +43,8 @@
         return node;
     };
 
-    let lowestQuality = "";
-    let highestQuality = "";
+    let lowestQualityGroup = "";
+    let highestQualityGroup = "";
     const createButton = data => {
         let button = newNode('button', ['quality-button'], { textContent: data.quality.name });
 
@@ -53,7 +53,7 @@
             highlightSelectedButton(event.target);
             sendEvent('event-save-quality', { group: data.quality.group });
             if (!event.ctrlKey) {
-                sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQuality, highest: highestQuality });
+                sendEvent('event-mute-video', { group: data.quality.group, lowest: lowestQualityGroup, highest: highestQualityGroup });
             }
         });
 
@@ -81,13 +81,27 @@
         return buttonsHeader;
     };
 
+    const findNearestQuality = (targetNumber, qualities) => {
+        let targetQuality = {};
+        let lowestDifference = Infinity;
+        for (const quality of qualities) {
+            let qualityNumber = quality.group.split("p")[0];
+            const difference = Math.abs(targetNumber - qualityNumber);
+            if (difference < lowestDifference) {
+                lowestDifference = difference;
+                targetQuality = quality;
+            }
+        }
+        return { quality: targetQuality, difference: lowestDifference };
+    };
+
     const updateQualityButtons = () => {
         if (!document.contains(buttonsHeader) && !document.querySelector('.quality-button-header')) {
             buttonsHeader = createButtonsHeader();
         }
         sendEvent('set-style', {});
 
-        if (!document.contains(videoPlayer?.core?.mediaSinkManager?.video)) {
+        if (!videoPlayer) {
             videoPlayer = findPlayer();
         }
         if (videoPlayer && buttonsHeader) {
@@ -95,14 +109,24 @@
             if (!qualities?.length) {
                 return false;
             }
-            lowestQuality = qualities[qualities.length - 1].group;
-            highestQuality = qualities[0].group;
+            lowestQualityGroup = qualities[qualities.length - 1].group;
+            highestQualityGroup = qualities[0].group;
             qualities.unshift(Object.assign({}, qualities[0]));
             qualities[0].name = 'Auto';
             qualities[0].group = 'auto';
 
             let functions = Array(qualities.length).fill('setQuality');
             functions.unshift('setAutoQualityMode');
+
+            const savedQualityObject = localStorage.getItem('video-quality');
+            const savedQualityGroup = JSON.parse(savedQualityObject).default;
+            const savedQualityNumber = savedQualityGroup.split("p")[0];
+            if (!isNaN(savedQualityNumber)) {
+                const nearestQuality = findNearestQuality(savedQualityNumber, qualities);
+                if (nearestQuality.difference) {
+                    videoPlayer.setQuality(nearestQuality.quality);
+                }
+            }
 
             let data = [];
             for (let i = 0; i < qualities.length; ++i) {
